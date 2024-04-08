@@ -1,29 +1,19 @@
 import type {
-  PredictiveQueryFragment,
-  SearchProductFragment,
-  PredictiveProductFragment,
+  PredictiveArticleFragment,
   PredictiveCollectionFragment,
   PredictivePageFragment,
-  PredictiveArticleFragment,
-} from 'storefrontapi.generated';
+  PredictiveProductFragment,
+  PredictiveQueryFragment,
+  SearchProductFragment
+} from 'storefrontapi.generated'
 
 export function applyTrackingParams(
-  resource:
-    | PredictiveQueryFragment
-    | SearchProductFragment
-    | PredictiveProductFragment
-    | PredictiveCollectionFragment
-    | PredictiveArticleFragment
-    | PredictivePageFragment,
-  params?: string,
+  resource: PredictiveQueryFragment | SearchProductFragment | PredictiveProductFragment | PredictiveCollectionFragment | PredictiveArticleFragment | PredictivePageFragment,
+  params?: string
 ) {
   if (params) {
-    return resource?.trackingParameters
-      ? `?${params}&${resource.trackingParameters}`
-      : `?${params}`;
+    return resource?.trackingParameters ? `?${params}&${resource.trackingParameters}` : `?${params}`
   } else {
-    return resource?.trackingParameters
-      ? `?${resource.trackingParameters}`
-      : '';
+    return resource?.trackingParameters ? `?${resource.trackingParameters}` : ''
   }
 }
