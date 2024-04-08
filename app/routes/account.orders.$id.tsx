@@ -53,7 +53,7 @@ export async function loader({ params, context, request }: LoaderFunctionArgs) {
 export default function OrderRoute() {
   const { order, lineItems, discountValue, discountPercentage, fulfillmentStatus } = useLoaderData<typeof loader>()
   return (
-    <div className="account-order">
+    <div className='account-order'>
       <h2>Order {order.name}</h2>
       <p>Placed on {new Date(order.processedAt!).toDateString()}</p>
       <br />
@@ -61,10 +61,10 @@ export default function OrderRoute() {
         <table>
           <thead>
             <tr>
-              <th scope="col">Product</th>
-              <th scope="col">Price</th>
-              <th scope="col">Quantity</th>
-              <th scope="col">Total</th>
+              <th scope='col'>Product</th>
+              <th scope='col'>Price</th>
+              <th scope='col'>Quantity</th>
+              <th scope='col'>Total</th>
             </tr>
           </thead>
           <tbody>
@@ -76,20 +76,20 @@ export default function OrderRoute() {
           <tfoot>
             {((discountValue && discountValue.amount) || discountPercentage) && (
               <tr>
-                <th scope="row" colSpan={3}>
+                <th scope='row' colSpan={3}>
                   <p>Discounts</p>
                 </th>
-                <th scope="row">
+                <th scope='row'>
                   <p>Discounts</p>
                 </th>
                 <td>{discountPercentage ? <span>-{discountPercentage}% OFF</span> : discountValue && <Money data={discountValue!} />}</td>
               </tr>
             )}
             <tr>
-              <th scope="row" colSpan={3}>
+              <th scope='row' colSpan={3}>
                 <p>Subtotal</p>
               </th>
-              <th scope="row">
+              <th scope='row'>
                 <p>Subtotal</p>
               </th>
               <td>
@@ -97,10 +97,10 @@ export default function OrderRoute() {
               </td>
             </tr>
             <tr>
-              <th scope="row" colSpan={3}>
+              <th scope='row' colSpan={3}>
                 Tax
               </th>
-              <th scope="row">
+              <th scope='row'>
                 <p>Tax</p>
               </th>
               <td>
@@ -108,10 +108,10 @@ export default function OrderRoute() {
               </td>
             </tr>
             <tr>
-              <th scope="row" colSpan={3}>
+              <th scope='row' colSpan={3}>
                 Total
               </th>
-              <th scope="row">
+              <th scope='row'>
                 <p>Total</p>
               </th>
               <td>
@@ -139,7 +139,7 @@ export default function OrderRoute() {
       </div>
       <br />
       <p>
-        <a target="_blank" href={order.statusPageUrl} rel="noreferrer">
+        <a target='_blank' href={order.statusPageUrl} rel='noreferrer'>
           View Order Status →
         </a>
       </p>

@@ -35,9 +35,9 @@ export default function Blog() {
   const { articles } = blog
 
   return (
-    <div className="blog">
+    <div className='blog'>
       <h1>{blog.title}</h1>
-      <div className="blog-grid">
+      <div className='blog-grid'>
         <Pagination connection={articles}>
           {({ nodes, isLoading, PreviousLink, NextLink }) => {
             return (
@@ -63,11 +63,11 @@ function ArticleItem({ article, loading }: { article: ArticleItemFragment; loadi
     day: 'numeric'
   }).format(new Date(article.publishedAt!))
   return (
-    <div className="blog-article" key={article.id}>
+    <div className='blog-article' key={article.id}>
       <Link to={`/blogs/${article.blog.handle}/${article.handle}`}>
         {article.image && (
-          <div className="blog-article-image">
-            <Image alt={article.image.altText || article.title} aspectRatio="3/2" data={article.image} loading={loading} sizes="(min-width: 768px) 50vw, 100vw" />
+          <div className='blog-article-image'>
+            <Image alt={article.image.altText || article.title} aspectRatio='3/2' data={article.image} loading={loading} sizes='(min-width: 768px) 50vw, 100vw' />
           </div>
         )}
         <h3>{article.title}</h3>

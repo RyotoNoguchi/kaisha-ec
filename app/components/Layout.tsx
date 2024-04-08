@@ -32,11 +32,11 @@ export function Layout({ cart, children = null, footer, header, isLoggedIn }: La
 
 function CartAside({ cart }: { cart: LayoutProps['cart'] }) {
   return (
-    <Aside id="cart-aside" heading="CART">
+    <Aside id='cart-aside' heading='CART'>
       <Suspense fallback={<p>Loading cart ...</p>}>
         <Await resolve={cart}>
           {(cart) => {
-            return <CartMain cart={cart} layout="aside" />
+            return <CartMain cart={cart} layout='aside' />
           }}
         </Await>
       </Suspense>
@@ -46,13 +46,13 @@ function CartAside({ cart }: { cart: LayoutProps['cart'] }) {
 
 function SearchAside() {
   return (
-    <Aside id="search-aside" heading="SEARCH">
-      <div className="predictive-search">
+    <Aside id='search-aside' heading='SEARCH'>
+      <div className='predictive-search'>
         <br />
         <PredictiveSearchForm>
           {({ fetchResults, inputRef }) => (
             <div>
-              <input name="q" onChange={fetchResults} onFocus={fetchResults} placeholder="Search" ref={inputRef} type="search" />
+              <input name='q' onChange={fetchResults} onFocus={fetchResults} placeholder='Search' ref={inputRef} type='search' />
               &nbsp;
               <button
                 onClick={() => {
@@ -74,8 +74,8 @@ function MobileMenuAside({ menu, shop }: { menu: HeaderQuery['menu']; shop: Head
   return (
     menu &&
     shop?.primaryDomain?.url && (
-      <Aside id="mobile-menu-aside" heading="MENU">
-        <HeaderMenu menu={menu} viewport="mobile" primaryDomainUrl={shop.primaryDomain.url} />
+      <Aside id='mobile-menu-aside' heading='MENU'>
+        <HeaderMenu menu={menu} viewport='mobile' primaryDomainUrl={shop.primaryDomain.url} />
       </Aside>
     )
   )

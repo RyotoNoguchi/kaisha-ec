@@ -91,10 +91,10 @@ export default function App() {
   const data = useLoaderData<typeof loader>()
 
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='width=device-width,initial-scale=1' />
         <Meta />
         <Links />
       </head>
@@ -125,16 +125,16 @@ export function ErrorBoundary() {
   }
 
   return (
-    <html lang="en">
+    <html lang='en'>
       <head>
-        <meta charSet="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <meta charSet='utf-8' />
+        <meta name='viewport' content='width=device-width,initial-scale=1' />
         <Meta />
         <Links />
       </head>
       <body>
         <Layout {...rootData}>
-          <div className="route-error">
+          <div className='route-error'>
             <h1>Oops</h1>
             <h2>{errorStatus}</h2>
             {errorMessage && (

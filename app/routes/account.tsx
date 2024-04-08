@@ -30,7 +30,7 @@ export default function AccountLayout() {
   const heading = customer ? (customer.firstName ? `Welcome, ${customer.firstName}` : `Welcome to your account.`) : 'Account Details'
 
   return (
-    <div className="account">
+    <div className='account'>
       <h1>{heading}</h1>
       <br />
       <AccountMenu />
@@ -50,16 +50,16 @@ function AccountMenu() {
   }
 
   return (
-    <nav role="navigation">
-      <NavLink to="/account/orders" style={isActiveStyle}>
+    <nav role='navigation'>
+      <NavLink to='/account/orders' style={isActiveStyle}>
         Orders &nbsp;
       </NavLink>
       &nbsp;|&nbsp;
-      <NavLink to="/account/profile" style={isActiveStyle}>
+      <NavLink to='/account/profile' style={isActiveStyle}>
         &nbsp; Profile &nbsp;
       </NavLink>
       &nbsp;|&nbsp;
-      <NavLink to="/account/addresses" style={isActiveStyle}>
+      <NavLink to='/account/addresses' style={isActiveStyle}>
         &nbsp; Addresses &nbsp;
       </NavLink>
       &nbsp;|&nbsp;
@@ -70,8 +70,8 @@ function AccountMenu() {
 
 function Logout() {
   return (
-    <Form className="account-logout" method="POST" action="/account/logout">
-      &nbsp;<button type="submit">Sign out</button>
+    <Form className='account-logout' method='POST' action='/account/logout'>
+      &nbsp;<button type='submit'>Sign out</button>
     </Form>
   )
 }
