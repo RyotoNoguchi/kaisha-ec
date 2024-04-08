@@ -11,11 +11,11 @@ type Viewport = 'desktop' | 'mobile'
 export function Header({ header, isLoggedIn, cart }: HeaderProps) {
   const { shop, menu } = header
   return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+    <header className='header'>
+      <NavLink prefetch='intent' to='/' style={activeLinkStyle} end>
         <strong>{shop.name}</strong>
       </NavLink>
-      <HeaderMenu menu={menu} viewport="desktop" primaryDomainUrl={header.shop.primaryDomain.url} />
+      <HeaderMenu menu={menu} viewport='desktop' primaryDomainUrl={header.shop.primaryDomain.url} />
       <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
     </header>
   )
@@ -33,9 +33,9 @@ export function HeaderMenu({ menu, primaryDomainUrl, viewport }: { menu: HeaderP
   }
 
   return (
-    <nav className={className} role="navigation">
+    <nav className={className} role='navigation'>
       {viewport === 'mobile' && (
-        <NavLink end onClick={closeAside} prefetch="intent" style={activeLinkStyle} to="/">
+        <NavLink end onClick={closeAside} prefetch='intent' style={activeLinkStyle} to='/'>
           Home
         </NavLink>
       )}
@@ -45,7 +45,7 @@ export function HeaderMenu({ menu, primaryDomainUrl, viewport }: { menu: HeaderP
         // if the url is internal, we strip the domain
         const url = item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname : item.url
         return (
-          <NavLink className="header-menu-item" end key={item.id} onClick={closeAside} prefetch="intent" style={activeLinkStyle} to={url}>
+          <NavLink className='header-menu-item' end key={item.id} onClick={closeAside} prefetch='intent' style={activeLinkStyle} to={url}>
             {item.title}
           </NavLink>
         )
@@ -56,11 +56,11 @@ export function HeaderMenu({ menu, primaryDomainUrl, viewport }: { menu: HeaderP
 
 function HeaderCtas({ isLoggedIn, cart }: Pick<HeaderProps, 'isLoggedIn' | 'cart'>) {
   return (
-    <nav className="header-ctas" role="navigation">
+    <nav className='header-ctas' role='navigation'>
       <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
-        <Suspense fallback="Sign in">
-          <Await resolve={isLoggedIn} errorElement="Sign in">
+      <NavLink prefetch='intent' to='/account' style={activeLinkStyle}>
+        <Suspense fallback='Sign in'>
+          <Await resolve={isLoggedIn} errorElement='Sign in'>
             {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
           </Await>
         </Suspense>
@@ -73,18 +73,18 @@ function HeaderCtas({ isLoggedIn, cart }: Pick<HeaderProps, 'isLoggedIn' | 'cart
 
 function HeaderMenuMobileToggle() {
   return (
-    <a className="header-menu-mobile-toggle" href="#mobile-menu-aside">
+    <a className='header-menu-mobile-toggle' href='#mobile-menu-aside'>
       <h3>☰</h3>
     </a>
   )
 }
 
 function SearchToggle() {
-  return <a href="#search-aside">Search</a>
+  return <a href='#search-aside'>Search</a>
 }
 
 function CartBadge({ count }: { count: number }) {
-  return <a href="#cart-aside">Cart {count}</a>
+  return <a href='#cart-aside'>Cart {count}</a>
 }
 
 function CartToggle({ cart }: Pick<HeaderProps, 'cart'>) {

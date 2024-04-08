@@ -24,9 +24,9 @@ export default function Blogs() {
   const { blogs } = useLoaderData<typeof loader>()
 
   return (
-    <div className="blogs">
+    <div className='blogs'>
       <h1>Blogs</h1>
-      <div className="blogs-grid">
+      <div className='blogs-grid'>
         <Pagination connection={blogs}>
           {({ nodes, isLoading, PreviousLink, NextLink }) => {
             return (
@@ -34,7 +34,7 @@ export default function Blogs() {
                 <PreviousLink>{isLoading ? 'Loading...' : <span>↑ Load previous</span>}</PreviousLink>
                 {nodes.map((blog) => {
                   return (
-                    <Link className="blog" key={blog.handle} prefetch="intent" to={`/blogs/${blog.handle}`}>
+                    <Link className='blog' key={blog.handle} prefetch='intent' to={`/blogs/${blog.handle}`}>
                       <h2>{blog.title}</h2>
                     </Link>
                   )

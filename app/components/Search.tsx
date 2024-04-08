@@ -73,10 +73,10 @@ export function SearchForm({ searchTerm }: { searchTerm: string }) {
   }, [])
 
   return (
-    <Form method="get">
-      <input defaultValue={searchTerm} name="q" placeholder="Search…" ref={inputRef} type="search" />
+    <Form method='get'>
+      <input defaultValue={searchTerm} name='q' placeholder='Search…' ref={inputRef} type='search' />
       &nbsp;
-      <button type="submit">Search</button>
+      <button type='submit'>Search</button>
     </Form>
   )
 }
@@ -99,17 +99,17 @@ export function SearchResults({
 
           if (resourceResults.nodes[0]?.__typename === 'Page') {
             const pageResults = resourceResults as SearchQuery['pages']
-            return resourceResults.nodes.length ? <SearchResultPageGrid key="pages" pages={pageResults} /> : null
+            return resourceResults.nodes.length ? <SearchResultPageGrid key='pages' pages={pageResults} /> : null
           }
 
           if (resourceResults.nodes[0]?.__typename === 'Product') {
             const productResults = resourceResults as SearchQuery['products']
-            return resourceResults.nodes.length ? <SearchResultsProductsGrid key="products" products={productResults} searchTerm={searchTerm} /> : null
+            return resourceResults.nodes.length ? <SearchResultsProductsGrid key='products' products={productResults} searchTerm={searchTerm} /> : null
           }
 
           if (resourceResults.nodes[0]?.__typename === 'Article') {
             const articleResults = resourceResults as SearchQuery['articles']
-            return resourceResults.nodes.length ? <SearchResultArticleGrid key="articles" articles={articleResults} /> : null
+            return resourceResults.nodes.length ? <SearchResultArticleGrid key='articles' articles={articleResults} /> : null
           }
 
           return null
@@ -120,7 +120,7 @@ export function SearchResults({
 
 function SearchResultsProductsGrid({ products, searchTerm }: Pick<SearchQuery, 'products'> & { searchTerm: string }) {
   return (
-    <div className="search-result">
+    <div className='search-result'>
       <h2>Products</h2>
       <Pagination connection={products}>
         {({ nodes, isLoading, NextLink, PreviousLink }) => {
@@ -128,8 +128,8 @@ function SearchResultsProductsGrid({ products, searchTerm }: Pick<SearchQuery, '
             const trackingParams = applyTrackingParams(product, `q=${encodeURIComponent(searchTerm)}`)
 
             return (
-              <div className="search-results-item" key={product.id}>
-                <Link prefetch="intent" to={`/products/${product.handle}${trackingParams}`}>
+              <div className='search-results-item' key={product.id}>
+                <Link prefetch='intent' to={`/products/${product.handle}${trackingParams}`}>
                   {product.variants.nodes[0].image && <Image data={product.variants.nodes[0].image} alt={product.title} width={50} />}
                   <div>
                     <p>{product.title}</p>
@@ -164,12 +164,12 @@ function SearchResultsProductsGrid({ products, searchTerm }: Pick<SearchQuery, '
 
 function SearchResultPageGrid({ pages }: Pick<SearchQuery, 'pages'>) {
   return (
-    <div className="search-result">
+    <div className='search-result'>
       <h2>Pages</h2>
       <div>
         {pages?.nodes?.map((page) => (
-          <div className="search-results-item" key={page.id}>
-            <Link prefetch="intent" to={`/pages/${page.handle}`}>
+          <div className='search-results-item' key={page.id}>
+            <Link prefetch='intent' to={`/pages/${page.handle}`}>
               {page.title}
             </Link>
           </div>
@@ -182,12 +182,12 @@ function SearchResultPageGrid({ pages }: Pick<SearchQuery, 'pages'>) {
 
 function SearchResultArticleGrid({ articles }: Pick<SearchQuery, 'articles'>) {
   return (
-    <div className="search-result">
+    <div className='search-result'>
       <h2>Articles</h2>
       <div>
         {articles?.nodes?.map((article) => (
-          <div className="search-results-item" key={article.id}>
-            <Link prefetch="intent" to={`/blogs/${article.handle}`}>
+          <div className='search-results-item' key={article.id}>
+            <Link prefetch='intent' to={`/blogs/${article.handle}`}>
               {article.title}
             </Link>
           </div>
@@ -277,7 +277,7 @@ export function PredictiveSearchResults() {
   }
 
   return (
-    <div className="predictive-search-results">
+    <div className='predictive-search-results'>
       <div>
         {results.map(({ type, items }) => (
           <PredictiveSearchResult goToSearchResult={goToSearchResult} items={items} key={type} searchTerm={searchTerm} type={type} />
@@ -318,8 +318,8 @@ function PredictiveSearchResult({ goToSearchResult, items, searchTerm, type }: S
   const categoryUrl = `/search?q=${searchTerm.current}&type=${pluralToSingularSearchType(type)}`
 
   return (
-    <div className="predictive-search-result" key={type}>
-      <Link prefetch="intent" to={categoryUrl} onClick={goToSearchResult}>
+    <div className='predictive-search-result' key={type}>
+      <Link prefetch='intent' to={categoryUrl} onClick={goToSearchResult}>
         <h5>{isSuggestions ? 'Suggestions' : type}</h5>
       </Link>
       <ul>
@@ -337,7 +337,7 @@ type SearchResultItemProps = Pick<SearchResultTypeProps, 'goToSearchResult'> & {
 
 function SearchResultItem({ goToSearchResult, item }: SearchResultItemProps) {
   return (
-    <li className="predictive-search-result-item" key={item.id}>
+    <li className='predictive-search-result-item' key={item.id}>
       <Link onClick={goToSearchResult} to={item.url}>
         {item.image?.url && <Image alt={item.image.altText ?? ''} src={item.image.url} width={50} height={50} />}
         <div>

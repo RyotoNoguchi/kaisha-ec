@@ -36,12 +36,12 @@ export async function loader({ request, context }: LoaderFunctionArgs) {
 export default function Orders() {
   const { customer } = useLoaderData<{ customer: CustomerOrdersFragment }>()
   const { orders } = customer
-  return <div className="orders">{orders.nodes.length ? <OrdersTable orders={orders} /> : <EmptyOrders />}</div>
+  return <div className='orders'>{orders.nodes.length ? <OrdersTable orders={orders} /> : <EmptyOrders />}</div>
 }
 
 function OrdersTable({ orders }: Pick<CustomerOrdersFragment, 'orders'>) {
   return (
-    <div className="acccount-orders">
+    <div className='acccount-orders'>
       {orders?.nodes.length ? (
         <Pagination connection={orders}>
           {({ nodes, isLoading, PreviousLink, NextLink }) => {
@@ -69,7 +69,7 @@ function EmptyOrders() {
       <p>You haven&apos;t placed any orders yet.</p>
       <br />
       <p>
-        <Link to="/collections">Start Shopping →</Link>
+        <Link to='/collections'>Start Shopping →</Link>
       </p>
     </div>
   )

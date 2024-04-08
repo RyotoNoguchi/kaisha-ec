@@ -28,7 +28,7 @@ function CartDetails({ layout, cart }: CartMainProps) {
   const cartHasItems = !!cart && cart.totalQuantity > 0
 
   return (
-    <div className="cart-details">
+    <div className='cart-details'>
       <CartLines lines={cart?.lines} layout={layout} />
       {cartHasItems && (
         <CartSummary cost={cart.cost} layout={layout}>
@@ -44,7 +44,7 @@ function CartLines({ lines, layout }: { layout: CartMainProps['layout']; lines: 
   if (!lines) return null
 
   return (
-    <div aria-labelledby="cart-lines">
+    <div aria-labelledby='cart-lines'>
       <ul>
         {lines.nodes.map((line) => (
           <CartLineItem key={line.id} line={line} layout={layout} />
@@ -60,12 +60,12 @@ function CartLineItem({ layout, line }: { layout: CartMainProps['layout']; line:
   const lineItemUrl = useVariantUrl(product.handle, selectedOptions)
 
   return (
-    <li key={id} className="cart-line">
-      {image && <Image alt={title} aspectRatio="1/1" data={image} height={100} loading="lazy" width={100} />}
+    <li key={id} className='cart-line'>
+      {image && <Image alt={title} aspectRatio='1/1' data={image} height={100} loading='lazy' width={100} />}
 
       <div>
         <Link
-          prefetch="intent"
+          prefetch='intent'
           to={lineItemUrl}
           onClick={() => {
             if (layout === 'aside') {
@@ -78,7 +78,7 @@ function CartLineItem({ layout, line }: { layout: CartMainProps['layout']; line:
             <strong>{product.title}</strong>
           </p>
         </Link>
-        <CartLinePrice line={line} as="span" />
+        <CartLinePrice line={line} as='span' />
         <ul>
           {selectedOptions.map((option) => (
             <li key={option.name}>
@@ -99,7 +99,7 @@ function CartCheckoutActions({ checkoutUrl }: { checkoutUrl: string }) {
 
   return (
     <div>
-      <a href={checkoutUrl} target="_self">
+      <a href={checkoutUrl} target='_self'>
         <p>Continue to Checkout &rarr;</p>
       </a>
       <br />
@@ -111,9 +111,9 @@ export function CartSummary({ cost, layout, children = null }: { children?: Reac
   const className = layout === 'page' ? 'cart-summary-page' : 'cart-summary-aside'
 
   return (
-    <div aria-labelledby="cart-summary" className={className}>
+    <div aria-labelledby='cart-summary' className={className}>
       <h4>Totals</h4>
-      <dl className="cart-subtotal">
+      <dl className='cart-subtotal'>
         <dt>Subtotal</dt>
         <dd>{cost?.subtotalAmount?.amount ? <Money data={cost?.subtotalAmount} /> : '-'}</dd>
       </dl>
@@ -124,8 +124,8 @@ export function CartSummary({ cost, layout, children = null }: { children?: Reac
 
 function CartLineRemoveButton({ lineIds }: { lineIds: string[] }) {
   return (
-    <CartForm route="/cart" action={CartForm.ACTIONS.LinesRemove} inputs={{ lineIds }}>
-      <button type="submit">Remove</button>
+    <CartForm route='/cart' action={CartForm.ACTIONS.LinesRemove} inputs={{ lineIds }}>
+      <button type='submit'>Remove</button>
     </CartForm>
   )
 }
@@ -137,16 +137,16 @@ function CartLineQuantity({ line }: { line: CartLine }) {
   const nextQuantity = Number((quantity + 1).toFixed(0))
 
   return (
-    <div className="cart-line-quantity">
+    <div className='cart-line-quantity'>
       <small>Quantity: {quantity} &nbsp;&nbsp;</small>
       <CartLineUpdateButton lines={[{ id: lineId, quantity: prevQuantity }]}>
-        <button aria-label="Decrease quantity" disabled={quantity <= 1} name="decrease-quantity" value={prevQuantity}>
+        <button aria-label='Decrease quantity' disabled={quantity <= 1} name='decrease-quantity' value={prevQuantity}>
           <span>&#8722; </span>
         </button>
       </CartLineUpdateButton>
       &nbsp;
       <CartLineUpdateButton lines={[{ id: lineId, quantity: nextQuantity }]}>
-        <button aria-label="Increase quantity" name="increase-quantity" value={nextQuantity}>
+        <button aria-label='Increase quantity' name='increase-quantity' value={nextQuantity}>
           <span>&#43;</span>
         </button>
       </CartLineUpdateButton>
@@ -179,7 +179,7 @@ export function CartEmpty({ hidden = false, layout = 'aside' }: { hidden: boolea
       <p>Looks like you haven&rsquo;t added anything yet, let&rsquo;s get you started!</p>
       <br />
       <Link
-        to="/collections"
+        to='/collections'
         onClick={() => {
           if (layout === 'aside') {
             window.location.href = '/collections'
@@ -202,7 +202,7 @@ function CartDiscounts({ discountCodes }: { discountCodes: CartApiQueryFragment[
         <div>
           <dt>Discount(s)</dt>
           <UpdateDiscountForm>
-            <div className="cart-discount">
+            <div className='cart-discount'>
               <code>{codes?.join(', ')}</code>
               &nbsp;
               <button>Remove</button>
@@ -214,9 +214,9 @@ function CartDiscounts({ discountCodes }: { discountCodes: CartApiQueryFragment[
       {/* Show an input to apply a discount */}
       <UpdateDiscountForm discountCodes={codes}>
         <div>
-          <input type="text" name="discountCode" placeholder="Discount code" />
+          <input type='text' name='discountCode' placeholder='Discount code' />
           &nbsp;
-          <button type="submit">Apply</button>
+          <button type='submit'>Apply</button>
         </div>
       </UpdateDiscountForm>
     </div>
@@ -226,7 +226,7 @@ function CartDiscounts({ discountCodes }: { discountCodes: CartApiQueryFragment[
 function UpdateDiscountForm({ discountCodes, children }: { discountCodes?: string[]; children: React.ReactNode }) {
   return (
     <CartForm
-      route="/cart"
+      route='/cart'
       action={CartForm.ACTIONS.DiscountCodesUpdate}
       inputs={{
         discountCodes: discountCodes || []
@@ -239,7 +239,7 @@ function UpdateDiscountForm({ discountCodes, children }: { discountCodes?: strin
 
 function CartLineUpdateButton({ children, lines }: { children: React.ReactNode; lines: CartLineUpdateInput[] }) {
   return (
-    <CartForm route="/cart" action={CartForm.ACTIONS.LinesUpdate} inputs={{ lines }}>
+    <CartForm route='/cart' action={CartForm.ACTIONS.LinesUpdate} inputs={{ lines }}>
       {children}
     </CartForm>
   )

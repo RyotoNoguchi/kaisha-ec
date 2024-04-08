@@ -7,5 +7,6 @@ module.exports = {
   printWidth: 200,
   quoteProps: 'as-needed',
   bracketSpacing: true,
+  jsxSingleQuote: true,
   plugins: ['prettier-plugin-organize-imports']
 }

@@ -2,7 +2,7 @@
  * @type {import("@types/eslint").Linter.BaseConfig}
  */
 module.exports = {
-  extends: ['@remix-run/eslint-config', 'plugin:hydrogen/recommended', 'plugin:hydrogen/typescript'],
+  extends: ['@remix-run/eslint-config', 'plugin:hydrogen/recommended', 'plugin:hydrogen/typescript', 'prettier'],
   parserOptions: {
     project: './tsconfig.json'
   },

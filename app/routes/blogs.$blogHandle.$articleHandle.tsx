@@ -37,7 +37,7 @@ export default function Article() {
   }).format(new Date(article.publishedAt))
 
   return (
-    <div className="article">
+    <div className='article'>
       <h1>
         {title}
         <span>
@@ -45,8 +45,8 @@ export default function Article() {
         </span>
       </h1>
 
-      {image && <Image data={image} sizes="90vw" loading="eager" />}
-      <div dangerouslySetInnerHTML={{ __html: contentHtml }} className="article" />
+      {image && <Image data={image} sizes='90vw' loading='eager' />}
+      <div dangerouslySetInnerHTML={{ __html: contentHtml }} className='article' />
     </div>
   )
 }

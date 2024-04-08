@@ -86,7 +86,7 @@ export default function Product() {
   const { product, variants } = useLoaderData<typeof loader>()
   const { selectedVariant } = product
   return (
-    <div className="product">
+    <div className='product'>
       <ProductImage image={selectedVariant?.image} />
       <ProductMain selectedVariant={selectedVariant} product={product} variants={variants} />
     </div>
@@ -95,11 +95,11 @@ export default function Product() {
 
 function ProductImage({ image }: { image: ProductVariantFragment['image'] }) {
   if (!image) {
-    return <div className="product-image" />
+    return <div className='product-image' />
   }
   return (
-    <div className="product-image">
-      <Image alt={image.altText || 'Product Image'} aspectRatio="1/1" data={image} key={image.id} sizes="(min-width: 45em) 50vw, 100vw" />
+    <div className='product-image'>
+      <Image alt={image.altText || 'Product Image'} aspectRatio='1/1' data={image} key={image.id} sizes='(min-width: 45em) 50vw, 100vw' />
     </div>
   )
 }
@@ -107,12 +107,12 @@ function ProductImage({ image }: { image: ProductVariantFragment['image'] }) {
 function ProductMain({ selectedVariant, product, variants }: { product: ProductFragment; selectedVariant: ProductFragment['selectedVariant']; variants: Promise<ProductVariantsQuery> }) {
   const { title, descriptionHtml } = product
   return (
-    <div className="product-main">
+    <div className='product-main'>
       <h1>{title}</h1>
       <ProductPrice selectedVariant={selectedVariant} />
       <br />
       <Suspense fallback={<ProductForm product={product} selectedVariant={selectedVariant} variants={[]} />}>
-        <Await errorElement="There was a problem loading product variants" resolve={variants}>
+        <Await errorElement='There was a problem loading product variants' resolve={variants}>
           {(data) => <ProductForm product={product} selectedVariant={selectedVariant} variants={data.product?.variants.nodes || []} />}
         </Await>
       </Suspense>
@@ -130,12 +130,12 @@ function ProductMain({ selectedVariant, product, variants }: { product: ProductF
 
 function ProductPrice({ selectedVariant }: { selectedVariant: ProductFragment['selectedVariant'] }) {
   return (
-    <div className="product-price">
+    <div className='product-price'>
       {selectedVariant?.compareAtPrice ? (
         <>
           <p>Sale</p>
           <br />
-          <div className="product-price-on-sale">
+          <div className='product-price-on-sale'>
             {selectedVariant ? <Money data={selectedVariant.price} /> : null}
             <s>
               <Money data={selectedVariant.compareAtPrice} />
@@ -151,7 +151,7 @@ function ProductPrice({ selectedVariant }: { selectedVariant: ProductFragment['s
 
 function ProductForm({ product, selectedVariant, variants }: { product: ProductFragment; selectedVariant: ProductFragment['selectedVariant']; variants: Array<ProductVariantFragment> }) {
   return (
-    <div className="product-form">
+    <div className='product-form'>
       <VariantSelector handle={product.handle} options={product.options} variants={variants}>
         {({ option }) => <ProductOptions key={option.name} option={option} />}
       </VariantSelector>
@@ -180,15 +180,15 @@ function ProductForm({ product, selectedVariant, variants }: { product: ProductF
 
 function ProductOptions({ option }: { option: VariantOption }) {
   return (
-    <div className="product-options" key={option.name}>
+    <div className='product-options' key={option.name}>
       <h5>{option.name}</h5>
-      <div className="product-options-grid">
+      <div className='product-options-grid'>
         {option.values.map(({ value, isAvailable, isActive, to }) => {
           return (
             <Link
-              className="product-options-item"
+              className='product-options-item'
               key={option.name + value}
-              prefetch="intent"
+              prefetch='intent'
               preventScrollReset
               replace
               to={to}
@@ -209,11 +209,11 @@ function ProductOptions({ option }: { option: VariantOption }) {
 
 function AddToCartButton({ analytics, children, disabled, lines, onClick }: { analytics?: unknown; children: React.ReactNode; disabled?: boolean; lines: CartLineInput[]; onClick?: () => void }) {
   return (
-    <CartForm route="/cart" inputs={{ lines }} action={CartForm.ACTIONS.LinesAdd}>
+    <CartForm route='/cart' inputs={{ lines }} action={CartForm.ACTIONS.LinesAdd}>
       {(fetcher: FetcherWithComponents<any>) => (
         <>
-          <input name="analytics" type="hidden" value={JSON.stringify(analytics)} />
-          <button type="submit" onClick={onClick} disabled={disabled ?? fetcher.state !== 'idle'}>
+          <input name='analytics' type='hidden' value={JSON.stringify(analytics)} />
+          <button type='submit' onClick={onClick} disabled={disabled ?? fetcher.state !== 'idle'}>
             {children}
           </button>
         </>

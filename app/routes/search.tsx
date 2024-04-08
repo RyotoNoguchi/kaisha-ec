@@ -51,7 +51,7 @@ export default function SearchPage() {
   const { searchTerm, searchResults } = useLoaderData<typeof loader>()
 
   return (
-    <div className="search">
+    <div className='search'>
       <h1>Search</h1>
       <SearchForm searchTerm={searchTerm} />
       {!searchTerm || !searchResults.totalResults ? <NoSearchResults /> : <SearchResults results={searchResults.results} searchTerm={searchTerm} />}

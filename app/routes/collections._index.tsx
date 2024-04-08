@@ -19,7 +19,7 @@ export default function Collections() {
   const { collections } = useLoaderData<typeof loader>()
 
   return (
-    <div className="collections">
+    <div className='collections'>
       <h1>Collections</h1>
       <Pagination connection={collections}>
         {({ nodes, isLoading, PreviousLink, NextLink }) => (
@@ -36,7 +36,7 @@ export default function Collections() {
 
 function CollectionsGrid({ collections }: { collections: CollectionFragment[] }) {
   return (
-    <div className="collections-grid">
+    <div className='collections-grid'>
       {collections.map((collection, index) => (
         <CollectionItem key={collection.id} collection={collection} index={index} />
       ))}
@@ -46,8 +46,8 @@ function CollectionsGrid({ collections }: { collections: CollectionFragment[] })
 
 function CollectionItem({ collection, index }: { collection: CollectionFragment; index: number }) {
   return (
-    <Link className="collection-item" key={collection.id} to={`/collections/${collection.handle}`} prefetch="intent">
-      {collection?.image && <Image alt={collection.image.altText || collection.title} aspectRatio="1/1" data={collection.image} loading={index < 3 ? 'eager' : undefined} />}
+    <Link className='collection-item' key={collection.id} to={`/collections/${collection.handle}`} prefetch='intent'>
+      {collection?.image && <Image alt={collection.image.altText || collection.title} aspectRatio='1/1' data={collection.image} loading={index < 3 ? 'eager' : undefined} />}
       <h5>{collection.title}</h5>
     </Link>
   )
