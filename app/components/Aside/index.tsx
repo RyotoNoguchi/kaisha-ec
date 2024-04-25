@@ -1,3 +1,5 @@
+import React from 'react'
+
 /**
  * A side bar component with Overlay that works without JavaScript.
  * @example
@@ -8,7 +10,7 @@
  * </Aside>
  * ```
  */
-export function Aside({ children, heading, id = 'aside' }: { children?: React.ReactNode; heading: React.ReactNode; id?: string }) {
+export const Aside: React.FC<{ children?: React.ReactNode; heading: React.ReactNode; id?: string }> = ({ children, heading, id = 'aside' }) => {
   return (
     <div aria-modal className='overlay' id={id} role='dialog'>
       <button
@@ -29,10 +31,10 @@ export function Aside({ children, heading, id = 'aside' }: { children?: React.Re
   )
 }
 
-function CloseAside() {
+const CloseAside: React.FC = () => {
   return (
     /* eslint-disable-next-line jsx-a11y/anchor-is-valid */
-    <a className='close' href='#' onChange={() => history.go(-1)}>
+    <a className='close' href='#' onClick={() => history.go(-1)}>
       &times;
     </a>
   )

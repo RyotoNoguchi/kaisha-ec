@@ -1,10 +1,11 @@
 import { Await } from '@remix-run/react'
+import { HeaderMenu } from 'app/components/Header/HeaderMenu'
+import { Header } from 'app/components/Header/index'
 import { Suspense } from 'react'
 import type { CartApiQueryFragment, FooterQuery, HeaderQuery } from 'storefrontapi.generated'
 import { Aside } from '~/components/Aside'
 import { CartMain } from '~/components/Cart'
 import { Footer } from '~/components/Footer'
-import { Header, HeaderMenu } from '~/components/Header'
 import { PredictiveSearchForm, PredictiveSearchResults } from '~/components/Search'
 
 export type LayoutProps = {
