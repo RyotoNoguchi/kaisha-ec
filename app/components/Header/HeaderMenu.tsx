@@ -39,7 +39,7 @@ export const HeaderMenu: React.FC<Props> = ({ menu, primaryDomainUrl, viewport }
 const activeLinkStyle = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black'
+    color: isPending ? 'grey' : 'white'
   }
 }
 
