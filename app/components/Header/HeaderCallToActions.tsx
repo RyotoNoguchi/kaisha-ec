@@ -1,6 +1,7 @@
-import { Await, NavLink } from '@remix-run/react'
+import { Await } from '@remix-run/react'
 import { Suspense } from 'react'
 import type { CartApiQueryFragment } from 'storefrontapi.generated'
+import { CartIcon } from '../atoms/CartIcon'
 
 type Props = {
   isLoggedIn: Promise<boolean>
@@ -11,14 +12,14 @@ export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart }) => {
   return (
     <nav className='header-ctas' role='navigation'>
       <HeaderMenuMobileToggle />
-      <NavLink prefetch='intent' to='/account' style={activeLinkStyle}>
+      {/* <NavLink prefetch='intent' to='/account' style={activeLinkStyle}>
         <Suspense fallback='Sign in'>
           <Await resolve={isLoggedIn} errorElement='Sign in'>
             {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
           </Await>
         </Suspense>
       </NavLink>
-      <SearchToggle />
+      <SearchToggle /> */}
       <CartToggle cart={cart} />
     </nav>
   )
@@ -30,10 +31,16 @@ const HeaderMenuMobileToggle: React.FC = () => (
   </a>
 )
 
-const SearchToggle: React.FC = () => <a href='#search-aside'>Search</a>
+// const SearchToggle: React.FC = () => <a href='#search-aside'>Search</a>
 
-const CartBadge: React.FC<{ count: number }> = ({ count }) => <a href='#cart-aside'>Cart {count}</a>
+// const CartBadge: React.FC<{ count: number }> = ({ count }) => <a href='#cart-aside'>Cart {count}</a>
+const CartBadge: React.FC<{ count: number }> = ({ count }) => (
+  <a href='#cart-aside'>
+    <CartIcon />
+  </a>
+)
 
+// TODO Implement cart icon with count
 const CartToggle: React.FC<Pick<Props, 'cart'>> = ({ cart }) => (
   <Suspense fallback={<CartBadge count={0} />}>
     <Await resolve={cart}>
