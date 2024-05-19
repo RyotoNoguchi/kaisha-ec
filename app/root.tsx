@@ -1,6 +1,7 @@
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useLoaderData, useMatches, useRouteError, type ShouldRevalidateFunction } from '@remix-run/react'
 import { useNonce } from '@shopify/hydrogen'
 import { defer, type LoaderFunctionArgs, type SerializeFrom } from '@shopify/remix-oxygen'
+import tailwind from 'tailwindcss/tailwind.css'
 import { Layout } from '~/components/Layout'
 import favicon from './assets/favicon.svg'
 import appStyles from './styles/app.css'
@@ -27,6 +28,7 @@ export function links() {
   return [
     { rel: 'stylesheet', href: resetStyles },
     { rel: 'stylesheet', href: appStyles },
+    { rel: 'stylesheet', href: tailwind },
     {
       rel: 'preconnect',
       href: 'https://cdn.shopify.com'
