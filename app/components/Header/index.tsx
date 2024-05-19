@@ -7,11 +7,14 @@ import { HeaderCallToActions } from './HeaderCallToActions'
 type Props = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>
 
 export const Header: React.FC<Props> = ({ header, cart, isLoggedIn }) => {
-  const { shop, menu } = header
+  const { menu } = header
   return (
-    <header className='bg-black text-white header'>
+    <header className='bg-black text-white header py-3 px-20 w-full'>
       <NavLink prefetch='intent' to='/' end>
-        <strong>{shop.name}</strong>
+        <div className=''>
+          {/* eslint-disable-next-line hydrogen/prefer-image-component */}
+          <img src='/image/kaysha-logo.webp' alt='logo' className='w-full h-16 py-3' />
+        </div>
       </NavLink>
       <HeaderMenu menu={menu} viewport='desktop' primaryDomainUrl={header.shop.primaryDomain.url} />
       <HeaderCallToActions isLoggedIn={isLoggedIn} cart={cart} />
