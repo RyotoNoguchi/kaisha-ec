@@ -9,7 +9,7 @@ type Props = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>
 export const Header: React.FC<Props> = ({ header, cart, isLoggedIn }) => {
   const { menu } = header
   return (
-    <header className='bg-black text-white header py-3 px-20 w-full'>
+    <header className='bg-black text-white header py-3 px-12 w-full justify-between'>
       <NavLink prefetch='intent' to='/' end>
         <div className=''>
           {/* eslint-disable-next-line hydrogen/prefer-image-component */}

@@ -1,7 +1,9 @@
 import { Await } from '@remix-run/react'
 import { Suspense } from 'react'
 import type { CartApiQueryFragment } from 'storefrontapi.generated'
-import { CartIcon } from '../atoms/CartIcon'
+import { CartIcon } from '~/components/atoms/CartIcon'
+import { HamburgerMenuIcon } from '~/components/atoms/HamburgerMenu'
+import { colors } from '~/styles/colors'
 
 type Props = {
   isLoggedIn: Promise<boolean>
@@ -10,7 +12,7 @@ type Props = {
 
 export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart }) => {
   return (
-    <nav className='header-ctas' role='navigation'>
+    <nav className='flex' role='navigation'>
       <HeaderMenuMobileToggle />
       {/* <NavLink prefetch='intent' to='/account' style={activeLinkStyle}>
         <Suspense fallback='Sign in'>
@@ -26,8 +28,8 @@ export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart }) => {
 }
 
 const HeaderMenuMobileToggle: React.FC = () => (
-  <a className='header-menu-mobile-toggle' href='#mobile-menu-aside'>
-    <h3>☰</h3>
+  <a className='header-menu-mobile-toggle flex lg:hidden' href='#mobile-menu-aside'>
+    <HamburgerMenuIcon color={colors.white} />
   </a>
 )
 
