@@ -464,3 +464,28 @@ aside li {
 .account-logout {
   display: inline-block;
 }
+
+/*
+* --------------------------------------------------
+* Swiper
+* --------------------------------------------------
+*/
+
+.swiper-button-next::after, .swiper-button-prev::after {
+  font-family: "Font Awesome 5 Free"; /* FontAwesomeのフォントファミリー */
+  font-weight: 900; /* FontAwesomeのアイコンの太さ */
+  color:  gray;
+  opacity: 0.5;
+}
+
+.swiper-button-next::after {
+  content: "\f054"; /* 右矢印アイコン */
+}
+
+.swiper-button-prev::after {
+  content: "\f053"; /* 左矢印アイコン */
+}
+
+.swiper-pagination-bullet-active {
+  background-color: gray
+}
