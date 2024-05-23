@@ -1,5 +1,6 @@
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
+import { Carousel } from './Carousel'
 import { FeaturedCollection } from './FeaturedCollection'
 import { RecommendedProducts } from './RecommendedProducts'
 
@@ -16,10 +17,19 @@ export async function loader({ context }: LoaderFunctionArgs) {
   return defer({ featuredCollection, recommendedProducts })
 }
 
+const carouselImages = [
+  { src: '/image/carousel/carousel-1.webp', alt: 'Image 1' },
+  { src: '/image/carousel/carousel-2.webp', alt: 'Image 2' },
+  { src: '/image/carousel/carousel-3.webp', alt: 'Image 3' },
+  { src: '/image/carousel/carousel-4.webp', alt: 'Image 4' },
+  { src: '/image/carousel/carousel-5.webp', alt: 'Image 5' },
+  { src: '/image/carousel/carousel-6.webp', alt: 'Image 6' }
+]
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
   return (
     <div className='home'>
+      <Carousel images={carouselImages} />
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>

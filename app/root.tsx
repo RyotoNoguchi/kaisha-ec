@@ -1,6 +1,11 @@
+import fontAwesome from '@fortawesome/fontawesome-free/css/all.min.css'
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useLoaderData, useMatches, useRouteError, type ShouldRevalidateFunction } from '@remix-run/react'
 import { useNonce } from '@shopify/hydrogen'
 import { defer, type LoaderFunctionArgs, type SerializeFrom } from '@shopify/remix-oxygen'
+import swiperStyles from 'swiper/css'
+import swiperNavigationStyles from 'swiper/css/navigation'
+import swiperPaginationStyles from 'swiper/css/pagination'
+import swiperScrollBarStyles from 'swiper/css/scrollbar'
 import tailwind from 'tailwindcss/tailwind.css'
 import { Layout } from '~/components/Layout'
 import favicon from './assets/favicon.svg'
@@ -27,6 +32,11 @@ export const shouldRevalidate: ShouldRevalidateFunction = ({ formMethod, current
 export function links() {
   return [
     { rel: 'stylesheet', href: resetStyles },
+    { rel: 'stylesheet', href: swiperStyles },
+    { rel: 'stylesheet', href: swiperNavigationStyles },
+    { rel: 'stylesheet', href: swiperPaginationStyles },
+    { rel: 'stylesheet', href: swiperScrollBarStyles },
+    { rel: 'stylesheet', href: fontAwesome },
     { rel: 'stylesheet', href: appStyles },
     { rel: 'stylesheet', href: tailwind },
     {
