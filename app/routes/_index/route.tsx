@@ -1,8 +1,9 @@
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
+import { MenuSection } from '~/components/organisms/MenuSection'
 import { Carousel } from './Carousel'
-import { FeaturedCollection } from './FeaturedCollection'
-import { RecommendedProducts } from './RecommendedProducts'
+// import { FeaturedCollection } from './FeaturedCollection'
+// import { RecommendedProducts } from './RecommendedProducts'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }]
@@ -30,8 +31,9 @@ const Homepage = () => {
   return (
     <div className='home'>
       <Carousel images={carouselImages} />
-      <FeaturedCollection collection={data.featuredCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      <MenuSection />
+      {/* <FeaturedCollection collection={data.featuredCollection} /> */}
+      {/* <RecommendedProducts products={data.recommendedProducts} /> */}
     </div>
   )
 }
