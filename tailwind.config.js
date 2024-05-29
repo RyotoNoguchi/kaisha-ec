@@ -8,7 +8,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        'custom-black': '#000000'
+        'custom-black': '#000000',
+        primary: '#BD9D5C',
+        secondary: '#B9A57C',
+        beige: '#CDC0A5'
+      },
+      fontFamily: {
+        yumincho: ['YuMincho', 'sans-serif']
       }
     }
   }
