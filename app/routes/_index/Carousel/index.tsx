@@ -11,11 +11,18 @@ type Props = {
 
 export const Carousel: React.FC<Props> = ({ images }) => {
   return (
-    <Swiper modules={[Navigation, Pagination, Scrollbar, A11y]} spaceBetween={0} navigation slidesPerView={1} pagination={{ clickable: true, dynamicBullets: true, dynamicMainBullets: 1 }}>
+    <Swiper
+      className='w-full'
+      modules={[Navigation, Pagination, Scrollbar, A11y]}
+      spaceBetween={0}
+      navigation
+      slidesPerView={1}
+      pagination={{ clickable: true, dynamicBullets: true, dynamicMainBullets: 1 }}
+    >
       {images.map((image, index) => (
         <SwiperSlide key={image.src}>
           {/* eslint-disable-next-line hydrogen/prefer-image-component */}
-          <img src={image.src} alt={`carousel-${index}`} />
+          <img className='rounded-none' src={image.src} alt={`carousel-${index}`} />
         </SwiperSlide>
       ))}
     </Swiper>
