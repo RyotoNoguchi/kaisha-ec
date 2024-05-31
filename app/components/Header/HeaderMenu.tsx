@@ -84,7 +84,7 @@ const FALLBACK_HEADER_MENU = {
       items: []
     },
     {
-      id: 'gid://shopify/MenuItem/461609599032',
+      id: 'gid://shopify/MenuItem/461609599033',
       resourceId: 'gid://shopify/Page/92591030329',
       tags: [],
       title: 'アクセス',
@@ -93,7 +93,7 @@ const FALLBACK_HEADER_MENU = {
       items: []
     },
     {
-      id: 'gid://shopify/MenuItem/461609599032',
+      id: 'gid://shopify/MenuItem/461609599035',
       resourceId: 'gid://shopify/Page/92591030329',
       tags: [],
       title: '店主の思い',
