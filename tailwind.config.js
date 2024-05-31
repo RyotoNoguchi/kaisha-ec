@@ -11,7 +11,8 @@ export default {
         'custom-black': '#000000',
         primary: '#BD9D5C',
         secondary: '#B9A57C',
-        beige: '#CDC0A5'
+        beige: '#CDC0A5',
+        tertiary: '#E2CCA0'
       },
       fontFamily: {
         yumincho: ['YuMincho', 'sans-serif']

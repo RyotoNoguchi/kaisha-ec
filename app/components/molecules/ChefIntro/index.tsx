@@ -8,7 +8,7 @@ type Props = {
 export const ChefIntro: React.FC<Props> = ({ title, text }) => {
   const paragraphs = text.split('。').filter((paragraph) => paragraph.trim() !== '')
   return (
-    <div className='flex flex-col gap-9 bg-beige p-4 md:pt-9 pb-16 md:px-16'>
+    <div className='flex flex-col gap-9 bg-beige p-9'>
       <h2 className='flex font-extrabold font-yumincho text-2xl'>{title}</h2>
       <div className='flex flex-col lg:flex-row'>
         {/* eslint-disable-next-line hydrogen/prefer-image-component */}
