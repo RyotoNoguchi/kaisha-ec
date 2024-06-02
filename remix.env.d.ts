@@ -26,6 +26,7 @@ declare global {
     PUBLIC_STOREFRONT_ID: string
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string
+    GOOGLE_MAPS_API_KEY: string
   }
 
   /**
