@@ -176,7 +176,7 @@ aside li {
 * components/Footer
 * --------------------------------------------------
 */
-.footer {
+/* .footer {
   background: var(--color-dark);
   margin-top: auto;
 }
@@ -190,7 +190,7 @@ aside li {
 
 .footer-menu a {
   color: var(--color-light);
-}
+} */
 
 /*
 * --------------------------------------------------
