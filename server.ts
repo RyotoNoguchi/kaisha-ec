@@ -46,7 +46,7 @@ export default {
         customerAccountUrl: env.PUBLIC_CUSTOMER_ACCOUNT_API_URL
       })
 
-      /*
+      /**
        * Create a cart handler that will be used to
        * create and update the cart in the session.
        */
@@ -57,6 +57,11 @@ export default {
         setCartId: cartSetIdDefault(),
         cartQueryFragment: CART_QUERY_FRAGMENT
       })
+
+      /**
+       * Set the Google Maps API key in the environment.
+       */
+      const googleMapsApiKey = getGoogleMapsApiKey(env)
 
       /**
        * Create a Remix request handler and pass
@@ -71,6 +76,7 @@ export default {
           customerAccount,
           cart,
           env,
+          googleMapsApiKey,
           waitUntil
         })
       })
@@ -108,4 +114,13 @@ function getLocaleFromRequest(request: Request): I18nLocale {
   const domain = url.hostname.split('.').pop()?.toUpperCase() as keyof typeof supportedLocales
 
   return domain && supportedLocales[domain] ? { language: supportedLocales[domain], country: domain } : defaultLocale
+}
+
+// 環境変数からGoogle Maps APIキーを取得する関数
+function getGoogleMapsApiKey(env: Env): string {
+  const apiKey = env.GOOGLE_MAPS_API_KEY
+  if (!apiKey) {
+    throw new Error('Google Maps API key is not set in the environment variables')
+  }
+  return apiKey
 }

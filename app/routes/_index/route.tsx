@@ -10,14 +10,13 @@ export const meta: MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }]
 }
 
-export async function loader({ context }: LoaderFunctionArgs) {
-  const { storefront } = context
+export const loader = async ({ context }: LoaderFunctionArgs) => {
+  const { storefront, googleMapsApiKey } = context
   const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY)
   const featuredCollection = collections.nodes[0]
   const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY)
-  const env = context.env
 
-  return defer({ featuredCollection, recommendedProducts, env })
+  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey })
 }
 
 const carouselImages = [
@@ -31,14 +30,14 @@ const carouselImages = [
 
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
-  const { env } = data
+  const { googleMapsApiKey } = data
   return (
     <div className='home flex flex-col flex-shrink-0 gap-8'>
       <Carousel images={carouselImages} />
       <MenuSection />
       <ChefIntroSection />
       <TestimonialSection />
-      <GoogleMapSection apiKey={env.GOOGLE_MAPS_API_KEY} />
+      <GoogleMapSection apiKey={googleMapsApiKey} />
     </div>
   )
 }
