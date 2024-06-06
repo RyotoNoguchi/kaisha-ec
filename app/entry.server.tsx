@@ -37,6 +37,7 @@ export default async function handleRequest(request: Request, responseStatusCode
     imgSrc: [
       'self',
       'data:',
+      'https://cdn.shopify.com', // ShopifyのCDNからのフォントを許可
       'https://maps.googleapis.com',
       'https://maps.gstatic.com', // Google Mapsの静的リソースを許可
       'http://localhost:3000',
