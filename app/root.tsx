@@ -1,3 +1,4 @@
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
 import fontAwesome from '@fortawesome/fontawesome-free/css/all.min.css'
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useLoaderData, useMatches, useRouteError, type ShouldRevalidateFunction } from '@remix-run/react'
 import { useNonce } from '@shopify/hydrogen'
@@ -13,6 +14,16 @@ import { Layout } from '~/components/Layout'
 import favicon from './assets/favicon.svg'
 import appStyles from './styles/app.css'
 import resetStyles from './styles/reset.css'
+
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: 'https://itoshima-ochazuke.myshopify.com/api/graphql.json',
+    headers: {
+      'X-Shopify-Storefront-Access-Token': 'd61c36c751aef8b50b04ca8afc38c6fa'
+    }
+  }),
+  cache: new InMemoryCache()
+})
 
 const CartProvider = React.lazy(() => import('@shopify/hydrogen-react').then((module) => ({ default: module.CartProvider })))
 
@@ -122,17 +133,19 @@ const App = () => {
         <Links />
       </head>
       <body>
-        <ShopifyProvider storeDomain={data.publicStoreDomain} storefrontToken={data.publicStorefrontToken} storefrontApiVersion='2024-04' countryIsoCode='JP' languageIsoCode='JA'>
-          {isClient && (
-            <React.Suspense fallback={<div>Loading cart...</div>}>
-              <CartProvider>
-                <Layout {...data}>
-                  <Outlet />
-                </Layout>
-              </CartProvider>
-            </React.Suspense>
-          )}
-        </ShopifyProvider>
+        <ApolloProvider client={client}>
+          <ShopifyProvider storeDomain={data.publicStoreDomain} storefrontToken={data.publicStorefrontToken} storefrontApiVersion='2024-04' countryIsoCode='JP' languageIsoCode='JA'>
+            {isClient && (
+              <React.Suspense fallback={<div>Loading cart...</div>}>
+                <CartProvider>
+                  <Layout {...data}>
+                    <Outlet />
+                  </Layout>
+                </CartProvider>
+              </React.Suspense>
+            )}
+          </ShopifyProvider>
+        </ApolloProvider>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
