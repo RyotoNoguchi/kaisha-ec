@@ -32,7 +32,9 @@ export default async function handleRequest(request: Request, responseStatusCode
       'https://monorail-edge.shopifysvc.com',
       'http://localhost:*',
       'ws://localhost:*',
-      'ws://127.0.0.1:*'
+      'ws://127.0.0.1:*',
+      'https://itoshima-ochazuke.myshopify.com/api/graphql.json', // Shopify GraphQL API を許可
+      'https://itoshima-ochazuke.myshopify.com/api/2024-04/graphql.json' // Shopify GraphQL API を許可
     ],
     imgSrc: [
       'self',
