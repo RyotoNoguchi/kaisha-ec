@@ -1,3 +1,4 @@
+import { gql, useQuery } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { ChefIntroSection } from '~/components/organisms/ChefIntroSection'
@@ -13,9 +14,52 @@ export const meta: MetaFunction = () => {
 export const loader = async ({ context }: LoaderFunctionArgs) => {
   const { storefront, googleMapsApiKey } = context
   const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY)
-  const featuredCollection = collections.nodes[0]
-  const recommendedProducts = storefront.query(RECOMMENDED_PRODUCTS_QUERY)
 
+  const featuredCollection = collections.nodes[0]
+
+  const SERVER_SIDE_RECOMMENDED_PRODUCTS_FRAGMENT = `#graphql
+    fragment RecommendedProduct on Product {
+    id
+    title
+    handle
+    images(first: 1) {
+      nodes {
+        id
+        url
+        altText
+        width
+        height
+      }
+    }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    variants(first: 1) {
+      nodes {
+        id
+        selectedOptions {
+					name
+					value
+				}
+      }
+    }
+  }
+  `
+
+  const SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY = `#graphql
+    ${SERVER_SIDE_RECOMMENDED_PRODUCTS_FRAGMENT}
+    query RecommendedProducts($country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
+      products(first: 10, sortKey: UPDATED_AT, reverse: true) {
+        nodes {
+          ...RecommendedProduct
+        }
+      }
+    }
+  `
+  const recommendedProducts = await storefront.query<any>(SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY)
   return defer({ featuredCollection, recommendedProducts, googleMapsApiKey })
 }
 
@@ -30,11 +74,14 @@ const carouselImages = [
 
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
-  const { googleMapsApiKey } = data
+  const { googleMapsApiKey, featuredCollection, recommendedProducts } = data
+  const { data: testData } = useQuery(RECOMMENDED_PRODUCTS_QUERY)
   return (
     <div className='home flex flex-col flex-shrink-0 gap-8'>
       <Carousel images={carouselImages} />
-      <MenuSection />
+      {/* <RecommendedProducts products={recommendedProducts} /> */}
+      {/* <RecommendedMenu products={recommendedProducts} /> */}
+      <MenuSection products={recommendedProducts.products.nodes} />
       <ChefIntroSection />
       <TestimonialSection />
       <GoogleMapSection apiKey={googleMapsApiKey} />
@@ -67,17 +114,11 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
 ` as const
 
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+const RECOMMENDED_PRODUCTS_FRAGMENT = gql`
   fragment RecommendedProduct on Product {
     id
     title
     handle
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
     images(first: 1) {
       nodes {
         id
@@ -87,13 +128,62 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
         height
       }
     }
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    variants(first: 1) {
+      nodes {
+        id
+        selectedOptions {
+          name
+          value
+        }
+      }
+    }
   }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-    @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+`
+
+const RECOMMENDED_PRODUCTS_QUERY = gql`
+  ${RECOMMENDED_PRODUCTS_FRAGMENT}
+  query RecommendedProducts($country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
+    products(first: 10, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }
     }
   }
-` as const
+`
+
+// const RECOMMENDED_PRODUCTS_QUERY = `#graphql
+//   fragment RecommendedProduct on Product {
+//     id
+//     title
+//     handle
+//     priceRange {
+//       minVariantPrice {
+//         amount
+//         currencyCode
+//       }
+//     }
+//     images(first: 1) {
+//       nodes {
+//         id
+//         url
+//         altText
+//         width
+//         height
+//       }
+//     }
+//   }
+//   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
+//     @inContext(country: $country, language: $language) {
+//     products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+//       nodes {
+//         ...RecommendedProduct
+//       }
+//     }
+//   }
+// ` as const

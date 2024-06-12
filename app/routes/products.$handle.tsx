@@ -1,8 +1,9 @@
+import { gql, useQuery } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { getSelectedProductOptions } from '@shopify/hydrogen'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
-import type { ProductFragment } from 'storefrontapi.generated'
+import type { ProductFragment, ProductQuery } from 'storefrontapi.generated'
 import { ProductImage } from '~/components/molecules/ProductImage'
 import { ProductMain } from '~/components/organisms/ProductMain'
 import { getVariantUrl } from '~/lib/variants'
@@ -63,9 +64,9 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
   const variants = storefront.query(VARIANTS_QUERY, {
     variables: { handle }
   })
-  return defer({ product, variants })
-}
 
+  return defer({ product, variants, context })
+}
 const redirectToFirstVariant = ({ product, request }: { product: ProductFragment; request: Request }) => {
   const url = new URL(request.url)
   const firstVariant = product.variants.nodes[0]
@@ -86,6 +87,7 @@ const redirectToFirstVariant = ({ product, request }: { product: ProductFragment
 const Product: React.FC = () => {
   const { product, variants } = useLoaderData<typeof loader>()
   const { selectedVariant } = product
+  const { data } = useQuery<ProductQuery>(PRODUCT_DETAIL_QUERY, { variables: { handle: product.handle } })
 
   return (
     <div className='product'>
@@ -135,6 +137,7 @@ const PRODUCT_VARIANT_FRAGMENT = `#graphql
 ` as const
 
 const PRODUCT_FRAGMENT = `#graphql
+  # https://shopify.dev/docs/api/storefront/2024-01/objects/Product#fields
   fragment Product on Product {
     id
     title
@@ -146,7 +149,7 @@ const PRODUCT_FRAGMENT = `#graphql
       name
       values
     }
-    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {
       ...ProductVariant
     }
     variants(first: 1) {
@@ -199,3 +202,48 @@ const VARIANTS_QUERY = `#graphql
     }
   }
 ` as const
+
+const PRODUCT_DETAIL_FRAGMENT = gql`
+  fragment ProductDetail on Product {
+    id
+    title
+    handle
+    description
+    createdAt
+    priceRange {
+      minVariantPrice {
+        amount
+        currencyCode
+      }
+    }
+    variants(first: 10) {
+      edges {
+        node {
+          id
+          title
+          price {
+            amount
+            currencyCode
+          }
+          selectedOptions {
+            name
+            value
+          }
+          image {
+            url
+            altText
+          }
+        }
+      }
+    }
+  }
+`
+
+const PRODUCT_DETAIL_QUERY = gql`
+  query ProductDetail($handle: String!) {
+    product(handle: $handle) {
+      ...ProductDetail
+    }
+  }
+  ${PRODUCT_DETAIL_FRAGMENT}
+`
