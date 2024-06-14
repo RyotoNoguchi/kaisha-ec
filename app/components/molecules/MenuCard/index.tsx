@@ -1,4 +1,4 @@
-import { AddToCartButton, ProductProvider } from '@shopify/hydrogen-react'
+import { AddToCartButton, Image, ProductProvider } from '@shopify/hydrogen-react'
 import { Product } from '@shopify/hydrogen-react/storefront-api-types'
 import React from 'react'
 
@@ -9,21 +9,21 @@ type Props = {
 export const MenuCard: React.FC<Props> = ({ product }) => {
   return (
     <ProductProvider data={product}>
-      <li className='w-56 flex flex-shrink-0 flex-col gap-4 p-4 bg-black mb-2'>
-        {/* eslint-disable-next-line hydrogen/prefer-image-component */}
-        <img src={product.images?.nodes[0].url} alt='bento' className='w-full' />
-        <h3 className='text-secondary font-yumincho'>{product.title}</h3>
-        <div className='flex justify-between items-end'>
-          <div className='flex '>
-            <p className='text-primary text-xl font-bold font-yumincho'>
-              {product.priceRange?.minVariantPrice.amount}
-              {product.priceRange?.minVariantPrice.currencyCode}
-            </p>
+      <li className='w-56 flex flex-shrink-0 flex-col gap-4 p-4 bg-black mb-2 rounded-sm'>
+        <Image data={product.images?.nodes[0]} alt='product image' className='rounded-sm' />
+        <div className='flex flex-col gap-3 flex-1'>
+          <h3 className='text-primary font-yumincho break-words whitespace-normal'>{product.title}</h3>
+          <div className='flex justify-between items-end flex-1'>
+            <div className='flex'>
+              <p className='text-primary text-xl font-semibold font-yumincho'>
+                {product.priceRange?.minVariantPrice.amount}
+                {product.priceRange?.minVariantPrice.currencyCode}
+              </p>
+            </div>
+            <AddToCartButton variantId={product.variants?.nodes[0].id} className='text-black bg-primary px-2 py-1 rounded-full font-yumincho text-lg font-semibold'>
+              予約
+            </AddToCartButton>
           </div>
-          {/* <Button text='予約' fontWeight='extrabold' /> */}
-          <AddToCartButton variantId={product.variants?.nodes[0].id} className='text-white'>
-            予約
-          </AddToCartButton>
         </div>
       </li>
     </ProductProvider>

@@ -51,7 +51,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
 
   const SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY = `#graphql
     ${SERVER_SIDE_RECOMMENDED_PRODUCTS_FRAGMENT}
-    query RecommendedProducts($country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
+    query ServerSideRecommendedProducts($country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
       products(first: 10, sortKey: UPDATED_AT, reverse: true) {
         nodes {
           ...RecommendedProduct
