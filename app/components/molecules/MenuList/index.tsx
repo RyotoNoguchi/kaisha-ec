@@ -7,7 +7,6 @@ type Props = {
 }
 
 export const MenuList: React.FC<Props> = ({ title, products }) => {
-  console.log('%capp/components/molecules/MenuList/index.tsx:17 products', 'color: #26bfa5;', products)
   return (
     <div className='w-full flex flex-col gap-9 p-9 bg-beige'>
       <h2 className='text-2xl font-yumincho font-bold whitespace-nowrap'>{title}</h2>
