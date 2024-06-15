@@ -1,11 +1,11 @@
 import { gql, useQuery } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
+import { Carousel } from '~/components/organisms/Carousel'
 import { ChefIntroSection } from '~/components/organisms/ChefIntroSection'
 import { GoogleMapSection } from '~/components/organisms/GoogleMapSection'
 import { MenuSection } from '~/components/organisms/MenuSection'
 import { TestimonialSection } from '~/components/organisms/TestimonialSection'
-import { Carousel } from './Carousel'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }]
