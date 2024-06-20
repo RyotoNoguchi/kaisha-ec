@@ -27,7 +27,7 @@ export type Scalars = {
 
 /**
  * A version of the API, as defined by [Shopify API versioning](https://shopify.dev/api/usage/versioning).
- * Versions are commonly referred to by their handle (for example, `2021-10`).
+ * Versions are commonly referred to by their handle (fr example, `2021-10`).
  *
  */
 export type ApiVersion = {
