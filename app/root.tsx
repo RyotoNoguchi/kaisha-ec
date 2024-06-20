@@ -17,7 +17,7 @@ import resetStyles from './styles/reset.css'
 
 const client = new ApolloClient({
   link: new HttpLink({
-    uri: 'https://itoshima-ochazuke.myshopify.com/2024-04/api/graphql.json',
+    uri: 'https://itoshima-ochazuke.myshopify.com/api/graphql.json',
     headers: {
       'X-Shopify-Storefront-Access-Token': 'd61c36c751aef8b50b04ca8afc38c6fa'
     }

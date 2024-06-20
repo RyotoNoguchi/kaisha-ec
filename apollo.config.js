@@ -1,3 +1,4 @@
+// 拡張機能「Apollo GraphQL」で使用する設定ファイル
 module.exports = {
   client: {
     service: {
