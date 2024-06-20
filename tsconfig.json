@@ -15,7 +15,8 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true,
     "baseUrl": ".",
-    "types": ["@shopify/oxygen-workers-types"],
+    // "types": ["@shopify/oxygen-workers-types"],
+    "typeRoots": ["./types", "./node_modules/@types"],
     "paths": {
       "~/*": ["app/*"]
     },

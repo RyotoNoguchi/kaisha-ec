@@ -194,6 +194,12 @@ export type RecommendedProductsQuery = {
         images: {
           nodes: Array<Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>>
         }
+        variants: {
+          nodes: {
+            id: string
+            selectedOptions: Array<Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>>
+          }
+        }
       }
     >
   }

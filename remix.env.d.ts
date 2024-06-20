@@ -45,6 +45,7 @@ declare module '@shopify/remix-oxygen' {
     storefront: Storefront<I18nLocale>
     customerAccount: CustomerAccount
     session: AppSession
+    googleMapsApiKey: string
     waitUntil: ExecutionContext['waitUntil']
   }
 }

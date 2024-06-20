@@ -13,7 +13,7 @@ type Props = {
 export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart }) => {
   return (
     <nav className='flex' role='navigation'>
-      <HeaderMenuMobileToggle />
+      {/* <HeaderMenuMobileToggle /> */}
       {/* <NavLink prefetch='intent' to='/account' style={activeLinkStyle}>
         <Suspense fallback='Sign in'>
           <Await resolve={isLoggedIn} errorElement='Sign in'>
@@ -47,7 +47,7 @@ const CartToggle: React.FC<Pick<Props, 'cart'>> = ({ cart }) => (
   <Suspense fallback={<CartBadge count={0} />}>
     <Await resolve={cart}>
       {(cart) => {
-        if (!cart) return <CartBadge count={0} />
+        if (!cart) return <CartBadge count={1} />
       }}
     </Await>
   </Suspense>

@@ -1,7 +1,10 @@
+import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
 import fontAwesome from '@fortawesome/fontawesome-free/css/all.min.css'
 import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useLoaderData, useMatches, useRouteError, type ShouldRevalidateFunction } from '@remix-run/react'
 import { useNonce } from '@shopify/hydrogen'
+import { ShopifyProvider } from '@shopify/hydrogen-react'
 import { defer, type LoaderFunctionArgs, type SerializeFrom } from '@shopify/remix-oxygen'
+import React, { useEffect, useState } from 'react'
 import swiperStyles from 'swiper/css'
 import swiperNavigationStyles from 'swiper/css/navigation'
 import swiperPaginationStyles from 'swiper/css/pagination'
@@ -11,6 +14,18 @@ import { Layout } from '~/components/Layout'
 import favicon from './assets/favicon.svg'
 import appStyles from './styles/app.css'
 import resetStyles from './styles/reset.css'
+
+const client = new ApolloClient({
+  link: new HttpLink({
+    uri: 'https://itoshima-ochazuke.myshopify.com/api/graphql.json',
+    headers: {
+      'X-Shopify-Storefront-Access-Token': 'd61c36c751aef8b50b04ca8afc38c6fa'
+    }
+  }),
+  cache: new InMemoryCache()
+})
+
+const CartProvider = React.lazy(() => import('@shopify/hydrogen-react').then((module) => ({ default: module.CartProvider })))
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -62,6 +77,7 @@ export const useRootLoaderData = () => {
 export async function loader({ context }: LoaderFunctionArgs) {
   const { storefront, customerAccount, cart } = context
   const publicStoreDomain = context.env.PUBLIC_STORE_DOMAIN
+  const publicStorefrontToken = context.env.PUBLIC_STOREFRONT_API_TOKEN
 
   const isLoggedInPromise = customerAccount.isLoggedIn()
   const cartPromise = cart.get()
@@ -88,7 +104,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
       footer: footerPromise,
       header: await headerPromise,
       isLoggedIn: isLoggedInPromise,
-      publicStoreDomain
+      publicStoreDomain,
+      publicStorefrontToken
     },
     {
       headers: {
@@ -98,9 +115,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
   )
 }
 
-export default function App() {
+const App = () => {
   const nonce = useNonce()
   const data = useLoaderData<typeof loader>()
+  const { publicStoreDomain, publicStorefrontToken } = data
+  const [isClient, setIsClient] = useState(false)
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <html lang='en'>
@@ -111,9 +133,21 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Layout {...data}>
-          <Outlet />
-        </Layout>
+        <ApolloProvider client={client}>
+          <ShopifyProvider storeDomain={data.publicStoreDomain} storefrontToken={data.publicStorefrontToken} storefrontApiVersion='2024-04' countryIsoCode='JP' languageIsoCode='JA'>
+            {isClient && (
+              <React.Suspense fallback={<div>Loading cart...</div>}>
+                {/* <ProductProvider> */}
+                <CartProvider>
+                  <Layout {...data}>
+                    <Outlet />
+                  </Layout>
+                </CartProvider>
+                {/* </ProductProvider> */}
+              </React.Suspense>
+            )}
+          </ShopifyProvider>
+        </ApolloProvider>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
         <LiveReload nonce={nonce} />
@@ -121,6 +155,8 @@ export default function App() {
     </html>
   )
 }
+
+export default App
 
 export function ErrorBoundary() {
   const error = useRouteError()
