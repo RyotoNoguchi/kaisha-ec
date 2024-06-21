@@ -9,8 +9,7 @@ import { print } from 'graphql'
 import { useState } from 'react'
 import type { ProductsQuery } from 'src/generated/graphql'
 import type { ProductFragment } from 'storefrontapi.generated'
-import { MinusIcon } from '~/components/atoms/MinusIcon'
-import { PlusIcon } from '~/components/atoms/PlusIcon'
+import { ProductCounter } from '~/components/molecules/ProductCounter'
 import { getVariantUrl } from '~/lib/variants'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -103,11 +102,6 @@ const Product: React.FC = () => {
     url: product?.selectedVariant?.image?.url ?? ''
   }
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: string }>(imageData)
-
-  const handleChangeProductCount = (count: number) => {
-    setProductCount(count)
-  }
-
   const handleImageClick = (image: { altText: string; id: string; url: string }) => {
     setSelectedImage(image)
   }
@@ -139,22 +133,22 @@ const Product: React.FC = () => {
               </div>
               <div className='flex flex-col gap-2'>
                 <p className='text-gray opacity-50 font-semibold'>数量</p>
-                <div className='flex border-gray border-opacity-50 border-2 rounded-md w-max p-2 gap-5'>
-                  <button onClick={() => handleChangeProductCount(productCount - 1)}>
-                    <MinusIcon />
-                  </button>
-                  <p className='text-3xl'>{productCount}</p>
-                  <button onClick={() => handleChangeProductCount(productCount + 1)}>
-                    <PlusIcon />
-                  </button>
-                </div>
+                <ProductCounter
+                  count={productCount}
+                  onIncrement={() => setProductCount(productCount + 1)}
+                  onDecrement={() => setProductCount(productCount - 1)}
+                  iconWidth={32}
+                  iconHeight={34}
+                  maxHeight={14}
+                  gap={5}
+                  textSize='3xl'
+                />
               </div>
               <div className='flex gap-2'>
                 {product.selectedVariant.availableForSale && (
                   <>
                     <AddToCartButton
-                      // quantity={productCount}
-                      quantity={1}
+                      quantity={productCount}
                       variantId={product?.selectedVariant?.id}
                       className='bg-yellow text-grayOpacity py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2'
                     >

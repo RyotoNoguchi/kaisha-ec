@@ -1,4 +1,4 @@
-import { Await } from '@remix-run/react'
+import { Await, Link } from '@remix-run/react'
 import { Suspense } from 'react'
 import type { CartApiQueryFragment } from 'storefrontapi.generated'
 import { CartIcon } from '~/components/atoms/CartIcon'
@@ -37,9 +37,9 @@ const HeaderMenuMobileToggle: React.FC = () => (
 
 // const CartBadge: React.FC<{ count: number }> = ({ count }) => <a href='#cart-aside'>Cart {count}</a>
 const CartBadge: React.FC<{ count: number }> = ({ count }) => (
-  <a href='#cart-aside'>
+  <Link to='/cart'>
     <CartIcon />
-  </a>
+  </Link>
 )
 
 // TODO Implement cart icon with count

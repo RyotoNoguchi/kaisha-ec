@@ -1,6 +1,11 @@
-export const MinusIcon = () => {
+type Props = {
+  width: number
+  height: number
+}
+
+export const MinusIcon = ({ width, height }: Props) => {
   return (
-    <svg width='32' height='34' viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <svg width={width} height={height} viewBox='0 0 16 17' fill='none' xmlns='http://www.w3.org/2000/svg'>
       <path d='M11.3333 8.5H4.66666' stroke='#000000' strokeOpacity='0.5' strokeLinecap='round' />
       <path
         fillRule='evenodd'

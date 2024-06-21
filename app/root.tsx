@@ -137,13 +137,11 @@ const App = () => {
           <ShopifyProvider storeDomain={data.publicStoreDomain} storefrontToken={data.publicStorefrontToken} storefrontApiVersion='2024-04' countryIsoCode='JP' languageIsoCode='JA'>
             {isClient && (
               <React.Suspense fallback={<div>Loading cart...</div>}>
-                {/* <ProductProvider> */}
                 <CartProvider>
                   <Layout {...data}>
                     <Outlet />
                   </Layout>
                 </CartProvider>
-                {/* </ProductProvider> */}
               </React.Suspense>
             )}
           </ShopifyProvider>

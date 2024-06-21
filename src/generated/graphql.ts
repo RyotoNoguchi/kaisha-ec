@@ -1,6 +1,5 @@
 import * as Apollo from '@apollo/client'
-// eslint-disable-next-line hydrogen/prefer-gql
-import { gql } from '@apollo/client'
+import { gql } from '@shopify/hydrogen'
 export type Maybe<T> = T | null
 export type InputMaybe<T> = Maybe<T>
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] }
@@ -27,7 +26,7 @@ export type Scalars = {
 
 /**
  * A version of the API, as defined by [Shopify API versioning](https://shopify.dev/api/usage/versioning).
- * Versions are commonly referred to by their handle (fr example, `2021-10`).
+ * Versions are commonly referred to by their handle (for example, `2021-10`).
  *
  */
 export type ApiVersion = {
