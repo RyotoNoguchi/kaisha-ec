@@ -1,4 +1,3 @@
-// eslint-disable-next-line hydrogen/prefer-gql
 import { gql, useQuery } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'

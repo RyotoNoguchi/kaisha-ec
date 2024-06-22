@@ -1,4 +1,3 @@
-// eslint-disable-next-line hydrogen/prefer-gql
 import { gql } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { Image, Money, getSelectedProductOptions } from '@shopify/hydrogen'
@@ -7,7 +6,7 @@ import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
-import type { ProductsQuery } from 'src/generated/graphql'
+import type { ProductsQuery } from 'src/gql/graphql'
 import type { ProductFragment } from 'storefrontapi.generated'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import { getVariantUrl } from '~/lib/variants'
