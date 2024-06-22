@@ -1,6 +1,6 @@
 import { Link } from '@remix-run/react'
 import { AddToCartButton, Image, ProductProvider } from '@shopify/hydrogen-react'
-import { Product } from '@shopify/hydrogen-react/storefront-api-types'
+import type { Product } from '@shopify/hydrogen-react/storefront-api-types'
 import React from 'react'
 
 type Props = {

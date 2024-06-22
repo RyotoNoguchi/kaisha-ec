@@ -1,4 +1,4 @@
-import { Product } from '@shopify/hydrogen-react/storefront-api-types'
+import type { Product } from '@shopify/hydrogen-react/storefront-api-types'
 import React from 'react'
 // import { ChefIntro } from '~/components/molecules/ChefIntro'
 import { MenuList } from '~/components/molecules/MenuList'

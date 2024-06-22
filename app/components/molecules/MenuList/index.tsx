@@ -1,4 +1,4 @@
-import { Product } from '@shopify/hydrogen-react/storefront-api-types'
+import type { Product } from '@shopify/hydrogen-react/storefront-api-types'
 import { MenuCard } from '~/components/molecules/MenuCard'
 
 type Props = {

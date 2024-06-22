@@ -1,6 +1,7 @@
-import { Link, useLoaderData } from '@remix-run/react'
-import { Image, Pagination, getPaginationVariables } from '@shopify/hydrogen'
-import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
+import { json, Link, useLoaderData } from '@remix-run/react'
+import { getPaginationVariables } from '@shopify/hydrogen'
+import { Image } from '@shopify/hydrogen-react'
+import type { LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import type { CollectionFragment } from 'storefrontapi.generated'
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
@@ -15,26 +16,27 @@ export async function loader({ context, request }: LoaderFunctionArgs) {
   return json({ collections })
 }
 
-export default function Collections() {
+const Collections = () => {
   const { collections } = useLoaderData<typeof loader>()
-
   return (
     <div className='collections'>
       <h1>Collections</h1>
-      <Pagination connection={collections}>
-        {({ nodes, isLoading, PreviousLink, NextLink }) => (
-          <div>
-            <PreviousLink>{isLoading ? 'Loading...' : <span>↑ Load previous</span>}</PreviousLink>
-            <CollectionsGrid collections={nodes} />
-            <NextLink>{isLoading ? 'Loading...' : <span>Load more ↓</span>}</NextLink>
-          </div>
-        )}
-      </Pagination>
+      {/* <Pagination connection={collections}>
+      {({ nodes, isLoading, PreviousLink, NextLink }) => (
+        <div>
+          <PreviousLink>{isLoading ? 'Loading...' : <span>↑ Load previous</span>}</PreviousLink>
+          <CollectionsGrid collections={nodes} />
+          <NextLink>{isLoading ? 'Loading...' : <span>Load more ↓</span>}</NextLink>
+        </div>
+      )}
+    </Pagination> */}
     </div>
   )
 }
 
-function CollectionsGrid({ collections }: { collections: CollectionFragment[] }) {
+export default Collections
+
+const CollectionsGrid = ({ collections }: { collections: CollectionFragment[] }) => {
   return (
     <div className='collections-grid'>
       {collections.map((collection, index) => (
@@ -44,7 +46,7 @@ function CollectionsGrid({ collections }: { collections: CollectionFragment[] })
   )
 }
 
-function CollectionItem({ collection, index }: { collection: CollectionFragment; index: number }) {
+const CollectionItem = ({ collection, index }: { collection: CollectionFragment; index: number }) => {
   return (
     <Link className='collection-item' key={collection.id} to={`/collections/${collection.handle}`} prefetch='intent'>
       {collection?.image && <Image alt={collection.image.altText || collection.title} aspectRatio='1/1' data={collection.image} loading={index < 3 ? 'eager' : undefined} />}
