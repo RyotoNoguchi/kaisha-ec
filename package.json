@@ -32,7 +32,7 @@
     "@vis.gl/react-google-maps": "^1.0.2",
     "fast-equals": "^5.0.1",
     "google-maps-react": "^2.0.6",
-    "graphql": "^16.8.1",
+    "graphql": "^16.9.0",
     "graphql-config": "^5.0.3",
     "graphql-tag": "^2.12.6",
     "isbot": "^3.6.6",
@@ -44,9 +44,11 @@
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.5.0",
     "@graphql-codegen/cli": "^5.0.2",
+    "@graphql-codegen/client-preset": "^4.3.0",
     "@graphql-codegen/typescript": "^4.0.7",
     "@graphql-codegen/typescript-operations": "^4.2.1",
     "@graphql-codegen/typescript-react-apollo": "^4.3.0",
+    "@parcel/watcher": "^2.4.1",
     "@remix-run/dev": "^2.8.0",
     "@remix-run/eslint-config": "^2.8.0",
     "@shopify/oxygen-workers-types": "^4.0.0",
@@ -74,7 +76,8 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "stylelint": "^16.3.1",
     "tailwindcss": "^3.3.0",
-    "typescript": "^5.2.2"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
   },
   "resolutions": {
     "@typescript-eslint/eslint-plugin": "5.59.0"
