@@ -1,5 +1,4 @@
 module.exports = {
-  ...require('@shopify/prettier-config'),
   trailingComma: 'none',
   semi: false,
   tabWidth: 2,
