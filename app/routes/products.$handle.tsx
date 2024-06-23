@@ -6,8 +6,7 @@ import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
-import type { ProductsQuery } from 'src/gql/graphql'
-import type { ProductFragment } from 'storefrontapi.generated'
+import type { ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment, ProductsQuery } from 'src/gql/graphql'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import { getVariantUrl } from '~/lib/variants'
 
@@ -37,8 +36,9 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
     throw new Error('Expected product handle to be defined')
   }
 
+  type MyProductQueryType = { product: MyProductFragment & { selectedVariant: MyProductVariantFragment } }
   // await the query for the critical product data
-  const { product } = await storefront.query(print(PRODUCT_QUERY), {
+  const { product } = await storefront.query<MyProductQueryType>(print(PRODUCT_QUERY), {
     variables: { handle, selectedOptions }
   })
 
@@ -46,7 +46,7 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
     throw new Response(null, { status: 404 })
   }
 
-  const firstVariant = product.variants.nodes[0]
+  const firstVariant = product.variants.nodes[0] as MyProductVariantFragment
   const firstVariantIsDefault = Boolean(firstVariant.selectedOptions.find((option: SelectedOption) => option.name === 'Title' && option.value === 'Default Title'))
 
   if (firstVariantIsDefault) {
@@ -74,9 +74,9 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
 
   return defer({ product, variants, context, selectedOptions, products })
 }
-const redirectToFirstVariant = ({ product, request }: { product: ProductFragment; request: Request }) => {
+const redirectToFirstVariant = ({ product, request }: { product: MyProductFragment; request: Request }) => {
   const url = new URL(request.url)
-  const firstVariant = product.variants.nodes[0]
+  const firstVariant = product.variants.nodes[0] as MyProductVariantFragment
 
   return redirect(
     getVariantUrl({
@@ -93,6 +93,7 @@ const redirectToFirstVariant = ({ product, request }: { product: ProductFragment
 
 const Product: React.FC = () => {
   const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
+  // console.log('%capp/routes/products.$handle.tsx:97 product', 'color: #26bfa5;', product)
   const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
   const imageData = {
@@ -100,8 +101,8 @@ const Product: React.FC = () => {
     id: product?.selectedVariant?.image?.id ?? '',
     url: product?.selectedVariant?.image?.url ?? ''
   }
-  const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: string }>(imageData)
-  const handleImageClick = (image: { altText: string; id: string; url: string }) => {
+  const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
+  const handleImageClick = (image: { altText: string; id: string; url: URL }) => {
     setSelectedImage(image)
   }
 
@@ -112,14 +113,20 @@ const Product: React.FC = () => {
           <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
             <div className='flex flex-col relative gap-4 flex-1 sm:aspect-square justify-center items-center'>
               <Image
-                data={{ ...product?.selectedVariant?.image, altText: selectedImage.altText, id: selectedImage.id, url: selectedImage.url }}
+                data={{ ...product?.selectedVariant?.image, altText: selectedImage.altText, id: selectedImage.id, url: selectedImage.url.toString() }}
                 className='w-full h-full object-cover sm:max-w-96 sm:max-h-96 flex-1'
               />
               <ul className='w-full gap-8 overflow-x-auto whitespace-nowrap px-4 lg:px-10 xl:px-24 hidden sm:flex'>
                 {product?.images?.edges &&
-                  product.images.edges.map((image: { node: { altText: string; url: string; id: string } }) => (
+                  product.images.edges.map((image: { node: { url?: any; altText: string | null; id: string | null } }) => (
                     <li key={image.node.id} className='cursor-pointer'>
-                      <Image data={image.node} className='w-full h-full max-w-20 max-h-20' onClick={() => handleImageClick({ altText: image.node.altText, id: image.node.id, url: image.node.url })} />
+                      {image.node.url && (
+                        <Image
+                          data={{ url: image.node.url as string, altText: image.node.altText ?? '', id: image.node.id ?? '' }}
+                          className='w-full h-full max-w-20 max-h-20'
+                          onClick={() => handleImageClick({ altText: image.node.altText ?? '', id: image.node.id ?? '', url: new URL(image.node.url) })}
+                        />
+                      )}
                     </li>
                   ))}
               </ul>
@@ -174,7 +181,7 @@ const Product: React.FC = () => {
                   </h4>
                   {isIngredientsOpen && (
                     <p className=''>
-                      テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。
+                      テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。
                     </p>
                   )}
                 </div>
@@ -206,9 +213,9 @@ const Product: React.FC = () => {
             <h3 className='text-2xl font-semibold'>ご一緒にいかがですか？</h3>
             <ul className='w-full gap-6 flex overflow-x-auto'>
               {/* TODO Adminでデータ作成したら、RecommendedProductsに置換 */}
-              {product?.images?.edges?.map((image: { node: { altText: string; url: string; id: string } }) => (
+              {product.images.edges.map((image: { node: { url?: URL; altText: string | null; id: string | null } }) => (
                 <li key={image.node.id}>
-                  <Image data={image.node} className='min-w-32 md:min-w-48 max-w-48' />
+                  <Image data={{ url: image.node.url?.toString() ?? '', altText: image.node.altText ?? '', id: image.node.id ?? '' }} className='min-w-32 md:min-w-48 max-w-48' />
                 </li>
               ))}
             </ul>
