@@ -7980,6 +7980,7 @@ export type AllProductsQuery = {
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
+  quantityAvailable: number | null
   id: string
   sku: string | null
   title: string
@@ -8056,6 +8057,7 @@ export const ProductVariantFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quantityAvailable' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'compareAtPrice' },
@@ -8236,6 +8238,7 @@ export const ProductFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quantityAvailable' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'compareAtPrice' },
@@ -8350,6 +8353,7 @@ export const ProductVariantsFragmentDoc = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quantityAvailable' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'compareAtPrice' },
@@ -8690,6 +8694,7 @@ export const ProductDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quantityAvailable' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'compareAtPrice' },
@@ -8905,6 +8910,7 @@ export const ProductVariantsDocument = {
         kind: 'SelectionSet',
         selections: [
           { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+          { kind: 'Field', name: { kind: 'Name', value: 'quantityAvailable' } },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'compareAtPrice' },

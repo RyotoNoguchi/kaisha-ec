@@ -238,6 +238,7 @@ export default Product
 const PRODUCT_VARIANT_FRAGMENT = gql`
   fragment ProductVariant on ProductVariant {
     availableForSale
+    quantityAvailable
     compareAtPrice {
       amount
       currencyCode
