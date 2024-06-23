@@ -130,19 +130,23 @@ const Product: React.FC = () => {
                 <h2 className='text-2xl md:text-3xl lg:text-4xl font-extrabold'>{product.title}</h2>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
-              <div className='flex flex-col gap-2'>
-                <p className='text-gray opacity-50 font-semibold'>数量</p>
-                <ProductCounter
-                  count={productCount}
-                  onIncrement={() => setProductCount(productCount + 1)}
-                  onDecrement={() => setProductCount(productCount - 1)}
-                  iconWidth={32}
-                  iconHeight={34}
-                  maxHeight={14}
-                  gap={5}
-                  textSize='3xl'
-                />
-              </div>
+              {product.selectedVariant.availableForSale ? (
+                <div className='flex flex-col gap-2'>
+                  <p className='text-gray opacity-50 font-semibold'>数量</p>
+                  <ProductCounter
+                    count={productCount}
+                    onIncrement={() => setProductCount(productCount + 1)}
+                    onDecrement={() => setProductCount(productCount - 1)}
+                    iconWidth={32}
+                    iconHeight={34}
+                    maxHeight={14}
+                    gap={5}
+                    textSize='3xl'
+                  />
+                </div>
+              ) : (
+                <p className='text-gray'>申し訳ございませんが、こちらの商品は現在販売停止中です</p>
+              )}
               <div className='flex gap-2'>
                 {product.selectedVariant.availableForSale && (
                   <>
