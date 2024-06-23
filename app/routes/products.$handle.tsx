@@ -153,7 +153,7 @@ const Product: React.FC = () => {
                     <AddToCartButton
                       quantity={productCount}
                       variantId={product?.selectedVariant?.id}
-                      className='bg-yellow text-grayOpacity py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2'
+                      className='bg-yellow text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2'
                     >
                       カートに追加
                     </AddToCartButton>
