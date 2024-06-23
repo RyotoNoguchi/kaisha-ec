@@ -7929,6 +7929,31 @@ export type WeightUnit =
   /** 1 pound equals 16 ounces. */
   | 'POUNDS'
 
+export type AllProductsQueryVariables = Exact<{
+  country: InputMaybe<CountryCode>
+  endCursor: InputMaybe<Scalars['String']['input']>
+  first: InputMaybe<Scalars['Int']['input']>
+  language: InputMaybe<LanguageCode>
+  last: InputMaybe<Scalars['Int']['input']>
+  startCursor: InputMaybe<Scalars['String']['input']>
+}>
+
+export type AllProductsQuery = {
+  __typename?: 'QueryRoot'
+  products: {
+    __typename?: 'ProductConnection'
+    edges: Array<{ __typename?: 'ProductEdge'; cursor: string; node: { __typename?: 'Product'; id: string; featuredImage: { __typename?: 'Image'; id: string | null; url: any } | null } }>
+    nodes: Array<{
+      __typename?: 'Product'
+      id: string
+      title: string
+      images: { __typename?: 'ImageConnection'; nodes: Array<{ __typename?: 'Image'; id: string | null; url: any }> }
+      featuredImage: { __typename?: 'Image'; id: string | null; url: any } | null
+    }>
+    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string | null; endCursor: string | null }
+  }
+}
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -7994,31 +8019,6 @@ export type ProductsQuery = {
       description: string
       images: { __typename?: 'ImageConnection'; edges: Array<{ __typename?: 'ImageEdge'; node: { __typename?: 'Image'; url: any } }> }
     }>
-  }
-}
-
-export type AllProductsQueryVariables = Exact<{
-  country: InputMaybe<CountryCode>
-  endCursor: InputMaybe<Scalars['String']['input']>
-  first: InputMaybe<Scalars['Int']['input']>
-  language: InputMaybe<LanguageCode>
-  last: InputMaybe<Scalars['Int']['input']>
-  startCursor: InputMaybe<Scalars['String']['input']>
-}>
-
-export type AllProductsQuery = {
-  __typename?: 'QueryRoot'
-  products: {
-    __typename?: 'ProductConnection'
-    edges: Array<{ __typename?: 'ProductEdge'; cursor: string; node: { __typename?: 'Product'; id: string; featuredImage: { __typename?: 'Image'; id: string | null; url: any } | null } }>
-    nodes: Array<{
-      __typename?: 'Product'
-      id: string
-      title: string
-      images: { __typename?: 'ImageConnection'; nodes: Array<{ __typename?: 'Image'; id: string | null; url: any }> }
-      featuredImage: { __typename?: 'Image'; id: string | null; url: any } | null
-    }>
-    pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string | null; endCursor: string | null }
   }
 }
 
@@ -8405,6 +8405,141 @@ export const ProductVariantsFragmentDoc = {
     }
   ]
 } as unknown as DocumentNode<ProductVariantsFragment, unknown>
+export const AllProductsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'AllProducts' },
+      variableDefinitions: [
+        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'country' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'CountryCode' } } },
+        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'endCursor' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
+        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'language' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'LanguageCode' } } },
+        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
+        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'startCursor' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } }
+      ],
+      directives: [
+        {
+          kind: 'Directive',
+          name: { kind: 'Name', value: 'inContext' },
+          arguments: [
+            { kind: 'Argument', name: { kind: 'Name', value: 'country' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'country' } } },
+            { kind: 'Argument', name: { kind: 'Name', value: 'language' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'language' } } }
+          ]
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'products' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'last' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'last' } } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'before' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'startCursor' } } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'after' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'endCursor' } } }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'edges' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'cursor' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'node' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'featuredImage' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'images' },
+                        arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '1' } }],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'nodes' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'featuredImage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'pageInfo' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'hasPreviousPage' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'startCursor' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<AllProductsQuery, AllProductsQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [
@@ -8836,138 +8971,3 @@ export const ProductsDocument = {
     }
   ]
 } as unknown as DocumentNode<ProductsQuery, ProductsQueryVariables>
-export const AllProductsDocument = {
-  kind: 'Document',
-  definitions: [
-    {
-      kind: 'OperationDefinition',
-      operation: 'query',
-      name: { kind: 'Name', value: 'AllProducts' },
-      variableDefinitions: [
-        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'country' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'CountryCode' } } },
-        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'endCursor' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } },
-        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'first' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'language' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'LanguageCode' } } },
-        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'last' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'Int' } } },
-        { kind: 'VariableDefinition', variable: { kind: 'Variable', name: { kind: 'Name', value: 'startCursor' } }, type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } }
-      ],
-      directives: [
-        {
-          kind: 'Directive',
-          name: { kind: 'Name', value: 'inContext' },
-          arguments: [
-            { kind: 'Argument', name: { kind: 'Name', value: 'country' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'country' } } },
-            { kind: 'Argument', name: { kind: 'Name', value: 'language' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'language' } } }
-          ]
-        }
-      ],
-      selectionSet: {
-        kind: 'SelectionSet',
-        selections: [
-          {
-            kind: 'Field',
-            name: { kind: 'Name', value: 'products' },
-            arguments: [
-              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'first' } } },
-              { kind: 'Argument', name: { kind: 'Name', value: 'last' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'last' } } },
-              { kind: 'Argument', name: { kind: 'Name', value: 'before' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'startCursor' } } },
-              { kind: 'Argument', name: { kind: 'Name', value: 'after' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'endCursor' } } }
-            ],
-            selectionSet: {
-              kind: 'SelectionSet',
-              selections: [
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'edges' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'cursor' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'node' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'featuredImage' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                                  { kind: 'Field', name: { kind: 'Name', value: 'url' } }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'nodes' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'images' },
-                        arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '1' } }],
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'nodes' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                                  { kind: 'Field', name: { kind: 'Name', value: 'url' } }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'featuredImage' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'url' } }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: 'Field',
-                  name: { kind: 'Name', value: 'pageInfo' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'hasNextPage' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'hasPreviousPage' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'startCursor' } },
-                      { kind: 'Field', name: { kind: 'Name', value: 'endCursor' } }
-                    ]
-                  }
-                }
-              ]
-            }
-          }
-        ]
-      }
-    }
-  ]
-} as unknown as DocumentNode<AllProductsQuery, AllProductsQueryVariables>

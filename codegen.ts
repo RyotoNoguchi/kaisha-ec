@@ -9,7 +9,14 @@ const config: CodegenConfig = {
       }
     }
   },
-  documents: ['app/routes/_index.tsx', 'app/routes/products.$handle.tsx', 'app/routes/products._index.tsx', 'app/routes/cart.tsx', 'app/routes/collections._index.tsx'],
+  documents: [
+    'app/graphql/storefront/queries.ts',
+    'app/routes/_index.tsx',
+    'app/routes/products.$handle.tsx',
+    'app/routes/products._index.tsx',
+    'app/routes/cart.tsx',
+    'app/routes/collections._index.tsx'
+  ],
   ignoreNoDocuments: true, // for better experience with the watcher
   generates: {
     './src/gql/': {

@@ -12,6 +12,8 @@ import * as types from './graphql'
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
+  '\n  query AllProducts($country: CountryCode, $endCursor: String, $first: Int, $language: LanguageCode, $last: Int, $startCursor: String) @inContext(country: $country, language: $language) {\n    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {\n      edges {\n        cursor\n        node {\n          id\n          featuredImage {\n            id\n            url\n          }\n        }\n      }\n      nodes {\n        id\n        title\n        images(first: 1) {\n          nodes {\n            id\n            url\n          }\n        }\n        featuredImage {\n          id\n          url\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n':
+    types.AllProductsDocument,
   '\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n':
     types.ProductVariantFragmentDoc,
   '\n  # https://shopify.dev/docs/api/storefront/2024-01/objects/Product#fields\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    options {\n      name\n      values\n    }\n    images(first: 250) {\n      edges {\n        node {\n          url\n          altText\n          id\n        }\n      }\n    }\n    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    variants(first: 1) {\n      nodes {\n        ...ProductVariant\n      }\n    }\n    seo {\n      description\n      title\n    }\n  }\n  \n':
@@ -22,9 +24,7 @@ const documents = {
   '\n  \n  query ProductVariants($country: CountryCode, $language: LanguageCode, $handle: String!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...ProductVariants\n    }\n  }\n':
     types.ProductVariantsDocument,
   '\n  query Products {\n    products(first: 250) {\n      nodes {\n        id\n        title\n        handle\n        description\n        images(first: 250) {\n          edges {\n            node {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    types.ProductsDocument,
-  '\n  query AllProducts($country: CountryCode, $endCursor: String, $first: Int, $language: LanguageCode, $last: Int, $startCursor: String) @inContext(country: $country, language: $language) {\n    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {\n      edges {\n        cursor\n        node {\n          id\n          featuredImage {\n            id\n            url\n          }\n        }\n      }\n      nodes {\n        id\n        title\n        images(first: 1) {\n          nodes {\n            id\n            url\n          }\n        }\n        featuredImage {\n          id\n          url\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n':
-    types.AllProductsDocument
+    types.ProductsDocument
 }
 
 /**
@@ -41,6 +41,12 @@ const documents = {
  */
 export function graphql(source: string): unknown
 
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query AllProducts($country: CountryCode, $endCursor: String, $first: Int, $language: LanguageCode, $last: Int, $startCursor: String) @inContext(country: $country, language: $language) {\n    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {\n      edges {\n        cursor\n        node {\n          id\n          featuredImage {\n            id\n            url\n          }\n        }\n      }\n      nodes {\n        id\n        title\n        images(first: 1) {\n          nodes {\n            id\n            url\n          }\n        }\n        featuredImage {\n          id\n          url\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query AllProducts($country: CountryCode, $endCursor: String, $first: Int, $language: LanguageCode, $last: Int, $startCursor: String) @inContext(country: $country, language: $language) {\n    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {\n      edges {\n        cursor\n        node {\n          id\n          featuredImage {\n            id\n            url\n          }\n        }\n      }\n      nodes {\n        id\n        title\n        images(first: 1) {\n          nodes {\n            id\n            url\n          }\n        }\n        featuredImage {\n          id\n          url\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
@@ -77,12 +83,6 @@ export function graphql(
 export function graphql(
   source: '\n  query Products {\n    products(first: 250) {\n      nodes {\n        id\n        title\n        handle\n        description\n        images(first: 250) {\n          edges {\n            node {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n'
 ): (typeof documents)['\n  query Products {\n    products(first: 250) {\n      nodes {\n        id\n        title\n        handle\n        description\n        images(first: 250) {\n          edges {\n            node {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  query AllProducts($country: CountryCode, $endCursor: String, $first: Int, $language: LanguageCode, $last: Int, $startCursor: String) @inContext(country: $country, language: $language) {\n    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {\n      edges {\n        cursor\n        node {\n          id\n          featuredImage {\n            id\n            url\n          }\n        }\n      }\n      nodes {\n        id\n        title\n        images(first: 1) {\n          nodes {\n            id\n            url\n          }\n        }\n        featuredImage {\n          id\n          url\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n'
-): (typeof documents)['\n  query AllProducts($country: CountryCode, $endCursor: String, $first: Int, $language: LanguageCode, $last: Int, $startCursor: String) @inContext(country: $country, language: $language) {\n    products(first: $first, last: $last, before: $startCursor, after: $endCursor) {\n      edges {\n        cursor\n        node {\n          id\n          featuredImage {\n            id\n            url\n          }\n        }\n      }\n      nodes {\n        id\n        title\n        images(first: 1) {\n          nodes {\n            id\n            url\n          }\n        }\n        featuredImage {\n          id\n          url\n        }\n      }\n      pageInfo {\n        hasNextPage\n        hasPreviousPage\n        startCursor\n        endCursor\n      }\n    }\n  }\n']
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {}
