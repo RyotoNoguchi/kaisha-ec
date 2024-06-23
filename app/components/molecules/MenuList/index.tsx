@@ -1,18 +1,19 @@
-import type { Product } from '@shopify/hydrogen-react/storefront-api-types'
+import type { AllProductsQuery } from 'src/gql/graphql'
 import { MenuCard } from '~/components/molecules/MenuCard'
 
 type Props = {
   title: string
-  products: Partial<Product>[]
+  products: AllProductsQuery['products']['nodes']
 }
 
 export const MenuList: React.FC<Props> = ({ title, products }) => {
+  const productVariants = products.flatMap((product) => product.variants.nodes)
   return (
     <div className='w-full flex flex-col gap-9 p-9 bg-beige'>
       <h2 className='text-2xl font-yumincho font-bold whitespace-nowrap'>{title}</h2>
       <ul className='w-full flex gap-8 overflow-x-auto whitespace-nowrap'>
-        {products.map((product) => (
-          <MenuCard key={product.id} product={product} />
+        {productVariants.map((variant) => (
+          <MenuCard key={variant.id} variant={variant} />
         ))}
       </ul>
       <div className='flex justify-center'>

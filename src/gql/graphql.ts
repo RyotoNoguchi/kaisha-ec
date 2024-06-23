@@ -7942,13 +7942,36 @@ export type AllProductsQuery = {
   __typename?: 'QueryRoot'
   products: {
     __typename?: 'ProductConnection'
-    edges: Array<{ __typename?: 'ProductEdge'; cursor: string; node: { __typename?: 'Product'; id: string; featuredImage: { __typename?: 'Image'; id: string | null; url: any } | null } }>
     nodes: Array<{
       __typename?: 'Product'
       id: string
       title: string
-      images: { __typename?: 'ImageConnection'; nodes: Array<{ __typename?: 'Image'; id: string | null; url: any }> }
-      featuredImage: { __typename?: 'Image'; id: string | null; url: any } | null
+      handle: string
+      featuredImage: { __typename?: 'Image'; id: string | null; url: any; altText: string | null; height: number | null; width: number | null } | null
+      variants: {
+        __typename?: 'ProductVariantConnection'
+        nodes: Array<{
+          __typename?: 'ProductVariant'
+          id: string
+          title: string
+          availableForSale: boolean
+          image: { __typename?: 'Image'; id: string | null; url: any; altText: string | null; height: number | null; width: number | null } | null
+          selectedOptions: Array<{ __typename?: 'SelectedOption'; name: string; value: string }>
+          product: {
+            __typename?: 'Product'
+            id: string
+            title: string
+            handle: string
+            priceRange: { __typename?: 'ProductPriceRange'; minVariantPrice: { __typename?: 'MoneyV2'; amount: any; currencyCode: CurrencyCode } }
+            featuredImage: { __typename?: 'Image'; id: string | null; url: any; altText: string | null; height: number | null; width: number | null } | null
+          }
+        }>
+      }
+      priceRange: {
+        __typename?: 'ProductPriceRange'
+        minVariantPrice: { __typename?: 'MoneyV2'; amount: any; currencyCode: CurrencyCode }
+        maxVariantPrice: { __typename?: 'MoneyV2'; amount: any; currencyCode: CurrencyCode }
+      }
     }>
     pageInfo: { __typename?: 'PageInfo'; hasNextPage: boolean; hasPreviousPage: boolean; startCursor: string | null; endCursor: string | null }
   }
@@ -8447,47 +8470,31 @@ export const AllProductsDocument = {
               selections: [
                 {
                   kind: 'Field',
-                  name: { kind: 'Name', value: 'edges' },
-                  selectionSet: {
-                    kind: 'SelectionSet',
-                    selections: [
-                      { kind: 'Field', name: { kind: 'Name', value: 'cursor' } },
-                      {
-                        kind: 'Field',
-                        name: { kind: 'Name', value: 'node' },
-                        selectionSet: {
-                          kind: 'SelectionSet',
-                          selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            {
-                              kind: 'Field',
-                              name: { kind: 'Name', value: 'featuredImage' },
-                              selectionSet: {
-                                kind: 'SelectionSet',
-                                selections: [
-                                  { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                                  { kind: 'Field', name: { kind: 'Name', value: 'url' } }
-                                ]
-                              }
-                            }
-                          ]
-                        }
-                      }
-                    ]
-                  }
-                },
-                {
-                  kind: 'Field',
                   name: { kind: 'Name', value: 'nodes' },
                   selectionSet: {
                     kind: 'SelectionSet',
                     selections: [
                       { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                       { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'images' },
-                        arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '1' } }],
+                        name: { kind: 'Name', value: 'featuredImage' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'width' } }
+                          ]
+                        }
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'variants' },
+                        arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '250' } }],
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
@@ -8498,7 +8505,79 @@ export const AllProductsDocument = {
                                 kind: 'SelectionSet',
                                 selections: [
                                   { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                                  { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                                  { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'image' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'width' } }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'selectedOptions' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'value' } }
+                                      ]
+                                    }
+                                  },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'product' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'priceRange' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              {
+                                                kind: 'Field',
+                                                name: { kind: 'Name', value: 'minVariantPrice' },
+                                                selectionSet: {
+                                                  kind: 'SelectionSet',
+                                                  selections: [
+                                                    { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                                                    { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } }
+                                                  ]
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'featuredImage' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'width' } }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
                                 ]
                               }
                             }
@@ -8507,12 +8586,32 @@ export const AllProductsDocument = {
                       },
                       {
                         kind: 'Field',
-                        name: { kind: 'Name', value: 'featuredImage' },
+                        name: { kind: 'Name', value: 'priceRange' },
                         selectionSet: {
                           kind: 'SelectionSet',
                           selections: [
-                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                            { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'minVariantPrice' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } }
+                                ]
+                              }
+                            },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'maxVariantPrice' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'amount' } },
+                                  { kind: 'Field', name: { kind: 'Name', value: 'currencyCode' } }
+                                ]
+                              }
+                            }
                           ]
                         }
                       }

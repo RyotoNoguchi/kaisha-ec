@@ -1,20 +1,29 @@
-import { gql, useQuery } from '@apollo/client'
+import { gql } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
+import { getPaginationVariables } from '@shopify/hydrogen'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
+import { print } from 'graphql'
+import type { AllProductsQuery } from 'src/gql/graphql'
 import { Carousel } from '~/components/organisms/Carousel'
 import { ChefIntroSection } from '~/components/organisms/ChefIntroSection'
 import { GoogleMapSection } from '~/components/organisms/GoogleMapSection'
 import { MenuSection } from '~/components/organisms/MenuSection'
 import { TestimonialSection } from '~/components/organisms/TestimonialSection'
+import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Hydrogen | Home' }]
 }
 
-export const loader = async ({ context }: LoaderFunctionArgs) => {
+export const loader = async ({ context, request }: LoaderFunctionArgs) => {
   const { storefront, googleMapsApiKey } = context
   const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY)
-
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 4
+  })
+  const { products } = await context.storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
+    variables: paginationVariables
+  })
   const featuredCollection = collections.nodes[0]
 
   const SERVER_SIDE_RECOMMENDED_PRODUCTS_FRAGMENT = `#graphql
@@ -60,7 +69,7 @@ export const loader = async ({ context }: LoaderFunctionArgs) => {
     }
   `
   const recommendedProducts = await storefront.query<any>(SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY)
-  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey })
+  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products })
 }
 
 const carouselImages = [
@@ -74,14 +83,12 @@ const carouselImages = [
 
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
-  const { googleMapsApiKey, featuredCollection, recommendedProducts } = data
-  const { data: testData } = useQuery(RECOMMENDED_PRODUCTS_QUERY)
+  const { googleMapsApiKey, featuredCollection, recommendedProducts, products } = data
+
   return (
     <div className='home flex flex-col flex-shrink-0 gap-8'>
       <Carousel images={carouselImages} />
-      {/* <RecommendedProducts products={recommendedProducts} /> */}
-      {/* <RecommendedMenu products={recommendedProducts} /> */}
-      <MenuSection products={recommendedProducts.products.nodes} />
+      <MenuSection products={products.nodes as AllProductsQuery['products']['nodes']} />
       <ChefIntroSection />
       <TestimonialSection />
       <GoogleMapSection apiKey={googleMapsApiKey} />
