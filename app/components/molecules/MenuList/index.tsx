@@ -1,3 +1,4 @@
+import { Link } from '@remix-run/react'
 import type { AllProductsQuery } from 'src/gql/graphql'
 import { MenuCard } from '~/components/molecules/MenuCard'
 
@@ -16,9 +17,9 @@ export const MenuList: React.FC<Props> = ({ title, products }) => {
           <MenuCard key={variant.id} variant={variant} />
         ))}
       </ul>
-      <div className='flex justify-center'>
-        <button className='px-11 bg-primary h-16 rounded-full font-yumincho font-bold text-center text-2xl'>メニュー一覧</button>
-      </div>
+      <Link to='/products' className='flex justify-center'>
+        <button className='px-6 md:px-10 bg-primary h-14 rounded-full font-yumincho font-bold text-center text-xl md:text-2xl'>メニュー一覧</button>
+      </Link>
     </div>
   )
 }
