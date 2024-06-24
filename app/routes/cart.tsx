@@ -2,6 +2,7 @@ import type { MetaFunction } from '@remix-run/react'
 import { Link } from '@remix-run/react'
 import { Image, useCart } from '@shopify/hydrogen-react'
 import { useState } from 'react'
+import type { SelectedOption } from 'src/generated/graphql'
 import { Button } from '~/components/atoms/Button'
 import { CloseIcon } from '~/components/atoms/CloseIcon'
 import DateSelector from '~/components/atoms/DateSelector'
@@ -77,7 +78,16 @@ const Cart = () => {
           lines.length > 0 &&
           lines.map((line) => (
             <div className='grid grid-cols-[1fr,2fr] gap-2' key={line?.id}>
-              <div className='flex gap-1 justify-center'>{line?.merchandise?.image && <Image data={line?.merchandise?.image} className='max-w-32 sm:max-w-44' />}</div>
+              <div className='flex gap-1 justify-center'>
+                <Link
+                  to={{
+                    pathname: `/products/${line?.merchandise?.product?.handle}`,
+                    search: line?.merchandise?.selectedOptions?.map((option) => `${option?.name}=${option?.value}`).join('&')
+                  }}
+                >
+                  {line?.merchandise?.image && <Image data={line?.merchandise?.image} className='max-w-32 sm:max-w-44' />}
+                </Link>
+              </div>
               <div className='flex flex-col lg:flex-row gap-1 justify-between'>
                 <div className='flex flex-col'>
                   <div className='flex justify-between'>
@@ -111,16 +121,20 @@ const Cart = () => {
                   </div>
                 </div>
                 <div className='flex items-center gap-2 lg:gap-8'>
-                  <ProductCounter
-                    count={line?.quantity ?? 0}
-                    onIncrement={() => handleIncrement({ id: line?.id ?? '', quantity: line?.quantity ?? 0 })}
-                    onDecrement={() => handleDecrement({ id: line?.id ?? '', quantity: line?.quantity ?? 0 })}
-                    iconWidth={24}
-                    iconHeight={25.5}
-                    maxHeight={14}
-                    gap={2}
-                    textSize='xl'
-                  />
+                  {line?.merchandise?.selectedOptions && line?.merchandise?.product?.id && (
+                    <ProductCounter
+                      productId={line?.merchandise?.product?.id ?? ''}
+                      selectedOptions={(line?.merchandise?.selectedOptions as SelectedOption[]) ?? []}
+                      count={line?.quantity ?? 0}
+                      onIncrement={() => handleIncrement({ id: line?.id ?? '', quantity: line?.quantity ?? 0 })}
+                      onDecrement={() => handleDecrement({ id: line?.id ?? '', quantity: line?.quantity ?? 0 })}
+                      iconWidth={24}
+                      iconHeight={25.5}
+                      maxHeight={14}
+                      gap={2}
+                      textSize='xl'
+                    />
+                  )}
                   <div className='grid place-content-center flex-1'>
                     <p className='text-black text-2xl font-bold'>{Number(line?.cost?.totalAmount?.amount)}円</p>
                   </div>

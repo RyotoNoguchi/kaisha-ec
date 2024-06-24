@@ -93,7 +93,6 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 
 const Product: React.FC = () => {
   const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
-  // console.log('%capp/routes/products.$handle.tsx:97 product', 'color: #26bfa5;', product)
   const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
   const imageData = {
@@ -141,6 +140,8 @@ const Product: React.FC = () => {
                 <div className='flex flex-col gap-2'>
                   <p className='text-gray opacity-50 font-semibold'>数量</p>
                   <ProductCounter
+                    productId={product.id}
+                    selectedOptions={selectedOptions}
                     count={productCount}
                     onIncrement={() => setProductCount(productCount + 1)}
                     onDecrement={() => setProductCount(productCount - 1)}

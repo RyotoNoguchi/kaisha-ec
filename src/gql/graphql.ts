@@ -7977,6 +7977,26 @@ export type AllProductsQuery = {
   }
 }
 
+export type VariantQueryVariables = Exact<{
+  id: Scalars['ID']['input']
+  selectedOptions: Array<SelectedOptionInput> | SelectedOptionInput
+}>
+
+export type VariantQuery = {
+  __typename?: 'QueryRoot'
+  product: {
+    __typename?: 'Product'
+    variantBySelectedOptions: {
+      __typename?: 'ProductVariant'
+      id: string
+      title: string
+      availableForSale: boolean
+      quantityAvailable: number | null
+      image: { __typename?: 'Image'; id: string | null; url: any; altText: string | null; height: number | null; width: number | null } | null
+    } | null
+  } | null
+}
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -8643,6 +8663,71 @@ export const AllProductsDocument = {
     }
   ]
 } as unknown as DocumentNode<AllProductsQuery, AllProductsQueryVariables>
+export const VariantDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Variant' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'id' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'ID' } } }
+        },
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'selectedOptions' } },
+          type: { kind: 'NonNullType', type: { kind: 'ListType', type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'SelectedOptionInput' } } } } }
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'product' },
+            arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'id' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'id' } } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'variantBySelectedOptions' },
+                  arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'selectedOptions' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'selectedOptions' } } }],
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'availableForSale' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'quantityAvailable' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'image' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'height' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'width' } }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<VariantQuery, VariantQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [

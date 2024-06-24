@@ -70,3 +70,23 @@ export const PRODUCTS_QUERY = gql`
     }
   }
 `
+
+export const VARIANT_QUERY = gql`
+  query Variant($id: ID!, $selectedOptions: [SelectedOptionInput!]!) {
+    product(id: $id) {
+      variantBySelectedOptions(selectedOptions: $selectedOptions) {
+        id
+        title
+        availableForSale
+        quantityAvailable
+        image {
+          id
+          url
+          altText
+          height
+          width
+        }
+      }
+    }
+  }
+`

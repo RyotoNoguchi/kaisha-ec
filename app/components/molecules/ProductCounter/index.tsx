@@ -1,9 +1,15 @@
-import { useProduct } from '@shopify/hydrogen-react'
-import type { ProductFragment, ProductVariantFragment } from 'src/gql/graphql'
+import type { SelectedOption } from 'src/gql/graphql'
 import { MinusIcon } from '~/components/atoms/MinusIcon'
 import { PlusIcon } from '~/components/atoms/PlusIcon'
 
+import { graphql } from 'src/gql/gql'
+
+import { useQuery } from '@apollo/client'
+import { useCart } from '@shopify/hydrogen-react'
+
 type Props = {
+  productId: string
+  selectedOptions: SelectedOption[]
   count: number
   iconWidth: number
   iconHeight: number
@@ -14,9 +20,13 @@ type Props = {
   onDecrement: () => void
 }
 
-export const ProductCounter: React.FC<Props> = ({ count, onIncrement, onDecrement, iconWidth, iconHeight, gap, maxHeight = 14, textSize }) => {
-  const { product } = useProduct() as unknown as { product: ProductFragment & { selectedVariant: ProductVariantFragment } }
-  const isPlusDisabled = count >= (product?.selectedVariant?.quantityAvailable ?? 0)
+export const ProductCounter: React.FC<Props> = ({ productId, selectedOptions, count, onIncrement, onDecrement, iconWidth, iconHeight, gap, maxHeight = 14, textSize }) => {
+  const { lines } = useCart()
+  const { data } = useQuery(document, { variables: { id: productId, selectedOptions } })
+  const quantityAvailable = data?.product?.variantBySelectedOptions?.quantityAvailable ?? 0
+  const variantId = data?.product?.variantBySelectedOptions?.id ?? ''
+  const correspondingLineQuantity = lines?.find((line) => line?.merchandise?.id === variantId)?.quantity ?? 0
+  const isPlusDisabled = count >= quantityAvailable - correspondingLineQuantity
   const isMinusDisabled = count <= 1
   return (
     <div className={`flex items-center border-gray border-opacity-50 border-2 rounded-md w-max p-2 gap-${gap} max-h-${maxHeight.toString()} `}>
@@ -30,3 +40,23 @@ export const ProductCounter: React.FC<Props> = ({ count, onIncrement, onDecremen
     </div>
   )
 }
+
+const document = graphql(/* Graphql */ `
+  query Variant($id: ID!, $selectedOptions: [SelectedOptionInput!]!) {
+    product(id: $id) {
+      variantBySelectedOptions(selectedOptions: $selectedOptions) {
+        id
+        title
+        availableForSale
+        quantityAvailable
+        image {
+          id
+          url
+          altText
+          height
+          width
+        }
+      }
+    }
+  }
+`)
