@@ -1,6 +1,6 @@
 import { ApolloClient, ApolloProvider, HttpLink, InMemoryCache } from '@apollo/client'
 import fontAwesome from '@fortawesome/fontawesome-free/css/all.min.css'
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, isRouteErrorResponse, useLoaderData, useMatches, useRouteError, type ShouldRevalidateFunction } from '@remix-run/react'
+import { isRouteErrorResponse, Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useLoaderData, useMatches, useRouteError, type ShouldRevalidateFunction } from '@remix-run/react'
 import { useNonce } from '@shopify/hydrogen'
 import { ShopifyProvider } from '@shopify/hydrogen-react'
 import { defer, type LoaderFunctionArgs, type SerializeFrom } from '@shopify/remix-oxygen'
@@ -118,7 +118,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 const App = () => {
   const nonce = useNonce()
   const data = useLoaderData<typeof loader>()
-  const { publicStoreDomain, publicStorefrontToken } = data
+  // const { publicStoreDomain, publicStorefrontToken } = data
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
     setIsClient(true)

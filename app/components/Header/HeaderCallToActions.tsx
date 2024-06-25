@@ -8,12 +8,14 @@ import { colors } from '~/styles/colors'
 type Props = {
   isLoggedIn: Promise<boolean>
   cart: Promise<CartApiQueryFragment | null>
+  isMobileMenuOpen: boolean
+  setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void
 }
 
-export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart }) => {
+export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   return (
     <nav className='flex' role='navigation'>
-      {/* <HeaderMenuMobileToggle /> */}
+      {!isMobileMenuOpen && <HeaderMenuMobileToggle isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />}
       {/* <NavLink prefetch='intent' to='/account' style={activeLinkStyle}>
         <Suspense fallback='Sign in'>
           <Await resolve={isLoggedIn} errorElement='Sign in'>
@@ -27,15 +29,14 @@ export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart }) => {
   )
 }
 
-const HeaderMenuMobileToggle: React.FC = () => (
-  <a className='header-menu-mobile-toggle flex lg:hidden' href='#mobile-menu-aside'>
+const HeaderMenuMobileToggle: React.FC<{ isMobileMenuOpen: boolean; setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void }> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => (
+  <a className='flex lg:hidden' href='#mobile-menu-aside' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
     <HamburgerMenuIcon color={colors.white} />
   </a>
 )
 
 // const SearchToggle: React.FC = () => <a href='#search-aside'>Search</a>
 
-// const CartBadge: React.FC<{ count: number }> = ({ count }) => <a href='#cart-aside'>Cart {count}</a>
 const CartBadge: React.FC<{ count: number }> = ({ count }) => (
   <Link to='/cart'>
     <CartIcon />

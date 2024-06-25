@@ -7997,6 +7997,22 @@ export type VariantQuery = {
   } | null
 }
 
+export type MenuQueryVariables = Exact<{
+  handle: Scalars['String']['input']
+}>
+
+export type MenuQuery = {
+  __typename?: 'QueryRoot'
+  menu: {
+    __typename?: 'Menu'
+    id: string
+    handle: string
+    itemsCount: number
+    title: string
+    items: Array<{ __typename?: 'MenuItem'; id: string; title: string; type: MenuItemType; url: any | null }>
+  } | null
+}
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -8728,6 +8744,55 @@ export const VariantDocument = {
     }
   ]
 } as unknown as DocumentNode<VariantQuery, VariantQueryVariables>
+export const MenuDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'Menu' },
+      variableDefinitions: [
+        {
+          kind: 'VariableDefinition',
+          variable: { kind: 'Variable', name: { kind: 'Name', value: 'handle' } },
+          type: { kind: 'NonNullType', type: { kind: 'NamedType', name: { kind: 'Name', value: 'String' } } }
+        }
+      ],
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'menu' },
+            arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'handle' }, value: { kind: 'Variable', name: { kind: 'Name', value: 'handle' } } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'itemsCount' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<MenuQuery, MenuQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [

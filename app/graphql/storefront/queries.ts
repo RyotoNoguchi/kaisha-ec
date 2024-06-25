@@ -90,3 +90,20 @@ export const VARIANT_QUERY = gql`
     }
   }
 `
+
+export const MENU_QUERY = gql`
+  query Menu($handle: String!) {
+    menu(handle: $handle) {
+      id
+      handle
+      itemsCount
+      title
+      items {
+        id
+        title
+        type
+        url
+      }
+    }
+  }
+`

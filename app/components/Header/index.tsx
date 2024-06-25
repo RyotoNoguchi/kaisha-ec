@@ -4,9 +4,12 @@ import type { LayoutProps } from 'app/components/Layout'
 import '../../styles/tailwind.css'
 import { HeaderCallToActions } from './HeaderCallToActions'
 
-type Props = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'>
+type Props = Pick<LayoutProps, 'header' | 'cart' | 'isLoggedIn'> & {
+  isMobileMenuOpen: boolean
+  setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void
+}
 
-export const Header: React.FC<Props> = ({ header, cart, isLoggedIn }) => {
+export const Header: React.FC<Props> = ({ header, cart, isLoggedIn, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const { menu } = header
   return (
     <header className='bg-black text-white header md:py-3 px-3 md:px-12 w-full justify-between z-50 font-yumincho'>
@@ -16,8 +19,10 @@ export const Header: React.FC<Props> = ({ header, cart, isLoggedIn }) => {
           <img src='/image/kaysha-logo.webp' alt='logo' className='w-full h-16 py-3' />
         </div>
       </NavLink>
-      <HeaderMenu menu={menu} viewport='desktop' primaryDomainUrl={header.shop.primaryDomain.url} />
-      <HeaderCallToActions isLoggedIn={isLoggedIn} cart={cart} />
+      <div className='hidden lg:flex'>
+        <HeaderMenu menu={menu} viewport='desktop' primaryDomainUrl={header.shop.primaryDomain.url} />
+      </div>
+      <HeaderCallToActions isLoggedIn={isLoggedIn} cart={cart} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
     </header>
   )
 }

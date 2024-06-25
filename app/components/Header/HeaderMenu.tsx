@@ -19,20 +19,22 @@ export const HeaderMenu: React.FC<Props> = ({ menu, primaryDomainUrl, viewport }
     }
   }
   return (
-    <nav className={`${className} hidden lg:flex`} role='navigation'>
-      <NavLink end onClick={closeAside} prefetch='intent' style={activeLinkStyle} to='/'>
-        Home
-      </NavLink>
+    <nav className='lg:flex' role='navigation'>
       {/*TODO (menu || FALLBACK_HEADER_MENU)に戻す */}
-      {FALLBACK_HEADER_MENU.items.map((item) => {
-        if (!item.url) return null
-        const url = item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname : item.url
-        return (
-          <NavLink className='header-menu-item' end key={item.id} onClick={closeAside} prefetch='intent' style={activeLinkStyle} to={url}>
-            {item.title}
-          </NavLink>
-        )
-      })}
+      <ul className='flex flex-col'>
+        <NavLink end onClick={closeAside} prefetch='intent' style={activeLinkStyle} to='/'>
+          Home
+        </NavLink>
+        {FALLBACK_HEADER_MENU.items.map((item) => {
+          if (!item.url) return null
+          const url = item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname : item.url
+          return (
+            <NavLink className='text-black' end key={item.id} onClick={closeAside} prefetch='intent' style={activeLinkStyle} to={url}>
+              {item.title}
+            </NavLink>
+          )
+        })}
+      </ul>
     </nav>
   )
 }
@@ -40,7 +42,7 @@ export const HeaderMenu: React.FC<Props> = ({ menu, primaryDomainUrl, viewport }
 const activeLinkStyle = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white'
+    color: isPending ? 'black' : 'black'
   }
 }
 
@@ -53,16 +55,16 @@ const FALLBACK_HEADER_MENU = {
       tags: [],
       title: '商品一覧',
       type: 'HTTP',
-      url: '/product-list',
+      url: '/products',
       items: []
     },
     {
       id: 'gid://shopify/MenuItem/461609533496',
       resourceId: null,
       tags: [],
-      title: 'ご予約',
+      title: 'カート',
       type: 'HTTP',
-      url: '/reservation',
+      url: '/cart',
       items: []
     },
     {

@@ -1,12 +1,12 @@
 import { Await } from '@remix-run/react'
-import { HeaderMenu } from 'app/components/Header/HeaderMenu'
 import { Header } from 'app/components/Header/index'
-import { Suspense } from 'react'
+import { Suspense, useState } from 'react'
 import type { CartApiQueryFragment, FooterQuery, HeaderQuery } from 'storefrontapi.generated'
 import { Aside } from '~/components/Aside'
-import { CartMain } from '~/components/Cart'
 import { Footer } from '~/components/Footer'
 import { PredictiveSearchForm, PredictiveSearchResults } from '~/components/Search'
+import { CartAside } from '~/components/molecules/CartAside'
+import { MobileMenuAside } from '~/components/organisms/MobileMenuAside'
 
 export type LayoutProps = {
   cart: Promise<CartApiQueryFragment | null>
@@ -16,13 +16,14 @@ export type LayoutProps = {
   isLoggedIn: Promise<boolean>
 }
 
-export function Layout({ cart, children = null, footer, header, isLoggedIn }: LayoutProps) {
+export const Layout = ({ cart, children = null, footer, header, isLoggedIn }: LayoutProps) => {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   return (
     <>
       <CartAside cart={cart} />
       <SearchAside />
-      <MobileMenuAside menu={header?.menu} shop={header?.shop} />
-      {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} />}
+      <MobileMenuAside menu={header?.menu} shop={header?.shop} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+      {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />}
       <main>{children}</main>
       <Suspense>
         <Await resolve={footer}>{(footer) => <Footer menu={footer?.menu} shop={header?.shop} />}</Await>
@@ -31,21 +32,7 @@ export function Layout({ cart, children = null, footer, header, isLoggedIn }: La
   )
 }
 
-function CartAside({ cart }: { cart: LayoutProps['cart'] }) {
-  return (
-    <Aside id='cart-aside' heading='CART'>
-      <Suspense fallback={<p>Loading cart ...</p>}>
-        <Await resolve={cart}>
-          {(cart) => {
-            return <CartMain cart={cart} layout='aside' />
-          }}
-        </Await>
-      </Suspense>
-    </Aside>
-  )
-}
-
-function SearchAside() {
+const SearchAside = () => {
   return (
     <Aside id='search-aside' heading='SEARCH'>
       <div className='predictive-search'>
@@ -68,16 +55,5 @@ function SearchAside() {
         <PredictiveSearchResults />
       </div>
     </Aside>
-  )
-}
-
-function MobileMenuAside({ menu, shop }: { menu: HeaderQuery['menu']; shop: HeaderQuery['shop'] }) {
-  return (
-    menu &&
-    shop?.primaryDomain?.url && (
-      <Aside id='mobile-menu-aside' heading='MENU'>
-        <HeaderMenu menu={menu} viewport='mobile' primaryDomainUrl={shop.primaryDomain.url} />
-      </Aside>
-    )
   )
 }
