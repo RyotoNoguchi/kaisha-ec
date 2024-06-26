@@ -30,9 +30,9 @@ export const HeaderCallToActions: React.FC<Props> = ({ isLoggedIn, cart, isMobil
 }
 
 const HeaderMenuMobileToggle: React.FC<{ isMobileMenuOpen: boolean; setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void }> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => (
-  <a className='flex lg:hidden' href='#mobile-menu-aside' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+  <button className='flex md:hidden' onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
     <HamburgerMenuIcon color={colors.white} />
-  </a>
+  </button>
 )
 
 // const SearchToggle: React.FC = () => <a href='#search-aside'>Search</a>

@@ -19,9 +19,9 @@ export const HeaderMenu: React.FC<Props> = ({ menu, primaryDomainUrl, viewport }
     }
   }
   return (
-    <nav className='lg:flex' role='navigation'>
+    <nav className='md:flex w-full' role='navigation'>
       {/*TODO (menu || FALLBACK_HEADER_MENU)に戻す */}
-      <ul className='flex flex-col'>
+      <ul className='flex flex-col flex-1 md:flex-row md:justify-evenly lg:justify-center  gap-4 md:gap-2 lg:gap-4 w-full md:px-4'>
         <NavLink end onClick={closeAside} prefetch='intent' style={activeLinkStyle} to='/'>
           Home
         </NavLink>
@@ -29,7 +29,7 @@ export const HeaderMenu: React.FC<Props> = ({ menu, primaryDomainUrl, viewport }
           if (!item.url) return null
           const url = item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname : item.url
           return (
-            <NavLink className='text-black' end key={item.id} onClick={closeAside} prefetch='intent' style={activeLinkStyle} to={url}>
+            <NavLink className='text-black md:text-white' end key={item.id} onClick={closeAside} prefetch='intent' style={activeLinkStyle} to={url}>
               {item.title}
             </NavLink>
           )
@@ -40,9 +40,10 @@ export const HeaderMenu: React.FC<Props> = ({ menu, primaryDomainUrl, viewport }
 }
 
 const activeLinkStyle = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => {
+  const isMobile = window.innerWidth <= 768 // モバイルサイズの判定
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'black' : 'black'
+    color: isPending ? 'gray' : isMobile ? 'black' : 'white'
   }
 }
 
