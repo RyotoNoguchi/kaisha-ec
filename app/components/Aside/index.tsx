@@ -22,7 +22,7 @@ export const Aside: React.FC<Props> = ({ children, heading, isMobileMenuOpen, se
   return (
     <div
       aria-modal
-      className={`font-yumincho fixed left-0 right-0 top-0 bottom-0 transition-all duration-500 ${isMobileMenuOpen ? 'transform -translate-x-1/2 z-50' : 'transform z-40'}`}
+      className={`font-yumincho fixed left-0 right-0 top-0 bottom-0 transition-all duration-500 ${isMobileMenuOpen ? 'transform -translate-x-1/2 z-50' : 'transform z-40 translate-x-full'}`}
       role='dialog'
     >
       <button
