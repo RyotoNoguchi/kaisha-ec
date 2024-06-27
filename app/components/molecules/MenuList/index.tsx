@@ -17,7 +17,7 @@ export const MenuList: React.FC<Props> = ({ title, products }) => {
           <MenuCard key={variant.id} variant={variant} />
         ))}
       </ul>
-      <Link to='/products' className='flex justify-center'>
+      <Link to='/products' className='flex justify-center hover:opacity-50 transition-all ease-in-out duration-300'>
         <button className='px-6 md:px-10 bg-primary h-14 rounded-full font-yumincho font-bold text-center text-xl md:text-2xl'>メニュー一覧</button>
       </Link>
     </div>
