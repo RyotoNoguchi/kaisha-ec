@@ -13,7 +13,7 @@ export const CustomAccordionItem: React.FC<AccordionItemProps> = ({ header, cont
         </div>
       </>
     )}
-    className='border-b'
+    className={`border-b ${!content ? 'hidden' : ''}`}
     buttonProps={{
       className: ({ isEnter }) => `flex items-center w-full py-4 sm:py-4 text-left hover:bg-secondary-500 hover:opacity-40 ${isEnter && 'bg-primary-200'}`
     }}
