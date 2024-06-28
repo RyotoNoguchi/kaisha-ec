@@ -188,7 +188,6 @@ const Product: React.FC = () => {
             </div>
           </div>
           <div className='flex flex-col gap-4 lg:px-10'>
-            {/* <h3 className='text-2xl font-semibold'>ご一緒にいかがですか？</h3> */}
             <Typography variant='h4' color='black' className='font-semibold text-xl md:text-2xl'>
               ご一緒にいかがですか？
             </Typography>
