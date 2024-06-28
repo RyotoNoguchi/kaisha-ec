@@ -8,8 +8,8 @@ export const CustomAccordionItem: React.FC<AccordionItemProps> = ({ header, cont
     header={({ state: { isEnter } }) => (
       <>
         <div className='text-lg font-semibold'>{header?.toString()}</div>
-        <div className={`ml-auto transition-transform duration-200 ease-out ${isEnter && 'rotate-180'}`}>
-          <ChevronIcon bgColor='bg-transparent' />
+        <div className={`ml-auto transition-transform duration-200 ease-out ${isEnter && '-rotate-90'}`}>
+          <ChevronIcon bgColor='bg-transparent' direction='left' />
         </div>
       </>
     )}
