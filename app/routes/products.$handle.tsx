@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { List, ListItem, Typography } from '@material-tailwind/react'
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
 import { Image, Money, getSelectedProductOptions } from '@shopify/hydrogen'
 import { AddToCartButton, BuyNowButton, ProductProvider } from '@shopify/hydrogen-react'
@@ -123,13 +124,19 @@ const Product: React.FC = () => {
             <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
             <div className='flex flex-col flex-1 font-yumincho gap-3'>
               <div className='flex flex-col gap-1 md:gap-2'>
-                <p className='text-gray opacity-50 font-semibold'>お弁当</p>
-                <h2 className='text-2xl md:text-3xl lg:text-4xl font-extrabold'>{product.title}</h2>
+                <Typography variant='h6' color='black' className='font-semibold'>
+                  お弁当
+                </Typography>
+                <Typography variant='h1' color='black' className='font-extrabold text-2xl md:text-3xl lg:text-4xl'>
+                  {product.title}
+                </Typography>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
               {product.selectedVariant.availableForSale ? (
                 <div className='flex flex-col gap-2'>
-                  <p className='text-gray opacity-50 font-semibold'>数量</p>
+                  <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
+                    数量
+                  </Typography>
                   <ProductCounter
                     productId={product.id}
                     selectedOptions={selectedOptions}
@@ -144,7 +151,9 @@ const Product: React.FC = () => {
                   />
                 </div>
               ) : (
-                <p className='text-gray'>申し訳ございませんが、こちらの商品は現在販売停止中です</p>
+                <Typography variant='paragraph' color='black' className='font-semibold'>
+                  申し訳ございませんが、こちらの商品は現在販売停止中です
+                </Typography>
               )}
               <div className='flex gap-2'>
                 {product.selectedVariant.availableForSale && (
@@ -167,39 +176,48 @@ const Product: React.FC = () => {
               </div>
               <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-2'>
-                  <h3 className='font-semibold text-xl'>商品説明</h3>
-                  <p className=''>{product.description}</p>
+                  <Typography variant='h4' color='black' className='font-semibold text-xl'>
+                    商品説明
+                  </Typography>
+                  <Typography variant='paragraph' color='black' className='font-semibold text-sm'>
+                    {product.description}
+                  </Typography>
                 </div>
                 <Accordion accordionItems={accordionItems} />
               </div>
             </div>
           </div>
           <div className='flex flex-col gap-4 lg:px-10'>
-            <h3 className='text-2xl font-semibold'>ご一緒にいかがですか？</h3>
-            <ul className='w-full gap-6 flex overflow-x-auto'>
+            {/* <h3 className='text-2xl font-semibold'>ご一緒にいかがですか？</h3> */}
+            <Typography variant='h4' color='black' className='font-semibold text-xl md:text-2xl'>
+              ご一緒にいかがですか？
+            </Typography>
+            <List className='flex flex-row p-0 gap-6 list-none w-full  overflow-x-auto'>
               {/* TODO Adminでデータ作成したら、RecommendedProductsに置換 */}
               {product.images.edges.map((image: { node: { url?: URL; altText: string | null; id: string | null } }) => (
-                <li key={image.node.id}>
+                <ListItem className='w-auto hover:opacity-70' key={image.node.id}>
                   <Image data={{ url: image.node.url?.toString() ?? '', altText: image.node.altText ?? '', id: image.node.id ?? '' }} className='min-w-32 md:min-w-48 max-w-48' />
-                </li>
+                </ListItem>
               ))}
-            </ul>
+            </List>
           </div>
         </div>
         {/* eslint-disable-next-line hydrogen/prefer-image-component */}
         <img src='/image/pages/product/banner.webp' alt='レストランバナー' className='w-full' />
         <div className=''>
           <div className='font-yumincho flex flex-col gap-4 px-6 md:px-10 lg:px-32 xl:px-56'>
-            <h3 className='text-2xl font-semibold flex flex-col gap-4 md:px-9 lg:px-10'>メニュー一覧</h3>
-            <ul className='w-full gap-6 flex overflow-x-auto md:mx-9'>
+            <Typography variant='h4' color='black' className='text-2xl font-semibold flex flex-col gap-4 md:px-9 lg:px-10'>
+              メニュー一覧
+            </Typography>
+            <List className='w-full gap-6 list-none p-0 flex flex-row overflow-x-auto md:mx-9'>
               {products.nodes.map((product) => (
                 <Link to={`/products/${product.handle}`} key={product.id}>
-                  <li className='mb-2'>
+                  <ListItem className='mb-2'>
                     <Image data={product.images.edges[0].node} className='min-w-32 md:min-w-48 max-w-48' />
-                  </li>
+                  </ListItem>
                 </Link>
               ))}
-            </ul>
+            </List>
           </div>
         </div>
       </div>
