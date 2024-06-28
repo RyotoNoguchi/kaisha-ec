@@ -7,6 +7,7 @@ import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
 import type { ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment, ProductsQuery } from 'src/gql/graphql'
+import { Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import { getVariantUrl } from '~/lib/variants'
 
@@ -188,66 +189,7 @@ const Product: React.FC = () => {
                   <h3 className='font-semibold text-xl'>商品説明</h3>
                   <p className=''>{product.description}</p>
                 </div>
-                {/* TODO 商品詳細情報が来たら実装 */}
-                <div className='flex flex-col gap-2'>
-                  <h4 className='font-semibold text-xl'>
-                    <button className='' onClick={() => setIsIngredientsOpen(!isIngredientsOpen)}>
-                      原材料
-                    </button>
-                  </h4>
-                  <ul className={`gap-x-2 flex-wrap ${isIngredientsOpen ? 'flex transition-all duration-1000 ease-in opacity-100' : 'hidden '}`}>
-                    {ingredients.map((ingredient, index) => (
-                      // eslint-disable-next-line react/no-array-index-key
-                      <li key={index} className='w-auto flex gap-2'>
-                        <p className='px-0 whitespace-nowrap'>{ingredient}</p>
-                        {index !== ingredients.length - 1 && <span className='text-gray'>/</span>}
-                      </li>
-                    ))}
-                  </ul>
-                  {/* {isIngredientsOpen && (
-                    <ul className='flex gap-x-2 flex-wrap'>
-                      {ingredients.map((ingredient, index) => (
-                        // eslint-disable-next-line react/no-array-index-key
-                        <li key={index} className='w-auto flex gap-2'>
-                          <p className='px-0 whitespace-nowrap'>{ingredient}</p>
-                          {index !== ingredients.length - 1 && <span className='text-gray'>/</span>}
-                        </li>
-                      ))}
-                    </ul>
-                  )} */}
-                </div>
-                {/* <div className='flex flex-col'>
-                <div className='flex flex-col'>
-                  <h4 className='' onClick={() => setIsIngredientsOpen(!isIngredientsOpen)}>
-                    原材料
-                  </h4>
-                  {isIngredientsOpen && (
-                    <p className=''>
-                      テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。
-                    </p>
-                  )}
-                </div>
-                <div className='flex flex-col'>
-                  <h3 className='' onClick={() => setIsSpecialtyOpen(!isSpecialtyOpen)}>
-                    こだわり
-                  </h3>
-                  {isSpecialtyOpen && (
-                    <p className=''>
-                      テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。
-                    </p>
-                  )}
-                </div>
-                <div className='flex flex-col'>
-                  <h3 className='' onClick={() => setIsDeliveryOpen(!isDeliveryOpen)}>
-                    配送日程
-                  </h3>
-                  {isDeliveryOpen && (
-                    <p className=''>
-                      テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。テキスト。
-                    </p>
-                  )}
-                </div>
-              </div> */}
+                <Accordion ingredients={ingredients} />
               </div>
             </div>
           </div>
