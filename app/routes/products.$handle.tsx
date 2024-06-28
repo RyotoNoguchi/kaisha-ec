@@ -1,5 +1,5 @@
 import { gql } from '@apollo/client'
-import { useLoaderData, type MetaFunction } from '@remix-run/react'
+import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
 import { Image, Money, getSelectedProductOptions } from '@shopify/hydrogen'
 import { AddToCartButton, BuyNowButton, ProductProvider } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
@@ -93,6 +93,14 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 
 const Product: React.FC = () => {
   const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
+  const ingredients =
+    product.metafield?.value
+      .replaceAll('[', '')
+      .replaceAll(']', '')
+      .replaceAll('"', '')
+      .split(',')
+      .map((ingredient) => ingredient.trim()) ?? []
+
   const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
   const imageData = {
@@ -101,6 +109,7 @@ const Product: React.FC = () => {
     url: product?.selectedVariant?.image?.url ?? ''
   }
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
+  const [isIngredientsOpen, setIsIngredientsOpen] = useState(false)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => {
     setSelectedImage(image)
   }
@@ -110,7 +119,7 @@ const Product: React.FC = () => {
       <div className='flex flex-col gap-10'>
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
           <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
-            <div className='flex flex-col relative gap-4 flex-1 sm:aspect-square justify-center items-center'>
+            <div className='flex flex-col relative gap-4 flex-1 sm:aspect-square justify-start items-center'>
               <Image
                 data={{ ...product?.selectedVariant?.image, altText: selectedImage.altText, id: selectedImage.id, url: selectedImage.url.toString() }}
                 className='w-full h-full object-cover sm:max-w-96 sm:max-h-96 flex-1'
@@ -161,20 +170,52 @@ const Product: React.FC = () => {
                     <AddToCartButton
                       quantity={productCount}
                       variantId={product?.selectedVariant?.id}
-                      className='bg-yellow text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2'
+                      className='bg-yellow text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
                     >
                       カートに追加
                     </AddToCartButton>
-                    <BuyNowButton variantId={product?.selectedVariant?.id ?? ''} className='bg-crimsonRed text-white py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2'>
+                    <BuyNowButton
+                      variantId={product?.selectedVariant?.id ?? ''}
+                      className='bg-crimsonRed text-white py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                    >
                       今すぐ買う
                     </BuyNowButton>
                   </>
                 )}
               </div>
-              <div className='flex flex-col'>
-                <h3 className='font-semibold text-xl'>商品説明</h3>
-                <p className=''>{product.description}</p>
+              <div className='flex flex-col gap-4'>
+                <div className='flex flex-col gap-2'>
+                  <h3 className='font-semibold text-xl'>商品説明</h3>
+                  <p className=''>{product.description}</p>
+                </div>
                 {/* TODO 商品詳細情報が来たら実装 */}
+                <div className='flex flex-col gap-2'>
+                  <h4 className='font-semibold text-xl'>
+                    <button className='' onClick={() => setIsIngredientsOpen(!isIngredientsOpen)}>
+                      原材料
+                    </button>
+                  </h4>
+                  <ul className={`gap-x-2 flex-wrap ${isIngredientsOpen ? 'flex transition-all duration-1000 ease-in opacity-100' : 'hidden '}`}>
+                    {ingredients.map((ingredient, index) => (
+                      // eslint-disable-next-line react/no-array-index-key
+                      <li key={index} className='w-auto flex gap-2'>
+                        <p className='px-0 whitespace-nowrap'>{ingredient}</p>
+                        {index !== ingredients.length - 1 && <span className='text-gray'>/</span>}
+                      </li>
+                    ))}
+                  </ul>
+                  {/* {isIngredientsOpen && (
+                    <ul className='flex gap-x-2 flex-wrap'>
+                      {ingredients.map((ingredient, index) => (
+                        // eslint-disable-next-line react/no-array-index-key
+                        <li key={index} className='w-auto flex gap-2'>
+                          <p className='px-0 whitespace-nowrap'>{ingredient}</p>
+                          {index !== ingredients.length - 1 && <span className='text-gray'>/</span>}
+                        </li>
+                      ))}
+                    </ul>
+                  )} */}
+                </div>
                 {/* <div className='flex flex-col'>
                 <div className='flex flex-col'>
                   <h4 className='' onClick={() => setIsIngredientsOpen(!isIngredientsOpen)}>
@@ -229,9 +270,11 @@ const Product: React.FC = () => {
             <h3 className='text-2xl font-semibold flex flex-col gap-4 md:px-9 lg:px-10'>メニュー一覧</h3>
             <ul className='w-full gap-6 flex overflow-x-auto md:mx-9'>
               {products.nodes.map((product) => (
-                <li key={product.id} className='mb-2'>
-                  <Image data={product.images.edges[0].node} className='min-w-32 md:min-w-48 max-w-48' />
-                </li>
+                <Link to={`/products/${product.handle}`} key={product.id}>
+                  <li className='mb-2'>
+                    <Image data={product.images.edges[0].node} className='min-w-32 md:min-w-48 max-w-48' />
+                  </li>
+                </Link>
               ))}
             </ul>
           </div>
@@ -290,6 +333,12 @@ const PRODUCT_FRAGMENT = gql`
     handle
     descriptionHtml
     description
+    metafield(namespace: "custom", key: "ingredients") {
+      id
+      description
+      type
+      value
+    }
     options {
       name
       values
