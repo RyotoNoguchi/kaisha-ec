@@ -8036,6 +8036,7 @@ export type ProductFragment = {
   handle: string
   descriptionHtml: any
   description: string
+  metafield: { __typename?: 'Metafield'; id: string; description: string | null; type: string; value: string } | null
   options: Array<{ __typename?: 'ProductOption'; name: string; values: Array<string> }>
   images: { __typename?: 'ImageConnection'; edges: Array<{ __typename?: 'ImageEdge'; node: { __typename?: 'Image'; url: any; altText: string | null; id: string | null } }> }
   selectedVariant: ({ __typename?: 'ProductVariant' } & { ' $fragmentRefs'?: { ProductVariantFragment: ProductVariantFragment } }) | null
@@ -8188,6 +8189,23 @@ export const ProductFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'descriptionHtml' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metafield' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } }
+              ]
+            }
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'options' },
@@ -8934,6 +8952,23 @@ export const ProductDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
           { kind: 'Field', name: { kind: 'Name', value: 'descriptionHtml' } },
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metafield' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } }
+              ]
+            }
+          },
           {
             kind: 'Field',
             name: { kind: 'Name', value: 'options' },
