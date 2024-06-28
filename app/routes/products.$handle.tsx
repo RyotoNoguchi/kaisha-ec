@@ -7,10 +7,9 @@ import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
 import type { ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment, ProductsQuery } from 'src/gql/graphql'
-import { Accordion } from '~/components/molecules/Accordion'
+import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import { getVariantUrl } from '~/lib/variants'
-
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Hydrogen | ${data?.product.title ?? ''}` }]
 }
@@ -94,13 +93,14 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 
 const Product: React.FC = () => {
   const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
-  const ingredients =
-    product.metafield?.value
-      .replaceAll('[', '')
-      .replaceAll(']', '')
-      .replaceAll('"', '')
-      .split(',')
-      .map((ingredient) => ingredient.trim()) ?? []
+  const ingredient = product.metafield?.value.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '').replaceAll(',', ' / ')
+
+  const accordionItems = [
+    {
+      header: '原材料',
+      content: ingredient ?? ''
+    }
+  ]
 
   const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
@@ -110,7 +110,6 @@ const Product: React.FC = () => {
     url: product?.selectedVariant?.image?.url ?? ''
   }
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
-  const [isIngredientsOpen, setIsIngredientsOpen] = useState(false)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => {
     setSelectedImage(image)
   }
@@ -189,7 +188,7 @@ const Product: React.FC = () => {
                   <h3 className='font-semibold text-xl'>商品説明</h3>
                   <p className=''>{product.description}</p>
                 </div>
-                <Accordion ingredients={ingredients} />
+                <Accordion accordionItems={accordionItems} />
               </div>
             </div>
           </div>

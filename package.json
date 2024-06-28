@@ -28,6 +28,7 @@
     "@shopify/hydrogen-react": "^2024.4.3",
     "@shopify/mini-oxygen": "^3.0.2",
     "@shopify/remix-oxygen": "^2.0.3",
+    "@szhsin/react-accordion": "^1.2.4",
     "@types/swiper": "^6.0.0",
     "@vis.gl/react-google-maps": "^1.0.2",
     "fast-equals": "^5.0.1",
@@ -76,6 +77,7 @@
     "prettier-plugin-organize-imports": "^3.2.4",
     "stylelint": "^16.3.1",
     "tailwindcss": "^3.3.0",
+    "tailwindest": "^2.3.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.2"
   },

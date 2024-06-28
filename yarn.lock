@@ -3099,6 +3099,13 @@
   resolved "https://registry.yarnpkg.com/@sindresorhus/is/-/is-5.6.0.tgz#41dd6093d34652cddb5d5bdeee04eafc33826668"
   integrity sha512-TV7t8GKYaJWsn00tFDqBw8+Uqmr8A0fRU1tvTQhyZzGv0sJCGRQL3JGMI3ucuKo3XIZdUP+Lx7/gh2t3lewy7g==
 
+"@szhsin/react-accordion@^1.2.4":
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/@szhsin/react-accordion/-/react-accordion-1.2.4.tgz#2e2a07617744b0709da40e4d004aedba50d3e693"
+  integrity sha512-3PlhO4TT4myGeW987MY1N3macO+438A1E2U1KIajK9PoqoJ1Ifv47guIsFWuaBUW8QeOxacCvZKTjh/vBjr7wQ==
+  dependencies:
+    react-transition-state "^2.1.1"
+
 "@szmarczak/http-timer@^5.0.1":
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/@szmarczak/http-timer/-/http-timer-5.0.1.tgz#c7c1bf1141cdd4751b0399c8fc7b8b664cd5be3a"
@@ -10194,6 +10201,11 @@ react-router@6.24.0:
   dependencies:
     "@remix-run/router" "1.17.0"
 
+react-transition-state@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/react-transition-state/-/react-transition-state-2.1.1.tgz#1601a6177926b647041b7d598bf124321ab8d25b"
+  integrity sha512-kQx5g1FVu9knoz1T1WkapjUgFz08qQ/g1OmuWGi3/AoEFfS0kStxrPlZx81urjCXdz2d+1DqLpU6TyLW/Ro04Q==
+
 react@^18.2.0:
   version "18.3.1"
   resolved "https://registry.yarnpkg.com/react/-/react-18.3.1.tgz#49ab892009c53933625bd16b2533fc754cab2891"
@@ -11299,6 +11311,11 @@ tailwindcss@^3.3.0:
     postcss-selector-parser "^6.0.11"
     resolve "^1.22.2"
     sucrase "^3.32.0"
+
+tailwindest@^2.3.2:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/tailwindest/-/tailwindest-2.3.2.tgz#fc37220f32505a43a733c153f8a7b00fe6f1a57b"
+  integrity sha512-vW4Usl8fl6DqmwRa6vBGEiMmf1TZD1TMS526ZbPpYsHNOgytfrDxbu8AU4YozDGkc6Ho5ib8R1hwlNI42odmig==
 
 tapable@^2.2.0:
   version "2.2.1"
