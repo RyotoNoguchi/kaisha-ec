@@ -2915,10 +2915,10 @@
   resolved "https://registry.yarnpkg.com/@rushstack/eslint-patch/-/eslint-patch-1.10.3.tgz#391d528054f758f81e53210f1a1eebcf1a8b1d20"
   integrity sha512-qC/xYId4NMebE6w/V33Fh9gWxLgURiNYgVNObbJl2LZv0GUUItCcCqC5axQSwRaAgaxl2mELq1rMzlswaQ0Zxg==
 
-"@shopify/cli-hydrogen@^8.0.4":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@shopify/cli-hydrogen/-/cli-hydrogen-8.1.0.tgz#0c025a0310bfbba0b68c986fc1ba5fbb30cb2fbe"
-  integrity sha512-81CJvS+WUXVdYpuzZY/Pqn1AVRSu6dRpBLXEwgfi71EpKFPMbaddhqNwD3d7h79ZI9+M5vCKgNOCO8J3svUSWA==
+"@shopify/cli-hydrogen@8.1.1":
+  version "8.1.1"
+  resolved "https://registry.yarnpkg.com/@shopify/cli-hydrogen/-/cli-hydrogen-8.1.1.tgz#0f20e23ac3221bc0f59a47f4b85e280b4d50cb28"
+  integrity sha512-rpT1RdmWWBumSvXec4C7IarDnYQreuOq6wj1EtQKmvbqi3B57EkU25D+bhX2/puFsb5aBaBh5RX6El5IMl2r6g==
   dependencies:
     "@ast-grep/napi" "0.11.0"
     "@oclif/core" "3.26.5"
