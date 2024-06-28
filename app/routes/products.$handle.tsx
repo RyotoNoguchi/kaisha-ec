@@ -9,6 +9,7 @@ import { useState } from 'react'
 import type { ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment, ProductsQuery } from 'src/gql/graphql'
 import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
+import ProductGallery from '~/components/molecules/ProductGallery'
 import { getVariantUrl } from '~/lib/variants'
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Hydrogen | ${data?.product.title ?? ''}` }]
@@ -119,26 +120,7 @@ const Product: React.FC = () => {
       <div className='flex flex-col gap-10'>
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
           <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
-            <div className='flex flex-col relative gap-4 flex-1 sm:aspect-square justify-start items-center'>
-              <Image
-                data={{ ...product?.selectedVariant?.image, altText: selectedImage.altText, id: selectedImage.id, url: selectedImage.url.toString() }}
-                className='w-full h-full object-cover sm:max-w-96 sm:max-h-96 flex-1'
-              />
-              <ul className='w-full gap-8 overflow-x-auto whitespace-nowrap px-4 lg:px-10 xl:px-24 hidden sm:flex'>
-                {product?.images?.edges &&
-                  product.images.edges.map((image: { node: { url?: any; altText: string | null; id: string | null } }) => (
-                    <li key={image.node.id} className='cursor-pointer'>
-                      {image.node.url && (
-                        <Image
-                          data={{ url: image.node.url as string, altText: image.node.altText ?? '', id: image.node.id ?? '' }}
-                          className='w-full h-full max-w-20 max-h-20'
-                          onClick={() => handleImageClick({ altText: image.node.altText ?? '', id: image.node.id ?? '', url: new URL(image.node.url) })}
-                        />
-                      )}
-                    </li>
-                  ))}
-              </ul>
-            </div>
+            <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
             <div className='flex flex-col flex-1 font-yumincho gap-3'>
               <div className='flex flex-col gap-1 md:gap-2'>
                 <p className='text-gray opacity-50 font-semibold'>お弁当</p>
