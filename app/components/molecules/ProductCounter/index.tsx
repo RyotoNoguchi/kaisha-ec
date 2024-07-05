@@ -29,14 +29,16 @@ export const ProductCounter: React.FC<Props> = ({ productId, selectedOptions, co
   const isPlusDisabled = count >= quantityAvailable - correspondingLineQuantity
   const isMinusDisabled = count <= 1
   return (
-    <div className={`flex items-center border-gray border-opacity-50 border-2 rounded-md w-max p-2 gap-${gap} max-h-${maxHeight.toString()} `}>
-      <button onClick={onDecrement} disabled={isMinusDisabled} className={`${isMinusDisabled ? 'cursor-not-allowed opacity-50' : ''}`}>
-        <MinusIcon width={iconWidth} height={iconHeight} />
-      </button>
-      <p className={`text-${textSize}`}>{count}</p>
-      <button onClick={onIncrement} disabled={isPlusDisabled} className={`${isPlusDisabled ? 'cursor-not-allowed opacity-50' : ''}`}>
-        <PlusIcon width={iconWidth} height={iconHeight} />
-      </button>
+    <div className=''>
+      <div className={`flex items-center border-gray border-opacity-50 border-2 rounded-md w-max p-2 gap-${gap} max-h-${maxHeight.toString()} `}>
+        <button onClick={onDecrement} disabled={isMinusDisabled} className={`${isMinusDisabled ? 'cursor-not-allowed opacity-50' : ''}`}>
+          <MinusIcon width={iconWidth} height={iconHeight} />
+        </button>
+        <p className={`text-${textSize}`}>{count}</p>
+        <button onClick={onIncrement} disabled={isPlusDisabled} className={`${isPlusDisabled ? 'cursor-not-allowed opacity-50' : ''}`}>
+          <PlusIcon width={iconWidth} height={iconHeight} />
+        </button>
+      </div>
     </div>
   )
 }

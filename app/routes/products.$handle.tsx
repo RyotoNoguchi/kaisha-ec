@@ -1,12 +1,13 @@
-import { gql } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import { List, ListItem, Typography } from '@material-tailwind/react'
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
 import { Image, Money, getSelectedProductOptions } from '@shopify/hydrogen'
-import { AddToCartButton, BuyNowButton, ProductProvider } from '@shopify/hydrogen-react'
+import { AddToCartButton, BuyNowButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
+import { graphql } from 'src/gql/gql'
 import type { ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment, ProductsQuery } from 'src/gql/graphql'
 import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
@@ -112,9 +113,13 @@ const Product: React.FC = () => {
     url: product?.selectedVariant?.image?.url ?? ''
   }
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
-  const handleImageClick = (image: { altText: string; id: string; url: URL }) => {
-    setSelectedImage(image)
-  }
+  const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
+  const { lines } = useCart()
+  const { data } = useQuery(document, { variables: { id: product.id, selectedOptions } })
+  const quantityAvailable = data?.product?.variantBySelectedOptions?.quantityAvailable ?? 0
+  const variantId = data?.product?.variantBySelectedOptions?.id ?? ''
+  const correspondingLineQuantity = lines?.find((line) => line?.merchandise?.id === variantId)?.quantity ?? 0
+  const isPlusDisabled = productCount > quantityAvailable - correspondingLineQuantity
 
   return (
     <ProductProvider data={product}>
@@ -133,30 +138,37 @@ const Product: React.FC = () => {
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
               {product.selectedVariant.availableForSale ? (
-                <div className='flex flex-col gap-2'>
-                  <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
-                    数量
-                  </Typography>
-                  <ProductCounter
-                    productId={product.id}
-                    selectedOptions={selectedOptions}
-                    count={productCount}
-                    onIncrement={() => setProductCount(productCount + 1)}
-                    onDecrement={() => setProductCount(productCount - 1)}
-                    iconWidth={32}
-                    iconHeight={34}
-                    maxHeight={14}
-                    gap={5}
-                    textSize='3xl'
-                  />
-                </div>
+                !isPlusDisabled && (
+                  <div className='flex flex-col gap-2'>
+                    <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
+                      数量
+                    </Typography>
+                    <ProductCounter
+                      productId={product.id}
+                      selectedOptions={selectedOptions}
+                      count={productCount}
+                      onIncrement={() => setProductCount(productCount + 1)}
+                      onDecrement={() => setProductCount(productCount - 1)}
+                      iconWidth={32}
+                      iconHeight={34}
+                      maxHeight={14}
+                      gap={5}
+                      textSize='3xl'
+                    />
+                  </div>
+                )
               ) : (
                 <Typography variant='paragraph' color='black' className='font-semibold'>
                   申し訳ございませんが、こちらの商品は現在販売停止中です
                 </Typography>
               )}
+              {product.selectedVariant.availableForSale && isPlusDisabled && (
+                <Typography variant='paragraph' color='black' className='font-semibold'>
+                  申し訳ございませんが、この商品はこれ以上購入可能な在庫がございません
+                </Typography>
+              )}
               <div className='flex gap-2'>
-                {product.selectedVariant.availableForSale && (
+                {product.selectedVariant.availableForSale && !isPlusDisabled && (
                   <>
                     <AddToCartButton
                       quantity={productCount}
@@ -356,3 +368,23 @@ const PRODUCTS_QUERY = gql`
     }
   }
 `
+
+const document = graphql(/* Graphql */ `
+  query Variant($id: ID!, $selectedOptions: [SelectedOptionInput!]!) {
+    product(id: $id) {
+      variantBySelectedOptions(selectedOptions: $selectedOptions) {
+        id
+        title
+        availableForSale
+        quantityAvailable
+        image {
+          id
+          url
+          altText
+          height
+          width
+        }
+      }
+    }
+  }
+`)
