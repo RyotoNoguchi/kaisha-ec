@@ -11,7 +11,7 @@ import swiperPaginationStyles from 'swiper/css/pagination'
 import swiperScrollBarStyles from 'swiper/css/scrollbar'
 import tailwind from 'tailwindcss/tailwind.css'
 import { Layout } from '~/components/Layout'
-import favicon from './assets/favicon.svg'
+import favicon from './assets/favicon.ico'
 import appStyles from './styles/app.css'
 import resetStyles from './styles/reset.css'
 
