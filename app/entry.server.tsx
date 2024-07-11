@@ -50,6 +50,10 @@ export default async function handleRequest(request: Request, responseStatusCode
       'http://localhost:3000',
       'http://localhost:3100',
       request.url.split('?')[0] // 動的にリクエストのホスト名を追加
+    ],
+    frameSrc: [
+      "'self'",
+      'https://www.google.com' // Google Mapsのiframeを許可
     ]
   })
 
