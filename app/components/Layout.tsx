@@ -5,7 +5,8 @@ import type { CartApiQueryFragment, FooterQuery, HeaderQuery } from 'storefronta
 import { Footer } from '~/components/Footer'
 import { MobileMenuAside } from '~/components/organisms/MobileMenuAside'
 
-export type LayoutProps = {
+export type Props = {
+  logoUrl: string
   cart: Promise<CartApiQueryFragment | null>
   children?: React.ReactNode
   footer: Promise<FooterQuery>
@@ -13,14 +14,14 @@ export type LayoutProps = {
   isLoggedIn: Promise<boolean>
 }
 
-export const Layout = ({ cart, children = null, footer, header, isLoggedIn }: LayoutProps) => {
+export const Layout: React.FC<Props> = ({ cart, children = null, footer, header, isLoggedIn, logoUrl }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   return (
     <>
       {/* <CartAside cart={cart} />
       <SearchAside /> */}
       <MobileMenuAside menu={header?.menu} shop={header?.shop} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-      {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />}
+      {header && <Header header={header} cart={cart} isLoggedIn={isLoggedIn} isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} logoUrl={logoUrl} />}
       <main>{children}</main>
       <Suspense>
         <Await resolve={footer}>{(footer) => <Footer menu={footer?.menu} shop={header?.shop} />}</Await>
