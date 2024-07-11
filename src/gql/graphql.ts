@@ -8013,6 +8013,24 @@ export type MenuQuery = {
   } | null
 }
 
+export type GetShopQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetShopQuery = {
+  __typename?: 'QueryRoot'
+  shop: {
+    __typename?: 'Shop'
+    id: string
+    name: string
+    description: string | null
+    brand: {
+      __typename?: 'Brand'
+      shortDescription: string | null
+      logo: { __typename?: 'MediaImage'; image: { __typename?: 'Image'; url: any } | null } | null
+      squareLogo: { __typename?: 'MediaImage'; image: { __typename?: 'Image'; url: any } | null } | null
+    } | null
+  }
+}
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -8811,6 +8829,63 @@ export const MenuDocument = {
     }
   ]
 } as unknown as DocumentNode<MenuQuery, MenuQueryVariables>
+export const GetShopDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetShop' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'shop' },
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'name' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'brand' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'shortDescription' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'logo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'image' }, selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'url' } }] } }
+                          ]
+                        }
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'squareLogo' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'image' }, selectionSet: { kind: 'SelectionSet', selections: [{ kind: 'Field', name: { kind: 'Name', value: 'url' } }] } }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetShopQuery, GetShopQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [
