@@ -107,3 +107,26 @@ export const MENU_QUERY = gql`
     }
   }
 `
+
+export const SHOP_QUERY = gql`
+  query GetShop {
+    shop {
+      id
+      name
+      description
+      brand {
+        shortDescription
+        logo {
+          image {
+            url
+          }
+        }
+        squareLogo {
+          image {
+            url
+          }
+        }
+      }
+    }
+  }
+`
