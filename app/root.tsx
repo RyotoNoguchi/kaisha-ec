@@ -12,8 +12,12 @@ import swiperScrollBarStyles from 'swiper/css/scrollbar'
 import tailwind from 'tailwindcss/tailwind.css'
 import { Layout } from '~/components/Layout'
 import favicon from './assets/favicon.ico'
+import { SHOP_QUERY } from './graphql/storefront/queries'
 import appStyles from './styles/app.css'
 import resetStyles from './styles/reset.css'
+
+import { print } from 'graphql'
+import type { GetShopQuery } from 'src/gql/graphql'
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -76,6 +80,8 @@ export const useRootLoaderData = () => {
 
 export async function loader({ context }: LoaderFunctionArgs) {
   const { storefront, customerAccount, cart } = context
+  const { shop } = await context.storefront.query<GetShopQuery>(print(SHOP_QUERY))
+  const logoUrl = shop.brand?.logo?.image?.url
   const publicStoreDomain = context.env.PUBLIC_STORE_DOMAIN
   const publicStorefrontToken = context.env.PUBLIC_STOREFRONT_API_TOKEN
 
@@ -100,6 +106,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 
   return defer(
     {
+      logoUrl,
       cart: cartPromise,
       footer: footerPromise,
       header: await headerPromise,
@@ -118,7 +125,6 @@ export async function loader({ context }: LoaderFunctionArgs) {
 const App = () => {
   const nonce = useNonce()
   const data = useLoaderData<typeof loader>()
-  // const { publicStoreDomain, publicStorefrontToken } = data
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
     setIsClient(true)
