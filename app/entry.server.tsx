@@ -10,6 +10,7 @@ export default async function handleRequest(request: Request, responseStatusCode
       "'self'",
       "'unsafe-inline'", // 必要に応じて 'unsafe-inline' も追加
       'https://maps.googleapis.com', // Google MapsのAPIを許可,
+      'https://cdn.shopify.com', // ShopifyのCDNを許可
       'http://localhost:3100'
     ],
     styleSrc: [
@@ -35,7 +36,10 @@ export default async function handleRequest(request: Request, responseStatusCode
       'ws://127.0.0.1:*',
       'https://itoshima-ochazuke.myshopify.com/api/graphql.json', // Shopify GraphQL API を許可
       'https://itoshima-ochazuke.myshopify.com/2024-04/api/graphql.json', // Shopify GraphQL API を許可
-      'https://itoshima-ochazuke.myshopify.com/api/2024-04/graphql.json' // Shopify GraphQL API を許可
+      'https://itoshima-ochazuke.myshopify.com/api/2024-04/graphql.json', // Shopify GraphQL API を許可
+      'https://c5c5ed-e8.myshopify.com/api/graphql.json', // Shopify GraphQL API を許可
+      'https://c5c5ed-e8.myshopify.com/2024-04/api/graphql.json', // Shopify GraphQL API を許可
+      'https://c5c5ed-e8.myshopify.com/api/2024-04/graphql.json' // Shopify GraphQL API を許可
     ],
     imgSrc: [
       'self',
@@ -44,7 +48,8 @@ export default async function handleRequest(request: Request, responseStatusCode
       'https://maps.googleapis.com',
       'https://maps.gstatic.com', // Google Mapsの静的リソースを許可
       'http://localhost:3000',
-      'http://localhost:3100'
+      'http://localhost:3100',
+      request.url.split('?')[0] // 動的にリクエストのホスト名を追加
     ]
   })
 
