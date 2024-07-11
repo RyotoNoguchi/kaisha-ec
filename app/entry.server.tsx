@@ -49,7 +49,7 @@ export default async function handleRequest(request: Request, responseStatusCode
       'https://maps.gstatic.com', // Google Mapsの静的リソースを許可
       'http://localhost:3000',
       'http://localhost:3100',
-      request.url // 動的にリクエストのホスト名を追加
+      request.url.split('?')[0] // 動的にリクエストのホスト名を追加
     ]
   })
 
