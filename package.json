@@ -29,6 +29,7 @@
     "@shopify/hydrogen-react": "^2024.4.3",
     "@shopify/mini-oxygen": "^3.0.2",
     "@shopify/remix-oxygen": "2.0.4",
+    "@shopify/shopify-api": "^11.1.0",
     "@szhsin/react-accordion": "^1.2.4",
     "@types/swiper": "^6.0.0",
     "@vis.gl/react-google-maps": "^1.0.2",
