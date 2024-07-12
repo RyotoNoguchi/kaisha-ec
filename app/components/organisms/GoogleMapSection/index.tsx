@@ -2,12 +2,19 @@ import { AccessInfo } from '~/components/molecules/AccessInfo'
 
 type Props = {
   apiKey: string
+  shopInfo: {
+    name: string
+    email: string
+    address: string
+    phoneNumber: string
+    postalCode: string
+  }
 }
 
-export const GoogleMapSection: React.FC<Props> = ({ apiKey }) => {
+export const GoogleMapSection: React.FC<Props> = ({ apiKey, shopInfo }) => {
   return (
-    <section className='p-6 flex flex-col md:flex-row-reverse gap-4 md:gap-8'>
-      <AccessInfo />
+    <section id='access' className='p-6 flex flex-col md:flex-row-reverse gap-4 md:gap-8'>
+      <AccessInfo {...shopInfo} />
       <iframe
         src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3323.9193974062746!2d130.4035565757939!3d33.58144197333793!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3541919959f5a96d%3A0x9a0ef819adf28ccf!2z6Ia-54KZKOOBi-OBhOOBl-OCgyk!5e0!3m2!1sen!2sjp!4v1720701523891!5m2!1sen!2sjp'
         width='100%'

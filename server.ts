@@ -5,6 +5,59 @@ import { createRequestHandler, getStorefrontHeaders, type AppLoadContext } from 
 import { CART_QUERY_FRAGMENT } from '~/lib/fragments'
 import { AppSession } from '~/lib/session'
 
+import { LATEST_API_VERSION, shopifyApi } from '@shopify/shopify-api'
+import '@shopify/shopify-api/adapters/cf-worker'
+import { restResources } from '@shopify/shopify-api/rest/admin/2024-07'
+
+import { gql } from '@apollo/client'
+import { print } from 'graphql'
+
+const getShopByAdmin = async (env: Env) => {
+  const shopify = shopifyApi({
+    apiKey: env.KAISHA_ADMIN_API_KEY,
+    apiSecretKey: env.KAISHA_ADMIN_API_SECRET_KEY,
+    hostName: env.PUBLIC_STORE_DOMAIN,
+    apiVersion: LATEST_API_VERSION,
+    isEmbeddedApp: false,
+    isCustomStoreApp: true,
+    adminApiAccessToken: env.KAISHA_ADMIN_API_ACCESS_TOKEN,
+    restResources,
+    future: {
+      lineItemBilling: true,
+      customerAddressDefaultFix: true
+    }
+  })
+  const query = gql`
+    query {
+      shop {
+        name
+        contactEmail
+        billingAddress {
+          address1
+          city
+          phone
+          zip
+        }
+      }
+    }
+  `
+
+  try {
+    const session = shopify.session.customAppSession(env.PUBLIC_STORE_DOMAIN)
+
+    const client = new shopify.clients.Graphql({
+      session,
+      apiVersion: LATEST_API_VERSION
+    })
+
+    const response = await client.request<{ shop: { name: string; contactEmail: string; billingAddress: { address1: string; city: string; phone: string; zip: string } } }>(print(query))
+    return response.data?.shop
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching shop address:', error)
+    throw new Error('Failed to fetch shop address')
+  }
+}
 /**
  * Export a fetch handler in module format.
  */
@@ -34,6 +87,11 @@ export default {
         storefrontId: env.PUBLIC_STOREFRONT_ID,
         storefrontHeaders: getStorefrontHeaders(request)
       })
+
+      /**
+       * Create a Shop for Admin API
+       */
+      const shop = await getShopByAdmin(env)
 
       /**
        * Create a client for Customer Account API.
@@ -74,6 +132,7 @@ export default {
           session,
           storefront,
           customerAccount,
+          shop,
           cart,
           env,
           googleMapsApiKey,

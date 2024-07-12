@@ -16,7 +16,7 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 }
 
 export const loader = async ({ context, request }: LoaderFunctionArgs) => {
-  const { storefront, googleMapsApiKey } = context
+  const { storefront, googleMapsApiKey, shop: adminShop } = context
   const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY)
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 4
@@ -71,7 +71,7 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
     }
   `
   const recommendedProducts = await storefront.query<any>(SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY)
-  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop })
+  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop, adminShop })
 }
 
 const carouselImages = [
@@ -85,7 +85,14 @@ const carouselImages = [
 
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
-  const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop } = data
+  const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop, adminShop } = data
+  const shopInfo = {
+    name: adminShop?.name ?? '',
+    email: adminShop?.contactEmail ?? '',
+    address: `${adminShop?.billingAddress.city}${adminShop?.billingAddress.address1}`,
+    phoneNumber: adminShop?.billingAddress.phone ?? '',
+    postalCode: adminShop?.billingAddress.zip ?? ''
+  }
 
   return (
     <div className='home flex flex-col flex-shrink-0 gap-8'>
@@ -93,7 +100,7 @@ const Homepage = () => {
       <MenuSection products={products.nodes as AllProductsQuery['products']['nodes']} />
       <ChefIntroSection />
       <TestimonialSection />
-      <GoogleMapSection apiKey={googleMapsApiKey} />
+      <GoogleMapSection apiKey={googleMapsApiKey} shopInfo={shopInfo} />
     </div>
   )
 }

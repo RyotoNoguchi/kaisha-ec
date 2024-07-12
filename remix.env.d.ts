@@ -27,6 +27,9 @@ declare global {
     PUBLIC_CUSTOMER_ACCOUNT_API_CLIENT_ID: string
     PUBLIC_CUSTOMER_ACCOUNT_API_URL: string
     GOOGLE_MAPS_API_KEY: string
+    KAISHA_ADMIN_API_KEY: string
+    KAISHA_ADMIN_API_SECRET_KEY: string
+    KAISHA_ADMIN_API_ACCESS_TOKEN: string
   }
 
   /**
@@ -42,6 +45,18 @@ declare module '@shopify/remix-oxygen' {
   export interface AppLoadContext {
     env: Env
     cart: HydrogenCart
+    shop:
+      | {
+          name: string
+          contactEmail: string
+          billingAddress: {
+            address1: string
+            city: string
+            phone: string
+            zip: string
+          }
+        }
+      | undefined
     storefront: Storefront<I18nLocale>
     customerAccount: CustomerAccount
     session: AppSession
