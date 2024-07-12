@@ -11,13 +11,13 @@ import swiperPaginationStyles from 'swiper/css/pagination'
 import swiperScrollBarStyles from 'swiper/css/scrollbar'
 import tailwind from 'tailwindcss/tailwind.css'
 import { Layout } from '~/components/Layout'
+import { HEADER_MENUS_QUERY, SHOP_QUERY } from '~/graphql/storefront/queries'
 import favicon from './assets/favicon.ico'
-import { SHOP_QUERY } from './graphql/storefront/queries'
 import appStyles from './styles/app.css'
 import resetStyles from './styles/reset.css'
 
 import { print } from 'graphql'
-import type { GetShopQuery } from 'src/gql/graphql'
+import type { GetHeaderMenusQuery, GetShopQuery } from 'src/gql/graphql'
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -96,6 +96,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
     }
   })
 
+  const headerMenus = await storefront.query<GetHeaderMenusQuery>(print(HEADER_MENUS_QUERY))
+
   // await the header query (above the fold)
   const headerPromise = storefront.query(HEADER_QUERY, {
     cache: storefront.CacheLong(),
@@ -110,6 +112,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
       cart: cartPromise,
       footer: footerPromise,
       header: await headerPromise,
+      headerMenus,
       isLoggedIn: isLoggedInPromise,
       publicStoreDomain,
       publicStorefrontToken
@@ -125,6 +128,7 @@ export async function loader({ context }: LoaderFunctionArgs) {
 const App = () => {
   const nonce = useNonce()
   const data = useLoaderData<typeof loader>()
+  const { menu } = data.headerMenus as GetHeaderMenusQuery
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
     setIsClient(true)
@@ -144,7 +148,7 @@ const App = () => {
             {isClient && (
               <React.Suspense fallback={<div>Loading cart...</div>}>
                 <CartProvider>
-                  <Layout {...data}>
+                  <Layout {...data} headerMenus={menu}>
                     <Outlet />
                   </Layout>
                 </CartProvider>
@@ -165,6 +169,7 @@ export default App
 export function ErrorBoundary() {
   const error = useRouteError()
   const rootData = useRootLoaderData()
+  const { menu: headerMenus } = rootData.headerMenus as GetHeaderMenusQuery
   const nonce = useNonce()
   let errorMessage = 'Unknown error'
   let errorStatus = 500
@@ -185,7 +190,7 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <Layout {...rootData}>
+        <Layout {...rootData} headerMenus={headerMenus}>
           <div className='route-error'>
             <h1>Oops</h1>
             <h2>{errorStatus}</h2>

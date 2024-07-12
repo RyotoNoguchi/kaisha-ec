@@ -1,21 +1,22 @@
+import type { GetHeaderMenusQuery } from 'src/gql/graphql'
 import type { HeaderQuery } from 'storefrontapi.generated'
 import { Aside } from '~/components/Aside'
 import { HeaderMenu } from '~/components/Header/HeaderMenu'
 
 type Props = {
-  menu: HeaderQuery['menu']
+  headerMenus: GetHeaderMenusQuery['menu']
   shop: HeaderQuery['shop']
   isMobileMenuOpen: boolean
   setIsMobileMenuOpen: (isMobileMenuOpen: boolean) => void
 }
 
-export const MobileMenuAside: React.FC<Props> = ({ menu, shop, isMobileMenuOpen, setIsMobileMenuOpen }) => {
+export const MobileMenuAside: React.FC<Props> = ({ headerMenus, shop, isMobileMenuOpen, setIsMobileMenuOpen }) => {
   return (
-    menu &&
+    headerMenus &&
     shop?.primaryDomain?.url && (
       <Aside heading='MENU' isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen}>
         <div className='flex justify-start pt-4'>
-          <HeaderMenu menu={menu} viewport='mobile' primaryDomainUrl={shop.primaryDomain.url} />
+          <HeaderMenu headerMenus={headerMenus} viewport='mobile' primaryDomainUrl={shop.primaryDomain.url} />
         </div>
       </Aside>
     )

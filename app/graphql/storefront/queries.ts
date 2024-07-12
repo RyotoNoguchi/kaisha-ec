@@ -130,3 +130,15 @@ export const SHOP_QUERY = gql`
     }
   }
 `
+
+export const HEADER_MENUS_QUERY = gql`
+  query GetHeaderMenus {
+    menu(handle: "main-menu") {
+      items {
+        id
+        title
+        url
+      }
+    }
+  }
+`

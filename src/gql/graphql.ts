@@ -8031,6 +8031,10 @@ export type GetShopQuery = {
   }
 }
 
+export type GetHeaderMenusQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetHeaderMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: string | null }> } | null }
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -8886,6 +8890,43 @@ export const GetShopDocument = {
     }
   ]
 } as unknown as DocumentNode<GetShopQuery, GetShopQueryVariables>
+export const GetHeaderMenusDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetHeaderMenus' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'menu' },
+            arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'handle' }, value: { kind: 'StringValue', value: 'main-menu', block: false } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetHeaderMenusQuery, GetHeaderMenusQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [
