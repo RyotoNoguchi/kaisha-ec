@@ -1,129 +1,71 @@
-import { NavLink } from '@remix-run/react'
-import type { FooterQuery } from 'storefrontapi.generated'
+import { NavLink, useLocation } from '@remix-run/react'
+import { Image } from '@shopify/hydrogen-react'
+import type { GetFooterMenusQuery, GetSocialMediasQuery } from 'src/gql/graphql'
+import { InstagramIcon } from '~/components/atoms/InstagramIcon'
+// import type { FooterQuery } from 'storefrontapi.generated'
 import { useRootLoaderData } from '~/root'
 
 type Props = {
-  menu: FooterQuery['menu']
+  menu: GetFooterMenusQuery['menu']
+  socialMedias: GetSocialMediasQuery['menu']
   primaryDomainUrl: string
+  logoUrl: string
 }
 
-export const FooterMenu: React.FC<Props> = ({ menu, primaryDomainUrl }) => {
+export const FooterMenu: React.FC<Props> = ({ menu, primaryDomainUrl, socialMedias, logoUrl }) => {
   const { publicStoreDomain } = useRootLoaderData()
+  const location = useLocation()
+  if (!menu) return null
 
-  const renderLink = (item: { id: string; resourceId?: string; tags?: string[]; title: string; type?: string; url: string; items?: any[] }) => {
+  const renderLink = (item: { id: string; title: string; url: string }) => {
     if (!item.url) return null
     const url = item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname : item.url
     const isExternal = !url.startsWith('/')
     return isExternal ? (
-      <a className='pl-6' href={url} key={item.id} rel='noopener noreferrer' target='_blank'>
-        {item.title}
-      </a>
+      <li className='pl-6 w-full h-full flex items-start' key={item.id}>
+        <a className='text-white text-left' href={url} key={item.id} rel='noopener noreferrer' target='_blank'>
+          {item.title !== 'Instagram' ? (
+            item.title
+          ) : (
+            <div className='flex items-center gap-2'>
+              <InstagramIcon />
+              <p className='text-white'>Instagram</p>
+            </div>
+          )}
+        </a>
+      </li>
     ) : (
-      <NavLink className='pl-6' end key={item.id} prefetch='intent' style={activeLinkStyle} to={url}>
+      <NavLink
+        className='pl-6 w-full h-full flex justify-start text-white'
+        end
+        key={item.id}
+        prefetch='intent'
+        style={activeLinkStyle({
+          isActive: location.pathname === new URL(url, window.location.origin).pathname && location.hash === new URL(url, window.location.origin).hash,
+          isPending: false
+        })}
+        to={url}
+      >
         {item.title}
       </NavLink>
     )
   }
 
   return (
-    <nav className='h-full w-full bg-black p-2 md:p-4 font-yumincho' role='navigation'>
+    <nav className='h-full w-full bg-black p-2 md:p-4 font-yumincho pb-14 lg:pb-20' role='navigation'>
       <div className='grid md:grid-cols-3 md:gap-12 p-2 md:p-4 lg:p-1'>
-        <div className='flex items-start mb-4 md:mb-0 '>
-          {/* eslint-disable-next-line hydrogen/prefer-image-component */}
-          <img src='/image/kaysha-logo.webp' alt='logo' className='w-full h--full px-10 py-3 ' />
+        <div className='flex justify-center items-start mb-4 md:mb-0 '>
+          <Image src={logoUrl} alt='logo' width={300} height={150} />
         </div>
-        <div className='flex flex-col gap-2 md:gap-4 md:py-3 mb-3 md:mb-0'>{FALLBACK_FOOTER_MENU.items.slice(0, Math.ceil(FALLBACK_FOOTER_MENU.items.length / 2)).map((item) => renderLink(item))}</div>
-        <div className='flex flex-col gap-2 md:gap-4 md:py-3'>{FALLBACK_FOOTER_MENU.items.slice(Math.ceil(FALLBACK_FOOTER_MENU.items.length / 2)).map((item) => renderLink(item))}</div>
+        <div className='grid grid-cols-2 gap-4 md:hidden'>
+          <ul className='flex flex-col gap-3 '>{menu.items.map((footerMenu) => renderLink(footerMenu))}</ul>
+          <ul className='flex  justify-center items-start'>{socialMedias?.items.map((socialMedia) => renderLink(socialMedia))}</ul>
+        </div>
+        <ul className='hidden md:flex flex-col gap-3 pt-10 lg:pt-14 '>{menu.items.map((footerMenu) => renderLink(footerMenu))}</ul>
+        <ul className='hidden md:flex justify-center items-start pt-10 lg:pt-14'>{socialMedias?.items.map((socialMedia) => renderLink(socialMedia))}</ul>
       </div>
     </nav>
   )
-}
-
-const FALLBACK_FOOTER_MENU = {
-  id: 'gid://shopify/Menu/199655620664',
-  items: [
-    {
-      id: 'gid://shopify/MenuItem/461633060920',
-      resourceId: 'gid://shopify/ShopPolicy/23358046264',
-      tags: [],
-      title: 'HOME',
-      type: 'SHOP_POLICY',
-      url: '/policies/privacy-policy',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633093688',
-      resourceId: 'gid://shopify/ShopPolicy/23358013496',
-      tags: [],
-      title: 'メニュー',
-      type: 'メニュー',
-      url: '/policies/refund-policy',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633126456',
-      resourceId: 'gid://shopify/ShopPolicy/23358111800',
-      tags: [],
-      title: 'お弁当',
-      type: 'お弁当',
-      url: '/policies/shipping-policy',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159224',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: '店舗案内',
-      type: '店舗案内',
-      url: '/policies/terms-of-service',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159225',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: '店主の想い',
-      type: '店主の想い',
-      url: '/policies/terms-of-service',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159226',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'ご予約',
-      type: 'ご予約',
-      url: '/policies/terms-of-service',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159227',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: '店主のこだわり',
-      type: '店主のこだわり',
-      url: '/policies/terms-of-service',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159228',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'ブログ',
-      type: 'ブログ',
-      url: '/policies/terms-of-service',
-      items: []
-    },
-    {
-      id: 'gid://shopify/MenuItem/461633159229',
-      resourceId: 'gid://shopify/ShopPolicy/23358079032',
-      tags: [],
-      title: 'お問い合わせ',
-      type: 'お問い合わせ',
-      url: '/policies/terms-of-service',
-      items: []
-    }
-  ]
 }
 
 function activeLinkStyle({ isActive, isPending }: { isActive: boolean; isPending: boolean }) {

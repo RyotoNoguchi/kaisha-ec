@@ -8033,7 +8033,15 @@ export type GetShopQuery = {
 
 export type GetHeaderMenusQueryVariables = Exact<{ [key: string]: never }>
 
-export type GetHeaderMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: string | null }> } | null }
+export type GetHeaderMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: any | null }> } | null }
+
+export type GetFooterMenusQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetFooterMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: any | null }> } | null }
+
+export type GetSocialMediasQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetSocialMediasQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: any | null }> } | null }
 
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
@@ -8927,6 +8935,80 @@ export const GetHeaderMenusDocument = {
     }
   ]
 } as unknown as DocumentNode<GetHeaderMenusQuery, GetHeaderMenusQueryVariables>
+export const GetFooterMenusDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetFooterMenus' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'menu' },
+            arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'handle' }, value: { kind: 'StringValue', value: 'footer', block: false } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetFooterMenusQuery, GetFooterMenusQueryVariables>
+export const GetSocialMediasDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetSocialMedias' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'menu' },
+            arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'handle' }, value: { kind: 'StringValue', value: 'footer-sns', block: false } }],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'items' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'title' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'url' } }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetSocialMediasQuery, GetSocialMediasQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [

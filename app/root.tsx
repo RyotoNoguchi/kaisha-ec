@@ -11,13 +11,13 @@ import swiperPaginationStyles from 'swiper/css/pagination'
 import swiperScrollBarStyles from 'swiper/css/scrollbar'
 import tailwind from 'tailwindcss/tailwind.css'
 import { Layout } from '~/components/Layout'
-import { HEADER_MENUS_QUERY, SHOP_QUERY } from '~/graphql/storefront/queries'
+import { FOOTER_MENUS_QUERY, HEADER_MENUS_QUERY, SHOP_QUERY, SOCIAL_MEDIAS_QUERY } from '~/graphql/storefront/queries'
 import favicon from './assets/favicon.ico'
 import appStyles from './styles/app.css'
 import resetStyles from './styles/reset.css'
 
 import { print } from 'graphql'
-import type { GetHeaderMenusQuery, GetShopQuery } from 'src/gql/graphql'
+import type { GetFooterMenusQuery, GetHeaderMenusQuery, GetShopQuery, GetSocialMediasQuery } from 'src/gql/graphql'
 
 const client = new ApolloClient({
   link: new HttpLink({
@@ -89,12 +89,14 @@ export async function loader({ context }: LoaderFunctionArgs) {
   const cartPromise = cart.get()
 
   // defer the footer query (below the fold)
-  const footerPromise = storefront.query(FOOTER_QUERY, {
+  const footerPromise = storefront.query<GetFooterMenusQuery>(print(FOOTER_MENUS_QUERY), {
     cache: storefront.CacheLong(),
     variables: {
       footerMenuHandle: 'footer' // Adjust to your footer menu handle
     }
   })
+
+  const socialMediasPromise = storefront.query<GetSocialMediasQuery>(print(SOCIAL_MEDIAS_QUERY))
 
   const headerMenus = await storefront.query<GetHeaderMenusQuery>(print(HEADER_MENUS_QUERY))
 
@@ -110,7 +112,8 @@ export async function loader({ context }: LoaderFunctionArgs) {
     {
       logoUrl,
       cart: cartPromise,
-      footer: footerPromise,
+      footerMenus: footerPromise,
+      socialMediasPromise,
       header: await headerPromise,
       headerMenus,
       isLoggedIn: isLoggedInPromise,
@@ -129,6 +132,8 @@ const App = () => {
   const nonce = useNonce()
   const data = useLoaderData<typeof loader>()
   const { menu } = data.headerMenus as GetHeaderMenusQuery
+  const footerMenusPromise = data.footerMenus as Promise<GetFooterMenusQuery>
+  const socialMediasPromise = data.socialMediasPromise as Promise<GetSocialMediasQuery>
   const [isClient, setIsClient] = useState(false)
   useEffect(() => {
     setIsClient(true)
@@ -148,7 +153,7 @@ const App = () => {
             {isClient && (
               <React.Suspense fallback={<div>Loading cart...</div>}>
                 <CartProvider>
-                  <Layout {...data} headerMenus={menu}>
+                  <Layout {...data} headerMenus={menu} footer={footerMenusPromise} socialMedias={socialMediasPromise}>
                     <Outlet />
                   </Layout>
                 </CartProvider>
@@ -170,6 +175,8 @@ export function ErrorBoundary() {
   const error = useRouteError()
   const rootData = useRootLoaderData()
   const { menu: headerMenus } = rootData.headerMenus as GetHeaderMenusQuery
+  const footerMenusPromise = rootData.footerMenus as Promise<GetFooterMenusQuery>
+  const socialMediasPromise = rootData.socialMediasPromise as Promise<GetSocialMediasQuery>
   const nonce = useNonce()
   let errorMessage = 'Unknown error'
   let errorStatus = 500
@@ -190,7 +197,7 @@ export function ErrorBoundary() {
         <Links />
       </head>
       <body>
-        <Layout {...rootData} headerMenus={headerMenus}>
+        <Layout {...rootData} headerMenus={headerMenus} footer={footerMenusPromise} socialMedias={socialMediasPromise}>
           <div className='route-error'>
             <h1>Oops</h1>
             <h2>{errorStatus}</h2>
@@ -266,15 +273,15 @@ const HEADER_QUERY = `#graphql
   ${MENU_FRAGMENT}
 ` as const
 
-const FOOTER_QUERY = `#graphql
-  query Footer(
-    $country: CountryCode
-    $footerMenuHandle: String!
-    $language: LanguageCode
-  ) @inContext(language: $language, country: $country) {
-    menu(handle: $footerMenuHandle) {
-      ...Menu
-    }
-  }
-  ${MENU_FRAGMENT}
-` as const
+// const FOOTER_QUERY = `#graphql
+//   query Footer(
+//     $country: CountryCode
+//     $footerMenuHandle: String!
+//     $language: LanguageCode
+//   ) @inContext(language: $language, country: $country) {
+//     menu(handle: $footerMenuHandle) {
+//       ...Menu
+//     }
+//   }
+//   ${MENU_FRAGMENT}
+// ` as const

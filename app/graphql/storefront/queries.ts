@@ -142,3 +142,27 @@ export const HEADER_MENUS_QUERY = gql`
     }
   }
 `
+
+export const FOOTER_MENUS_QUERY = gql`
+  query GetFooterMenus {
+    menu(handle: "footer") {
+      items {
+        id
+        title
+        url
+      }
+    }
+  }
+`
+
+export const SOCIAL_MEDIAS_QUERY = gql`
+  query GetSocialMedias {
+    menu(handle: "footer-sns") {
+      items {
+        id
+        title
+        url
+      }
+    }
+  }
+`

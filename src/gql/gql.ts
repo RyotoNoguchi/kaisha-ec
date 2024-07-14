@@ -21,6 +21,8 @@ const documents = {
   '\n  query GetShop {\n    shop {\n      id\n      name\n      description\n      brand {\n        shortDescription\n        logo {\n          image {\n            url\n          }\n        }\n        squareLogo {\n          image {\n            url\n          }\n        }\n      }\n    }\n  }\n':
     types.GetShopDocument,
   '\n  query GetHeaderMenus {\n    menu(handle: "main-menu") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n': types.GetHeaderMenusDocument,
+  '\n  query GetFooterMenus {\n    menu(handle: "footer") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n': types.GetFooterMenusDocument,
+  '\n  query GetSocialMedias {\n    menu(handle: "footer-sns") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n': types.GetSocialMediasDocument,
   '\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    quantityAvailable\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n':
     types.ProductVariantFragmentDoc,
   '\n  # https://shopify.dev/docs/api/storefront/2024-01/objects/Product#fields\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    metafield(namespace: "custom", key: "ingredients") {\n      id\n      description\n      type\n      value\n    }\n    options {\n      name\n      values\n    }\n    images(first: 250) {\n      edges {\n        node {\n          url\n          altText\n          id\n        }\n      }\n    }\n    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    variants(first: 1) {\n      nodes {\n        ...ProductVariant\n      }\n    }\n    seo {\n      description\n      title\n    }\n  }\n  \n':
@@ -78,6 +80,18 @@ export function graphql(
 export function graphql(
   source: '\n  query GetHeaderMenus {\n    menu(handle: "main-menu") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n'
 ): (typeof documents)['\n  query GetHeaderMenus {\n    menu(handle: "main-menu") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetFooterMenus {\n    menu(handle: "footer") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query GetFooterMenus {\n    menu(handle: "footer") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetSocialMedias {\n    menu(handle: "footer-sns") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query GetSocialMedias {\n    menu(handle: "footer-sns") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
