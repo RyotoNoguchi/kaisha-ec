@@ -1,15 +1,14 @@
-import { gql } from '@apollo/client'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { getPaginationVariables } from '@shopify/hydrogen'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
-import type { AllProductsQuery, GetShopQuery, GetTestimonialsQuery } from 'src/gql/graphql'
+import type { AllProductsQuery, GetAboutChefQuery, GetShopQuery, GetTestimonialsQuery } from 'src/gql/graphql'
 import { Carousel } from '~/components/organisms/Carousel'
 import { ChefIntroSection } from '~/components/organisms/ChefIntroSection'
 import { GoogleMapSection } from '~/components/organisms/GoogleMapSection'
 import { MenuSection } from '~/components/organisms/MenuSection'
 import { TestimonialSection } from '~/components/organisms/TestimonialSection'
-import { PRODUCTS_QUERY, SHOP_QUERY, TESTIMONIALS_QUERY } from '~/graphql/storefront/queries'
+import { ABOUT_CHEF_QUERY, PRODUCTS_QUERY, SHOP_QUERY, TESTIMONIALS_QUERY } from '~/graphql/storefront/queries'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: data?.shop.name }, { name: 'description', content: data?.shop.description }]
@@ -20,6 +19,11 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
   const { collections } = await storefront.query(FEATURED_COLLECTION_QUERY)
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 4
+  })
+  const aboutChef = context.storefront.query<GetAboutChefQuery>(print(ABOUT_CHEF_QUERY)).catch((error) => {
+    // eslint-disable-next-line no-console
+    console.error(error)
+    return null
   })
   const testimonials = context.storefront.query<GetTestimonialsQuery>(print(TESTIMONIALS_QUERY)).catch((error) => {
     // eslint-disable-next-line no-console
@@ -76,7 +80,7 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
     }
   `
   const recommendedProducts = await storefront.query<any>(SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY)
-  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop, adminShop, testimonials })
+  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop, adminShop, testimonials, aboutChef })
 }
 
 const carouselImages = [
@@ -90,7 +94,7 @@ const carouselImages = [
 
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
-  const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop, adminShop, testimonials } = data
+  const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop, adminShop, testimonials, aboutChef } = data
   const shopInfo = {
     name: adminShop?.name ?? '',
     email: adminShop?.contactEmail ?? '',
@@ -103,7 +107,7 @@ const Homepage = () => {
     <div className='home flex flex-col flex-shrink-0 gap-8'>
       <Carousel images={carouselImages} />
       <MenuSection products={products.nodes as AllProductsQuery['products']['nodes']} />
-      <ChefIntroSection />
+      {aboutChef && <ChefIntroSection aboutChef={aboutChef as Promise<GetAboutChefQuery>} />}
       {testimonials && <TestimonialSection testimonials={testimonials as Promise<GetTestimonialsQuery>} />}
       <GoogleMapSection apiKey={googleMapsApiKey} shopInfo={shopInfo} />
     </div>
@@ -134,77 +138,3 @@ const FEATURED_COLLECTION_QUERY = `#graphql
     }
   }
 ` as const
-
-const RECOMMENDED_PRODUCTS_FRAGMENT = gql`
-  fragment RecommendedProduct on Product {
-    id
-    title
-    handle
-    images(first: 1) {
-      nodes {
-        id
-        url
-        altText
-        width
-        height
-      }
-    }
-    priceRange {
-      minVariantPrice {
-        amount
-        currencyCode
-      }
-    }
-    variants(first: 1) {
-      nodes {
-        id
-        selectedOptions {
-          name
-          value
-        }
-      }
-    }
-  }
-`
-
-const RECOMMENDED_PRODUCTS_QUERY = gql`
-  ${RECOMMENDED_PRODUCTS_FRAGMENT}
-  query RecommendedProducts($country: CountryCode, $language: LanguageCode) @inContext(country: $country, language: $language) {
-    products(first: 10, sortKey: UPDATED_AT, reverse: true) {
-      nodes {
-        ...RecommendedProduct
-      }
-    }
-  }
-`
-
-// const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-//   fragment RecommendedProduct on Product {
-//     id
-//     title
-//     handle
-//     priceRange {
-//       minVariantPrice {
-//         amount
-//         currencyCode
-//       }
-//     }
-//     images(first: 1) {
-//       nodes {
-//         id
-//         url
-//         altText
-//         width
-//         height
-//       }
-//     }
-//   }
-//   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
-//     @inContext(country: $country, language: $language) {
-//     products(first: 4, sortKey: UPDATED_AT, reverse: true) {
-//       nodes {
-//         ...RecommendedProduct
-//       }
-//     }
-//   }
-// ` as const

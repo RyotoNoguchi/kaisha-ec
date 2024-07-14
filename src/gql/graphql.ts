@@ -8045,6 +8045,33 @@ export type GetTestimonialsQuery = {
   }
 }
 
+export type GetAboutChefQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetAboutChefQuery = {
+  __typename?: 'QueryRoot'
+  metaobject: {
+    __typename?: 'Metaobject'
+    id: string
+    handle: string
+    type: string
+    fields: Array<{
+      __typename?: 'MetaobjectField'
+      key: string
+      value: string | null
+      reference:
+        | { __typename: 'Collection' }
+        | { __typename: 'GenericFile' }
+        | { __typename: 'MediaImage'; alt: string | null; image: { __typename?: 'Image'; id: string | null; url: any; altText: string | null; width: number | null; height: number | null } | null }
+        | { __typename: 'Metaobject' }
+        | { __typename: 'Page' }
+        | { __typename: 'Product' }
+        | { __typename: 'ProductVariant' }
+        | { __typename: 'Video' }
+        | null
+    }>
+  } | null
+}
+
 export type GetFooterMenusQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetFooterMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: any | null }> } | null }
@@ -8995,6 +9022,91 @@ export const GetTestimonialsDocument = {
     }
   ]
 } as unknown as DocumentNode<GetTestimonialsQuery, GetTestimonialsQueryVariables>
+export const GetAboutChefDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetAboutChef' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metaobject' },
+            arguments: [
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'handle' },
+                value: {
+                  kind: 'ObjectValue',
+                  fields: [
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'type' }, value: { kind: 'StringValue', value: 'about_chef', block: false } },
+                    { kind: 'ObjectField', name: { kind: 'Name', value: 'handle' }, value: { kind: 'StringValue', value: 'about-chef', block: false } }
+                  ]
+                }
+              }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'fields' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'reference' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                            {
+                              kind: 'InlineFragment',
+                              typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MediaImage' } },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: 'alt' } },
+                                  {
+                                    kind: 'Field',
+                                    name: { kind: 'Name', value: 'image' },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+                                        { kind: 'Field', name: { kind: 'Name', value: 'height' } }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetAboutChefQuery, GetAboutChefQueryVariables>
 export const GetFooterMenusDocument = {
   kind: 'Document',
   definitions: [

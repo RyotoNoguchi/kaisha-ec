@@ -23,6 +23,8 @@ const documents = {
   '\n  query GetHeaderMenus {\n    menu(handle: "main-menu") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n': types.GetHeaderMenusDocument,
   '\n  query GetTestimonials {\n    metaobjects(type: "testimonial", first: 250) {\n      nodes {\n        id\n        handle\n        fields {\n          key\n          value\n        }\n      }\n    }\n  }\n':
     types.GetTestimonialsDocument,
+  '\n  query GetAboutChef {\n    metaobject(handle: { type: "about_chef", handle: "about-chef" }) {\n      id\n      handle\n      type\n      fields {\n        key\n        value\n        reference {\n          __typename\n          ... on MediaImage {\n            alt\n            image {\n              id\n              url\n              altText\n              width\n              height\n            }\n          }\n        }\n      }\n    }\n  }\n':
+    types.GetAboutChefDocument,
   '\n  query GetFooterMenus {\n    menu(handle: "footer") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n': types.GetFooterMenusDocument,
   '\n  query GetSocialMedias {\n    menu(handle: "footer-sns") {\n      items {\n        id\n        title\n        url\n      }\n    }\n  }\n': types.GetSocialMediasDocument,
   '\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    quantityAvailable\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n':
@@ -88,6 +90,12 @@ export function graphql(
 export function graphql(
   source: '\n  query GetTestimonials {\n    metaobjects(type: "testimonial", first: 250) {\n      nodes {\n        id\n        handle\n        fields {\n          key\n          value\n        }\n      }\n    }\n  }\n'
 ): (typeof documents)['\n  query GetTestimonials {\n    metaobjects(type: "testimonial", first: 250) {\n      nodes {\n        id\n        handle\n        fields {\n          key\n          value\n        }\n      }\n    }\n  }\n']
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(
+  source: '\n  query GetAboutChef {\n    metaobject(handle: { type: "about_chef", handle: "about-chef" }) {\n      id\n      handle\n      type\n      fields {\n        key\n        value\n        reference {\n          __typename\n          ... on MediaImage {\n            alt\n            image {\n              id\n              url\n              altText\n              width\n              height\n            }\n          }\n        }\n      }\n    }\n  }\n'
+): (typeof documents)['\n  query GetAboutChef {\n    metaobject(handle: { type: "about_chef", handle: "about-chef" }) {\n      id\n      handle\n      type\n      fields {\n        key\n        value\n        reference {\n          __typename\n          ... on MediaImage {\n            alt\n            image {\n              id\n              url\n              altText\n              width\n              height\n            }\n          }\n        }\n      }\n    }\n  }\n']
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
