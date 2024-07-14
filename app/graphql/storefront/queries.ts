@@ -157,6 +157,33 @@ export const TESTIMONIALS_QUERY = gql`
   }
 `
 
+export const ABOUT_CHEF_QUERY = gql`
+  query GetAboutChef {
+    metaobject(handle: { type: "about_chef", handle: "about-chef" }) {
+      id
+      handle
+      type
+      fields {
+        key
+        value
+        reference {
+          __typename
+          ... on MediaImage {
+            alt
+            image {
+              id
+              url
+              altText
+              width
+              height
+            }
+          }
+        }
+      }
+    }
+  }
+`
+
 export const FOOTER_MENUS_QUERY = gql`
   query GetFooterMenus {
     menu(handle: "footer") {
