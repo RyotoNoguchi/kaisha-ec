@@ -12,7 +12,7 @@ export const TestimonialCard: React.FC<Props> = ({ title, text, sex, customerAge
       <div className='flex flex-col gap-3 flex-1 justify-between'>
         <p className=''>{text}</p>
         <div className='flex gap-1 justify-end'>
-          <p className=''>{sex}</p>
+          <p className=''>{sex === 'man' ? '男性' : '女性'}</p>
           <p className=''>{customerAge}代</p>
         </div>
       </div>

@@ -8035,6 +8035,16 @@ export type GetHeaderMenusQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetHeaderMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: any | null }> } | null }
 
+export type GetTestimonialsQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetTestimonialsQuery = {
+  __typename?: 'QueryRoot'
+  metaobjects: {
+    __typename?: 'MetaobjectConnection'
+    nodes: Array<{ __typename?: 'Metaobject'; id: string; handle: string; fields: Array<{ __typename?: 'MetaobjectField'; key: string; value: string | null }> }>
+  }
+}
+
 export type GetFooterMenusQueryVariables = Exact<{ [key: string]: never }>
 
 export type GetFooterMenusQuery = { __typename?: 'QueryRoot'; menu: { __typename?: 'Menu'; items: Array<{ __typename?: 'MenuItem'; id: string; title: string; url: any | null }> } | null }
@@ -8935,6 +8945,56 @@ export const GetHeaderMenusDocument = {
     }
   ]
 } as unknown as DocumentNode<GetHeaderMenusQuery, GetHeaderMenusQueryVariables>
+export const GetTestimonialsDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetTestimonials' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metaobjects' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'type' }, value: { kind: 'StringValue', value: 'testimonial', block: false } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '250' } }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'fields' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'value' } }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetTestimonialsQuery, GetTestimonialsQueryVariables>
 export const GetFooterMenusDocument = {
   kind: 'Document',
   definitions: [

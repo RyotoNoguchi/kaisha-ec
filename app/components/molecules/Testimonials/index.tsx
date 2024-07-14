@@ -1,31 +1,39 @@
-import { TestimonialCard } from '~/components/molecules/TestimonialCard'
+import { Await } from '@remix-run/react'
+import { Suspense } from 'react'
+import type { GetTestimonialsQuery } from 'src/gql/graphql'
+import { TestimonialCard } from '../TestimonialCard'
 
-const testimonials = [
-  {
-    title: '上質な和の体験',
-    text: '「肉割烹 膾炙での食事は、単なる外食を超えた体験でした。選び抜かれた佐賀牛のステーキは、その一口一口に感動。和の伝統を重んじたお店の雰囲気と、丁寧なサービスが素晴らしく、特別な日をさらに格別なものにしてくれました。」',
-    sex: '女性',
-    customerAge: 40
-  },
-  {
-    title: '素材と技の極致',
-    text: '「素材の味を生かした調理法には毎回感動します。特に赤身のランプステーキは絶品で、肉本来の味わいが口いっぱいに広がります。細部にわたる料理人のこだわりが、見事に一皿に表現されていると感じました。」',
-    sex: '男性',
-    customerAge: 30
-  },
-  {
-    title: '安らぎの空間で味わう至福の時',
-    text: '「肉割烹 膾炙での食事は、単なる外食を超えた体験でした。選び抜かれた佐賀牛のステーキは、その一口一口に感動。和の伝統を重んじたお店の雰囲気と、丁寧なサービスが素晴らしく、特別な日をさらに格別なものにしてくれました。」',
-    sex: '女性',
-    customerAge: 50
-  }
-]
+type Props = {
+  testimonials: Promise<GetTestimonialsQuery>
+}
 
-export const Testimonials: React.FC = () => (
+export const Testimonials: React.FC<Props> = ({ testimonials }) => (
   <div className='flex gap-5 overflow-x-scroll'>
-    {testimonials.map((testimonial, index) => (
-      // eslint-disable-next-line react/no-array-index-key
-      <TestimonialCard key={index} title={testimonial.title} text={testimonial.text} sex={testimonial.sex} customerAge={testimonial.customerAge} />
-    ))}
+    <Suspense fallback={<div>Loading...</div>}>
+      <Await resolve={testimonials}>
+        {(response) => {
+          const testimonials = response.metaobjects.nodes.map((node) =>
+            node.fields.reduce((acc: { [key: string]: string | number }, field) => {
+              acc['id'] = node.id
+              if (field.value) {
+                acc[field.key] = field.value
+              }
+              return acc
+            }, {})
+          )
+          return testimonials.map((testimonial) => {
+            return (
+              <TestimonialCard
+                key={testimonial.id}
+                title={testimonial.title as string}
+                text={testimonial.comment as string}
+                sex={testimonial.sex as 'man' | 'woman'}
+                customerAge={testimonial.age as number}
+              />
+            )
+          })
+        }}
+      </Await>
+    </Suspense>
   </div>
 )
