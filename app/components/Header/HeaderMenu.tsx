@@ -27,7 +27,7 @@ export const HeaderMenu: React.FC<Props> = ({ primaryDomainUrl, viewport, header
 
   return (
     <nav className='md:flex w-full' role='navigation'>
-      <ul className='flex flex-col flex-1 md:flex-row md:justify-evenly lg:justify-center  gap-4 md:gap-2 lg:gap-4 w-full md:px-4'>
+      <ul className='flex flex-col flex-1 md:flex-row md:justify-evenly gap-4 md:gap-2 lg:gap-4 w-full md:px-4'>
         {headerMenus?.items.map((item) => {
           if (!item.url) return null
           const url =
