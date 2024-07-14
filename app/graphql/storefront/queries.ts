@@ -142,6 +142,20 @@ export const HEADER_MENUS_QUERY = gql`
     }
   }
 `
+export const TESTIMONIALS_QUERY = gql`
+  query GetTestimonials {
+    metaobjects(type: "testimonial", first: 250) {
+      nodes {
+        id
+        handle
+        fields {
+          key
+          value
+        }
+      }
+    }
+  }
+`
 
 export const FOOTER_MENUS_QUERY = gql`
   query GetFooterMenus {
