@@ -1,11 +1,14 @@
 import React from 'react'
-import type { FooterQuery, HeaderQuery } from 'storefrontapi.generated'
+import type { GetFooterMenusQuery, GetSocialMediasQuery } from 'src/gql/graphql'
+import type { HeaderQuery } from 'storefrontapi.generated'
 import { FooterMenu } from '~/components/molecules/FooterMenu'
 
-type FooterProps = FooterQuery & {
-  shop: HeaderQuery['shop']
-}
+type Props = { shop: HeaderQuery['shop'] } & { socialMedias: GetSocialMediasQuery['menu'] } & { footerMenus: GetFooterMenusQuery['menu'] } & { logoUrl: string }
 
-export const Footer: React.FC<FooterProps> = ({ menu, shop }) => {
-  return <footer className='mt-20'>{menu && shop?.primaryDomain?.url && <FooterMenu menu={menu} primaryDomainUrl={shop.primaryDomain.url} />}</footer>
+export const Footer: React.FC<Props> = ({ shop, socialMedias, footerMenus, logoUrl }) => {
+  return (
+    <footer className='mt-20'>
+      {footerMenus && shop?.primaryDomain?.url && <FooterMenu menu={footerMenus} primaryDomainUrl={shop.primaryDomain.url} socialMedias={socialMedias} logoUrl={logoUrl} />}
+    </footer>
+  )
 }
