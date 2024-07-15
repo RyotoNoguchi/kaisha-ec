@@ -2,20 +2,23 @@ import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
 import { gql, useQuery } from '@apollo/client'
-import { List, ListItem, Typography } from '@material-tailwind/react'
-import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
-import { getSelectedProductOptions, Image, Money } from '@shopify/hydrogen'
+import { Typography } from '@material-tailwind/react'
+import { useLoaderData, type MetaFunction } from '@remix-run/react'
+import { getPaginationVariables, getSelectedProductOptions, Money } from '@shopify/hydrogen'
 import { AddToCartButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
 import { graphql } from 'src/gql/gql'
-import type { ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment, ProductsQuery } from 'src/gql/graphql'
+import type { AllProductsQuery, ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment } from 'src/gql/graphql'
 import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import ProductGallery from '~/components/molecules/ProductGallery'
+import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
 import { getVariantUrl } from '~/lib/variants'
+
+import { CrossSellProductList } from '~/components/organisms/CrossSellProductList'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Hydrogen | ${data?.product.title ?? ''}` }]
@@ -24,6 +27,23 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export const loader = async ({ params, request, context }: LoaderFunctionArgs) => {
   const { handle } = params
   const { storefront } = context
+
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 6
+  })
+
+  const { products } = await context.storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
+    variables: paginationVariables
+  })
+
+  const filteredProductsByCurrentProductHandle = products.nodes
+    .filter((product) => product.handle !== handle)
+    .map((product) => ({
+      id: product.id,
+      title: product.title,
+      handle: product.handle,
+      imageUrl: product.featuredImage?.url ?? ''
+    }))
 
   const selectedOptions = getSelectedProductOptions(request).filter(
     (option) =>
@@ -66,20 +86,7 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
     }
   }
 
-  /*
-    In order to show which variants are available in the UI, we need to query
-    all of them. But there might be a *lot*, so instead separate the variants
-    into it's own separate query that is deferred. So there's a brief moment
-    where variant options might show as available when they're not, but after
-    this deffered query resolves, the UI will update.
-  */
-  const variants = storefront.query(print(VARIANTS_QUERY), {
-    variables: { handle }
-  })
-
-  const { products } = await storefront.query<ProductsQuery>(print(PRODUCTS_QUERY))
-
-  return defer({ product, variants, context, selectedOptions, products })
+  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle })
 }
 const redirectToFirstVariant = ({ product, request }: { product: MyProductFragment; request: Request }) => {
   const url = new URL(request.url)
@@ -99,7 +106,7 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 }
 
 const Product: React.FC = () => {
-  const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
+  const { product, selectedOptions, filteredProductsByCurrentProductHandle } = useLoaderData<typeof loader>()
 
   const ingredients = product.metafields
     .find((metafield) => metafield && metafield.key === 'ingredients')
@@ -241,23 +248,20 @@ const Product: React.FC = () => {
               </div>
             </div>
           </div>
-          <div className='flex flex-col gap-4 lg:px-10'>
-            <Typography variant='h4' color='black' className='font-semibold text-xl md:text-2xl'>
-              ご一緒にいかがですか？
-            </Typography>
-            <List className='flex flex-row p-0 gap-6 list-none w-full  overflow-x-auto'>
-              {/* TODO Adminでデータ作成したら、RecommendedProductsに置換 */}
-              {product.images.edges.map((image: { node: { url?: URL; altText: string | null; id: string | null } }) => (
-                <ListItem className='w-auto hover:opacity-70' key={image.node.id}>
-                  <Image data={{ url: image.node.url?.toString() ?? '', altText: image.node.altText ?? '', id: image.node.id ?? '' }} className='min-w-32 md:min-w-48 max-w-48' />
-                </ListItem>
-              ))}
-            </List>
-          </div>
+          <CrossSellProductList
+            products={
+              filteredProductsByCurrentProductHandle as {
+                id: string
+                title: string
+                handle: string
+                imageUrl: string
+              }[]
+            }
+          />
         </div>
         {/* eslint-disable-next-line hydrogen/prefer-image-component */}
         <img src='/image/pages/product/banner.webp' alt='レストランバナー' className='w-full' />
-        <div className=''>
+        {/* <div className=''>
           <div className='font-yumincho flex flex-col gap-4 px-6 md:px-10 lg:px-32 xl:px-56'>
             <Typography variant='h4' color='black' className='text-2xl font-semibold flex flex-col gap-4 md:px-9 lg:px-10'>
               メニュー一覧
@@ -272,7 +276,7 @@ const Product: React.FC = () => {
               ))}
             </List>
           </div>
-        </div>
+        </div> */}
       </div>
     </ProductProvider>
   )
@@ -369,46 +373,6 @@ const PRODUCT_QUERY = gql`
     }
   }
   ${PRODUCT_FRAGMENT}
-`
-
-const PRODUCT_VARIANTS_FRAGMENT = gql`
-  fragment ProductVariants on Product {
-    variants(first: 250) {
-      nodes {
-        ...ProductVariant
-      }
-    }
-  }
-  ${PRODUCT_VARIANT_FRAGMENT}
-`
-
-const VARIANTS_QUERY = gql`
-  ${PRODUCT_VARIANTS_FRAGMENT}
-  query ProductVariants($country: CountryCode, $language: LanguageCode, $handle: String!) @inContext(country: $country, language: $language) {
-    product(handle: $handle) {
-      ...ProductVariants
-    }
-  }
-`
-
-const PRODUCTS_QUERY = gql`
-  query Products {
-    products(first: 250) {
-      nodes {
-        id
-        title
-        handle
-        description
-        images(first: 250) {
-          edges {
-            node {
-              url
-            }
-          }
-        }
-      }
-    }
-  }
 `
 
 const document = graphql(/* Graphql */ `

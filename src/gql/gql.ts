@@ -36,12 +36,7 @@ const documents = {
   '\n  # https://shopify.dev/docs/api/storefront/2024-01/objects/Product#fields\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    metafields(identifiers: [{ namespace: "custom", key: "ingredients" }, { namespace: "custom", key: "shippable" }]) {\n      id\n      type\n      value\n      key\n    }\n    options {\n      name\n      values\n    }\n    images(first: 250) {\n      edges {\n        node {\n          url\n          altText\n          id\n        }\n      }\n    }\n    selectedVariant: variantBySelectedOptions(selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    variants(first: 1) {\n      nodes {\n        ...ProductVariant\n      }\n    }\n    seo {\n      description\n      title\n    }\n  }\n  \n':
     types.ProductFragmentDoc,
   '\n  query Product($country: CountryCode, $handle: String!, $language: LanguageCode, $selectedOptions: [SelectedOptionInput!]!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  \n':
-    types.ProductDocument,
-  '\n  fragment ProductVariants on Product {\n    variants(first: 250) {\n      nodes {\n        ...ProductVariant\n      }\n    }\n  }\n  \n': types.ProductVariantsFragmentDoc,
-  '\n  \n  query ProductVariants($country: CountryCode, $language: LanguageCode, $handle: String!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...ProductVariants\n    }\n  }\n':
-    types.ProductVariantsDocument,
-  '\n  query Products {\n    products(first: 250) {\n      nodes {\n        id\n        title\n        handle\n        description\n        images(first: 250) {\n          edges {\n            node {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n':
-    types.ProductsDocument
+    types.ProductDocument
 }
 
 /**
@@ -142,24 +137,6 @@ export function graphql(
 export function graphql(
   source: '\n  query Product($country: CountryCode, $handle: String!, $language: LanguageCode, $selectedOptions: [SelectedOptionInput!]!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  \n'
 ): (typeof documents)['\n  query Product($country: CountryCode, $handle: String!, $language: LanguageCode, $selectedOptions: [SelectedOptionInput!]!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  \n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  fragment ProductVariants on Product {\n    variants(first: 250) {\n      nodes {\n        ...ProductVariant\n      }\n    }\n  }\n  \n'
-): (typeof documents)['\n  fragment ProductVariants on Product {\n    variants(first: 250) {\n      nodes {\n        ...ProductVariant\n      }\n    }\n  }\n  \n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  \n  query ProductVariants($country: CountryCode, $language: LanguageCode, $handle: String!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...ProductVariants\n    }\n  }\n'
-): (typeof documents)['\n  \n  query ProductVariants($country: CountryCode, $language: LanguageCode, $handle: String!) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...ProductVariants\n    }\n  }\n']
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(
-  source: '\n  query Products {\n    products(first: 250) {\n      nodes {\n        id\n        title\n        handle\n        description\n        images(first: 250) {\n          edges {\n            node {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n'
-): (typeof documents)['\n  query Products {\n    products(first: 250) {\n      nodes {\n        id\n        title\n        handle\n        description\n        images(first: 250) {\n          edges {\n            node {\n              url\n            }\n          }\n        }\n      }\n    }\n  }\n']
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {}
