@@ -20,7 +20,7 @@ export const CrossSellProductList: React.FC<Props> = ({ products }) => {
       <ul className='flex flex-row p-0 gap-6 list-none w-full overflow-x-auto whitespace-nowrap'>
         {products.map((product) => {
           return (
-            <li key={product.id} className='hover:opacity-70'>
+            <li key={product.id} className='hover:opacity-70 max-w-[200px]'>
               <Link to={`/products/${product.handle}`} className='flex flex-col gap-2'>
                 <div className='w-[200px] h-[160px] overflow-hidden'>
                   <Image src={product.imageUrl} alt={product.title} className='object-cover w-full h-full' />
