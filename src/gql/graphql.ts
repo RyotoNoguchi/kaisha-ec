@@ -8123,6 +8123,36 @@ export type GetRecommendedCollectionQuery = {
   } | null
 }
 
+export type GetCarouselSlidesQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetCarouselSlidesQuery = {
+  __typename?: 'QueryRoot'
+  metaobjects: {
+    __typename?: 'MetaobjectConnection'
+    nodes: Array<{
+      __typename?: 'Metaobject'
+      id: string
+      handle: string
+      fields: Array<{
+        __typename?: 'MetaobjectField'
+        type: string
+        key: string
+        value: string | null
+        reference:
+          | { __typename: 'Collection' }
+          | { __typename: 'GenericFile' }
+          | { __typename: 'MediaImage'; alt: string | null; image: { __typename?: 'Image'; id: string | null; url: string; width: number | null; height: number | null } | null }
+          | { __typename: 'Metaobject' }
+          | { __typename: 'Page' }
+          | { __typename: 'Product' }
+          | { __typename: 'ProductVariant' }
+          | { __typename: 'Video' }
+          | null
+      }>
+    }>
+  }
+}
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -9380,6 +9410,90 @@ export const GetRecommendedCollectionDocument = {
     }
   ]
 } as unknown as DocumentNode<GetRecommendedCollectionQuery, GetRecommendedCollectionQueryVariables>
+export const GetCarouselSlidesDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetCarouselSlides' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metaobjects' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'type' }, value: { kind: 'StringValue', value: 'carousel', block: false } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '10' } }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'fields' },
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'reference' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MediaImage' } },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        { kind: 'Field', name: { kind: 'Name', value: 'alt' } },
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'image' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'height' } }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetCarouselSlidesQuery, GetCarouselSlidesQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [

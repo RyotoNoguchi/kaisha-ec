@@ -2,13 +2,13 @@ import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { getPaginationVariables } from '@shopify/hydrogen'
 import { defer, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
-import type { AllProductsQuery, GetAboutChefQuery, GetRecommendedCollectionQuery, GetShopQuery, GetTestimonialsQuery } from 'src/gql/graphql'
+import type { AllProductsQuery, GetAboutChefQuery, GetCarouselSlidesQuery, GetRecommendedCollectionQuery, GetShopQuery, GetTestimonialsQuery } from 'src/gql/graphql'
 import { Carousel } from '~/components/organisms/Carousel'
 import { ChefIntroSection } from '~/components/organisms/ChefIntroSection'
 import { GoogleMapSection } from '~/components/organisms/GoogleMapSection'
 import { MenuSection } from '~/components/organisms/MenuSection'
 import { TestimonialSection } from '~/components/organisms/TestimonialSection'
-import { ABOUT_CHEF_QUERY, PRODUCTS_QUERY, RECOMMENDED_COLLECTION_QUERY, SHOP_QUERY, TESTIMONIALS_QUERY } from '~/graphql/storefront/queries'
+import { ABOUT_CHEF_QUERY, CAROUSEL_SLIDES_QUERY, PRODUCTS_QUERY, RECOMMENDED_COLLECTION_QUERY, SHOP_QUERY, TESTIMONIALS_QUERY } from '~/graphql/storefront/queries'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: data?.shop.name }, { name: 'description', content: data?.shop.description }]
@@ -30,6 +30,8 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
     console.error(error)
     return null
   })
+
+  const { metaobjects: carouselSlidesObj } = await context.storefront.query<GetCarouselSlidesQuery>(print(CAROUSEL_SLIDES_QUERY))
   const { shop } = await context.storefront.query<GetShopQuery>(print(SHOP_QUERY))
 
   const { collection: recommendedCollection } = await context.storefront.query<GetRecommendedCollectionQuery>(print(RECOMMENDED_COLLECTION_QUERY))
@@ -82,7 +84,7 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
     }
   `
   const recommendedProducts = await storefront.query<any>(SERVER_SIDE_RECOMMENDED_PRODUCTS_QUERY)
-  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop, adminShop, testimonials, aboutChef, recommendedCollection })
+  return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop, adminShop, testimonials, aboutChef, recommendedCollection, carouselSlidesObj })
 }
 
 const carouselImages = [
@@ -96,7 +98,20 @@ const carouselImages = [
 
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
-  const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop, adminShop, testimonials, aboutChef, recommendedCollection } = data
+  const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop, adminShop, testimonials, aboutChef, recommendedCollection, carouselSlidesObj } = data
+  const carouselSlides = carouselSlidesObj.nodes
+    .map((carouselSlide) => {
+      const heroImageField = carouselSlide.fields.find((field) => field.key === 'hero_image')
+      if (heroImageField?.reference?.__typename === 'MediaImage') {
+        return {
+          id: carouselSlide.id,
+          url: heroImageField.reference.image?.url ?? ''
+        }
+      }
+      return null
+    })
+    .filter(Boolean)
+
   const shopInfo = {
     name: adminShop?.name ?? '',
     email: adminShop?.contactEmail ?? '',
@@ -107,7 +122,7 @@ const Homepage = () => {
 
   return (
     <div className='home flex flex-col flex-shrink-0 gap-8'>
-      <Carousel images={carouselImages} />
+      <Carousel images={carouselSlides} />
       <MenuSection products={products.nodes as AllProductsQuery['products']['nodes']} collection={recommendedCollection as GetRecommendedCollectionQuery['collection']} />
       {aboutChef && <ChefIntroSection aboutChef={aboutChef as Promise<GetAboutChefQuery>} />}
       {testimonials && <TestimonialSection testimonials={testimonials as Promise<GetTestimonialsQuery>} />}
