@@ -3,13 +3,13 @@ import 'react-toastify/dist/ReactToastify.css'
 
 import { gql, useQuery } from '@apollo/client'
 import { Typography } from '@material-tailwind/react'
-import { useLoaderData, type MetaFunction } from '@remix-run/react'
+import { useLoaderData, useLocation, useSearchParams, type MetaFunction } from '@remix-run/react'
 import { getPaginationVariables, getSelectedProductOptions, Money } from '@shopify/hydrogen'
 import { AddToCartButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { graphql } from 'src/gql/gql'
 import type { AllProductsQuery, GetRestaurantBannerQuery, GetShopQuery, ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment } from 'src/gql/graphql'
 import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
@@ -118,6 +118,28 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 const Product: React.FC = () => {
   const { product, selectedOptions, filteredProductsByCurrentProductHandle, deepLApiKey, restaurantBannerImageUrls } = useLoaderData<typeof loader>()
   const { data, refetch } = useQuery(document, { variables: { id: product.id, selectedOptions } })
+  const [selectedVariant, setSelectedVariant] = useState(data?.product)
+  const [_, setSearchParams] = useSearchParams()
+
+  const getQueryParamsAsObjectArray = (search: string) => {
+    const params = new URLSearchParams(search)
+    const result: { name: string; value: string }[] = []
+    for (const [key, value] of params.entries()) {
+      result.push({ name: key, value })
+    }
+    return result
+  }
+  const { search } = useLocation()
+  const queryParamsArray = getQueryParamsAsObjectArray(search)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const reFetchedData = await refetch({ id: product.id, selectedOptions: queryParamsArray })
+      setSelectedVariant(reFetchedData.data.product)
+    }
+    fetchData()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [queryParamsArray])
 
   const ingredients = product.metafields
     .find((metafield) => metafield && metafield.key === 'ingredients')
@@ -191,9 +213,10 @@ const Product: React.FC = () => {
                 </Typography>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
-              {product.options.map((option) => (
-                <VariantSelectButtons key={option.id} name={option.name} values={option.values} deepLApiKey={deepLApiKey} />
-              ))}
+              {product.options.map((option) => {
+                const hasVariant = !option.values.some((value) => value === 'default')
+                return hasVariant && <VariantSelectButtons key={option.id} name={option.name} values={option.values} deepLApiKey={deepLApiKey} setSearchParams={setSearchParams} />
+              })}
               <div className='flex justify-between items-end'>
                 {product.selectedVariant.availableForSale ? (
                   !isPlusDisabled && (
@@ -230,7 +253,7 @@ const Product: React.FC = () => {
                     <div className='flex items-end h-full'>
                       <AddToCartButton
                         quantity={productCount}
-                        variantId={product?.selectedVariant?.id}
+                        variantId={selectedVariant?.variantBySelectedOptions?.id}
                         className='bg-yellow truncate text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
                         onClick={handleAddToCart}
                       >

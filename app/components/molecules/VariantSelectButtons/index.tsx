@@ -7,15 +7,13 @@ type Props = {
   name: string
   deepLApiKey: string
   values: string[]
+  setSearchParams: (params: URLSearchParams) => void
 }
 
-export const VariantSelectButtons: React.FC<Props> = ({ name, values, deepLApiKey }) => {
+export const VariantSelectButtons: React.FC<Props> = ({ name, values, deepLApiKey, setSearchParams }) => {
   const [translatedName, setTranslatedName] = useState<string>('')
   const location = useLocation()
   const [weight, setWeight] = useState<string | null>(new URLSearchParams(location.search).get('weight'))
-  const { search } = useLocation()
-  const params = new URLSearchParams(search)
-  // const weight = params.get('weight')
 
   useEffect(() => {
     const fetchTranslation = async () => {
@@ -31,6 +29,7 @@ export const VariantSelectButtons: React.FC<Props> = ({ name, values, deepLApiKe
     const newUrl = `${window.location.pathname}?${params.toString()}`
     window.history.pushState({}, '', newUrl)
     setWeight(value)
+    setSearchParams(params)
   }
 
   return (
