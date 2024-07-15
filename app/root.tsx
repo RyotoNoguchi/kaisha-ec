@@ -5,6 +5,7 @@ import { useNonce } from '@shopify/hydrogen'
 import { ShopifyProvider } from '@shopify/hydrogen-react'
 import { defer, type LoaderFunctionArgs, type SerializeFrom } from '@shopify/remix-oxygen'
 import React, { useEffect, useState } from 'react'
+import reactToastifyStyles from 'react-toastify/dist/ReactToastify.css'
 import swiperStyles from 'swiper/css'
 import swiperNavigationStyles from 'swiper/css/navigation'
 import swiperPaginationStyles from 'swiper/css/pagination'
@@ -55,6 +56,7 @@ export function links() {
     { rel: 'stylesheet', href: swiperNavigationStyles },
     { rel: 'stylesheet', href: swiperPaginationStyles },
     { rel: 'stylesheet', href: swiperScrollBarStyles },
+    { rel: 'stylesheet', href: reactToastifyStyles },
     { rel: 'stylesheet', href: fontAwesome },
     { rel: 'stylesheet', href: appStyles },
     { rel: 'stylesheet', href: tailwind },

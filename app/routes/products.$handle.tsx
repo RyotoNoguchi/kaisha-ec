@@ -1,7 +1,10 @@
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import { gql, useQuery } from '@apollo/client'
 import { List, ListItem, Typography } from '@material-tailwind/react'
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
-import { Image, Money, getSelectedProductOptions } from '@shopify/hydrogen'
+import { getSelectedProductOptions, Image, Money } from '@shopify/hydrogen'
 import { AddToCartButton, BuyNowButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
@@ -13,6 +16,7 @@ import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import ProductGallery from '~/components/molecules/ProductGallery'
 import { getVariantUrl } from '~/lib/variants'
+
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Hydrogen | ${data?.product.title ?? ''}` }]
 }
@@ -123,7 +127,7 @@ const Product: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
   const handleAddToCart = () => {
-    alert('カートに追加されました。カートページをご確認ください。')
+    toast.success('カートに追加されました。カートページをご確認ください。')
   }
   const { lines } = useCart()
   const { data } = useQuery(document, { variables: { id: product.id, selectedOptions } })
@@ -135,6 +139,7 @@ const Product: React.FC = () => {
   return (
     <ProductProvider data={product}>
       <div className='flex flex-col gap-10'>
+        <ToastContainer pauseOnHover />
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
           <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
             <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
