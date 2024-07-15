@@ -5,7 +5,7 @@ import { gql, useQuery } from '@apollo/client'
 import { Typography } from '@material-tailwind/react'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { getPaginationVariables, getSelectedProductOptions, Money } from '@shopify/hydrogen'
-import { AddToCartButton, Image, ProductProvider, useCart } from '@shopify/hydrogen-react'
+import { AddToCartButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
@@ -269,23 +269,7 @@ const Product: React.FC = () => {
             }
           />
         </div>
-        {restaurantBannerImageUrls && <Image src={restaurantBannerImageUrls[0]} alt='レストランバナー' className='w-full' />}
-        {/* <div className=''>
-          <div className='font-yumincho flex flex-col gap-4 px-6 md:px-10 lg:px-32 xl:px-56'>
-            <Typography variant='h4' color='black' className='text-2xl font-semibold flex flex-col gap-4 md:px-9 lg:px-10'>
-              メニュー一覧
-            </Typography>
-            <List className='w-full gap-6 list-none p-0 flex flex-row overflow-x-auto md:mx-9'>
-              {products.nodes.map((product) => (
-                <Link to={`/products/${product.handle}`} key={product.id}>
-                  <ListItem className='mb-2'>
-                    <Image data={product.images.edges[0].node} className='min-w-32 md:min-w-48 max-w-48' />
-                  </ListItem>
-                </Link>
-              ))}
-            </List>
-          </div>
-        </div> */}
+        {/* {restaurantBannerImageUrls && <Image src={restaurantBannerImageUrls[0]} alt='レストランバナー' className='w-full' />} */}
       </div>
     </ProductProvider>
   )
