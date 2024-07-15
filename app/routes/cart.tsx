@@ -85,10 +85,10 @@ const Cart = () => {
 
   if (!lines || lines.length === 0) {
     return (
-      <div className='flex flex-col items-center justify-center'>
+      <div className='py-28 flex flex-col gap-10 items-center justify-center font-yumincho'>
         <p className='text-xl'>カートに商品がありません</p>
         <Link to='/'>
-          <Button text='商品一覧へ' fontWeight='bold' />
+          <Button text='商品一覧へ' fontWeight='bold' className='font-yumincho hover:opacity-70 underline' />
         </Link>
       </div>
     )

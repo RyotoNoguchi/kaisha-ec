@@ -41,7 +41,15 @@ export const VariantSelectButtons: React.FC<Props> = ({ name, values, deepLApiKe
           return (
             // eslint-disable-next-line react/no-array-index-key
             <li key={index} className='cursor-pointer'>
-              <Button text={value} fontWeight='bold' backgroundColor='bg-slate-400' borderWidth='border' opacity={isActive ? 'opacity-100' : 'opacity-40'} onClick={() => handleClick(value)} />
+              <Button
+                text={value}
+                fontWeight='bold'
+                backgroundColor='bg-slate-400'
+                borderWidth='border'
+                opacity={isActive ? 'opacity-100' : 'opacity-40'}
+                onClick={() => handleClick(value)}
+                className='font-yumincho'
+              />
             </li>
           )
         })}
