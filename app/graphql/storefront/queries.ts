@@ -294,3 +294,28 @@ export const CAROUSEL_SLIDES_QUERY = gql`
     }
   }
 `
+
+export const RESTAURANT_BANNER_QUERY = gql`
+  query GetRestaurantBanner {
+    metaobjects(type: "restaurant", first: 250) {
+      nodes {
+        id
+        handle
+        field(key: "image_url") {
+          key
+          reference {
+            __typename
+            ... on MediaImage {
+              image {
+                id
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
