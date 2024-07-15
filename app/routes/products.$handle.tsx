@@ -96,12 +96,18 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 
 const Product: React.FC = () => {
   const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
-  const ingredient = product.metafield?.value.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '').replaceAll(',', ' / ')
+
+  const ingredients = product.metafields
+    .find((metafield) => metafield && metafield.key === 'ingredients')
+    ?.value.replaceAll('[', '')
+    .replaceAll(']', '')
+    .replaceAll('"', '')
+    .replaceAll(',', ' / ')
 
   const accordionItems = [
     {
       header: '原材料',
-      content: ingredient ?? ''
+      content: ingredients ?? ''
     }
   ]
 
@@ -285,11 +291,11 @@ const PRODUCT_FRAGMENT = gql`
     handle
     descriptionHtml
     description
-    metafield(namespace: "custom", key: "ingredients") {
+    metafields(identifiers: [{ namespace: "custom", key: "ingredients" }, { namespace: "custom", key: "shippable" }]) {
       id
-      description
       type
       value
+      key
     }
     options {
       name

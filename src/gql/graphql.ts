@@ -8141,7 +8141,7 @@ export type GetCarouselSlidesQuery = {
         reference:
           | { __typename: 'Collection' }
           | { __typename: 'GenericFile' }
-          | { __typename: 'MediaImage'; alt: string | null; image: { __typename?: 'Image'; id: string | null; url: string; width: number | null; height: number | null } | null }
+          | { __typename: 'MediaImage'; alt: string | null; image: { __typename?: 'Image'; id: string | null; url: any; width: number | null; height: number | null } | null }
           | { __typename: 'Metaobject' }
           | { __typename: 'Page' }
           | { __typename: 'Product' }
@@ -8176,7 +8176,7 @@ export type ProductFragment = {
   handle: string
   descriptionHtml: any
   description: string
-  metafield: { __typename?: 'Metafield'; id: string; description: string | null; type: string; value: string } | null
+  metafields: Array<{ __typename?: 'Metafield'; id: string; type: string; value: string; key: string } | null>
   options: Array<{ __typename?: 'ProductOption'; name: string; values: Array<string> }>
   images: { __typename?: 'ImageConnection'; edges: Array<{ __typename?: 'ImageEdge'; node: { __typename?: 'Image'; url: any; altText: string | null; id: string | null } }> }
   selectedVariant: ({ __typename?: 'ProductVariant' } & { ' $fragmentRefs'?: { ProductVariantFragment: ProductVariantFragment } }) | null
@@ -8331,18 +8331,39 @@ export const ProductFragmentDoc = {
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'metafield' },
+            name: { kind: 'Name', value: 'metafields' },
             arguments: [
-              { kind: 'Argument', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
-              { kind: 'Argument', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'identifiers' },
+                value: {
+                  kind: 'ListValue',
+                  values: [
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+                      ]
+                    },
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'shippable', block: false } }
+                      ]
+                    }
+                  ]
+                }
+              }
             ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } }
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } }
               ]
             }
           },
@@ -9637,18 +9658,39 @@ export const ProductDocument = {
           { kind: 'Field', name: { kind: 'Name', value: 'description' } },
           {
             kind: 'Field',
-            name: { kind: 'Name', value: 'metafield' },
+            name: { kind: 'Name', value: 'metafields' },
             arguments: [
-              { kind: 'Argument', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
-              { kind: 'Argument', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+              {
+                kind: 'Argument',
+                name: { kind: 'Name', value: 'identifiers' },
+                value: {
+                  kind: 'ListValue',
+                  values: [
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+                      ]
+                    },
+                    {
+                      kind: 'ObjectValue',
+                      fields: [
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+                        { kind: 'ObjectField', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'shippable', block: false } }
+                      ]
+                    }
+                  ]
+                }
+              }
             ],
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
                 { kind: 'Field', name: { kind: 'Name', value: 'id' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'description' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'type' } },
-                { kind: 'Field', name: { kind: 'Name', value: 'value' } }
+                { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                { kind: 'Field', name: { kind: 'Name', value: 'key' } }
               ]
             }
           },
