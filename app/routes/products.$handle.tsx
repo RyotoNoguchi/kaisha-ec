@@ -159,8 +159,10 @@ const Product: React.FC = () => {
       <div className='flex flex-col gap-10'>
         <ToastContainer pauseOnHover />
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
-          <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
-            <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
+          <div className='w-full flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
+            <div className='w-full sm:w-1/2'>
+              <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
+            </div>
             <div className='flex flex-col flex-1 font-yumincho gap-3'>
               <div className='flex flex-col gap-1 md:gap-2'>
                 <Typography variant='h6' color='black' className='font-semibold'>
