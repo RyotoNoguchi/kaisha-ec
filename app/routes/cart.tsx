@@ -1,5 +1,6 @@
 import type { MetaFunction } from '@remix-run/react'
-import { Link } from '@remix-run/react'
+import { defer, Link, useLoaderData } from '@remix-run/react'
+import type { LoaderFunctionArgs } from '@remix-run/server-runtime'
 import { Image, useCart } from '@shopify/hydrogen-react'
 import { useEffect, useState } from 'react'
 import type { SelectedOption } from 'src/generated/graphql'
@@ -14,7 +15,13 @@ export const meta: MetaFunction = () => {
   return [{ title: `膾炙 | カート` }]
 }
 
+export const loader = async ({ context }: LoaderFunctionArgs) => {
+  const { deepLApiKey } = context
+  return defer({ deepLApiKey })
+}
+
 const Cart = () => {
+  const { deepLApiKey } = useLoaderData<typeof loader>()
   const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
 
   const { status, lines, cost, totalQuantity, id, cartAttributesUpdate, noteUpdate, linesUpdate, linesRemove, attributes, checkoutUrl } = useCart()
@@ -24,7 +31,7 @@ const Cart = () => {
       for (const line of lines ?? []) {
         for (const option of line?.merchandise?.selectedOptions ?? []) {
           if (option?.name && !translations[option.name]) {
-            translations[option.name] = await translateText(option.name)
+            translations[option.name] = await translateText(option.name, 'JA', deepLApiKey)
           }
         }
       }
@@ -34,7 +41,7 @@ const Cart = () => {
     if (lines && lines.length > 0) {
       translateOptions()
     }
-  }, [lines])
+  }, [deepLApiKey, lines])
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [customerNote, setCustomerNote] = useState('') // ユーザーのノート用の状態

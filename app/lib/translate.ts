@@ -1,5 +1,4 @@
-export const translateText = async (text: string, targetLang = 'JA'): Promise<string> => {
-  const apiKey = 'd705766c-04b6-6fce-1882-bcb33f5e893a:fx'
+export const translateText = async (text: string, targetLang = 'JA', apiKey: string): Promise<string> => {
   const url = 'https://api-free.deepl.com/v2/translate'
   const response = await fetch(url, {
     method: 'POST',

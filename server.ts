@@ -122,6 +122,11 @@ export default {
       const googleMapsApiKey = getGoogleMapsApiKey(env)
 
       /**
+       * Set the DeepL API key in the environment.
+       */
+      const deepLApiKey = getDeepLApiKey(env)
+
+      /**
        * Create a Remix request handler and pass
        * Hydrogen's Storefront client to the loader context.
        */
@@ -136,6 +141,7 @@ export default {
           cart,
           env,
           googleMapsApiKey,
+          deepLApiKey,
           waitUntil
         })
       })
@@ -180,6 +186,15 @@ function getGoogleMapsApiKey(env: Env): string {
   const apiKey = env.GOOGLE_MAPS_API_KEY
   if (!apiKey) {
     throw new Error('Google Maps API key is not set in the environment variables')
+  }
+  return apiKey
+}
+
+// DeepL APIキーを取得する関数
+const getDeepLApiKey = (env: Env): string => {
+  const apiKey = env.DEEPL_API_KEY
+  if (!apiKey) {
+    throw new Error('DeepL API key is not set in the environment variables')
   }
   return apiKey
 }
