@@ -30,6 +30,7 @@ declare global {
     KAISHA_ADMIN_API_KEY: string
     KAISHA_ADMIN_API_SECRET_KEY: string
     KAISHA_ADMIN_API_ACCESS_TOKEN: string
+    DEEPL_API_KEY: string
   }
 
   /**
@@ -61,6 +62,7 @@ declare module '@shopify/remix-oxygen' {
     customerAccount: CustomerAccount
     session: AppSession
     googleMapsApiKey: string
+    deepLApiKey: string
     waitUntil: ExecutionContext['waitUntil']
   }
 }

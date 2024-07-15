@@ -11,22 +11,24 @@ import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
 import { graphql } from 'src/gql/gql'
-import type { AllProductsQuery, GetRestaurantBannerQuery, ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment } from 'src/gql/graphql'
+import type { AllProductsQuery, GetRestaurantBannerQuery, GetShopQuery, ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment } from 'src/gql/graphql'
 import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import ProductGallery from '~/components/molecules/ProductGallery'
-import { PRODUCTS_QUERY, RESTAURANT_BANNER_QUERY } from '~/graphql/storefront/queries'
+import { PRODUCTS_QUERY, RESTAURANT_BANNER_QUERY, SHOP_QUERY } from '~/graphql/storefront/queries'
 import { getVariantUrl } from '~/lib/variants'
 
 import { CrossSellProductList } from '~/components/organisms/CrossSellProductList'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: `Hydrogen | ${data?.product.title ?? ''}` }]
+  return [{ title: `${data?.shop.name} | ${data?.product.title ?? ''}` }, { name: 'description', content: data?.shop.description }]
 }
 
 export const loader = async ({ params, request, context }: LoaderFunctionArgs) => {
   const { handle } = params
   const { storefront } = context
+
+  const { shop } = await context.storefront.query<GetShopQuery>(print(SHOP_QUERY))
 
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 6
@@ -95,7 +97,7 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
     }
   }
 
-  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls })
+  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls, shop })
 }
 const redirectToFirstVariant = ({ product, request }: { product: MyProductFragment; request: Request }) => {
   const url = new URL(request.url)
