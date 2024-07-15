@@ -1,3 +1,4 @@
+import { Image } from '@shopify/hydrogen-react'
 import 'swiper/css'
 import 'swiper/css/navigation'
 import 'swiper/css/pagination'
@@ -6,7 +7,7 @@ import { A11y, Navigation, Pagination, Scrollbar } from 'swiper/modules'
 import { Swiper, SwiperSlide } from 'swiper/react'
 
 type Props = {
-  images: { src: string; alt: string }[]
+  images: { url: string; id: string }[]
 }
 
 export const Carousel: React.FC<Props> = ({ images }) => {
@@ -20,9 +21,8 @@ export const Carousel: React.FC<Props> = ({ images }) => {
       pagination={{ clickable: true, dynamicBullets: true, dynamicMainBullets: 1 }}
     >
       {images.map((image, index) => (
-        <SwiperSlide key={image.src}>
-          {/* eslint-disable-next-line hydrogen/prefer-image-component */}
-          <img className='rounded-none' src={image.src} alt={`carousel-${index}`} />
+        <SwiperSlide key={image.id}>
+          <Image src={image.url} alt={`carousel-${index}`} />
         </SwiperSlide>
       ))}
     </Swiper>

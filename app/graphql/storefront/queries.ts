@@ -266,3 +266,31 @@ export const RECOMMENDED_COLLECTION_QUERY = gql`
     }
   }
 `
+
+export const CAROUSEL_SLIDES_QUERY = gql`
+  query GetCarouselSlides {
+    metaobjects(type: "carousel", first: 10) {
+      nodes {
+        id
+        handle
+        fields {
+          type
+          key
+          value
+          reference {
+            __typename
+            ... on MediaImage {
+              alt
+              image {
+                id
+                url
+                width
+                height
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
