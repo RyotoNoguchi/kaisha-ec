@@ -111,6 +111,8 @@ const Product: React.FC = () => {
     }
   ]
 
+  const shippable = product.metafields.find((metafield) => metafield && metafield.key === 'shippable')?.value === 'true'
+
   const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
   const imageData = {
@@ -140,6 +142,9 @@ const Product: React.FC = () => {
                 </Typography>
                 <Typography variant='h1' color='black' className='font-extrabold text-2xl md:text-3xl lg:text-4xl'>
                   {product.title}
+                </Typography>
+                <Typography variant='small' className='text-red-700 font-semibold'>
+                  {shippable ? 'こちらの商品は配送もお受けしております。' : 'こちらの商品は配送はお受けしておりません。店頭受取のみ可能です。'}
                 </Typography>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
