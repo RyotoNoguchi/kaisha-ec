@@ -5,17 +5,17 @@ import { gql, useQuery } from '@apollo/client'
 import { Typography } from '@material-tailwind/react'
 import { useLoaderData, type MetaFunction } from '@remix-run/react'
 import { getPaginationVariables, getSelectedProductOptions, Money } from '@shopify/hydrogen'
-import { AddToCartButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
+import { AddToCartButton, Image, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import { useState } from 'react'
 import { graphql } from 'src/gql/gql'
-import type { AllProductsQuery, ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment } from 'src/gql/graphql'
+import type { AllProductsQuery, GetRestaurantBannerQuery, ProductFragment as MyProductFragment, ProductVariantFragment as MyProductVariantFragment } from 'src/gql/graphql'
 import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import ProductGallery from '~/components/molecules/ProductGallery'
-import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
+import { PRODUCTS_QUERY, RESTAURANT_BANNER_QUERY } from '~/graphql/storefront/queries'
 import { getVariantUrl } from '~/lib/variants'
 
 import { CrossSellProductList } from '~/components/organisms/CrossSellProductList'
@@ -35,6 +35,15 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
   const { products } = await context.storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
     variables: paginationVariables
   })
+
+  const { metaobjects: restaurantBannerObj } = await context.storefront.query<GetRestaurantBannerQuery>(print(RESTAURANT_BANNER_QUERY))
+  const restaurantBannerImageUrls = restaurantBannerObj.nodes
+    .map((restaurantBanner) => {
+      const imageField = restaurantBanner.field
+      if (imageField?.reference?.__typename === 'MediaImage') return imageField.reference.image?.url
+      return null
+    })
+    .filter(Boolean)
 
   const filteredProductsByCurrentProductHandle = products.nodes
     .filter((product) => product.handle !== handle)
@@ -86,7 +95,7 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
     }
   }
 
-  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle })
+  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls })
 }
 const redirectToFirstVariant = ({ product, request }: { product: MyProductFragment; request: Request }) => {
   const url = new URL(request.url)
@@ -106,7 +115,7 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 }
 
 const Product: React.FC = () => {
-  const { product, selectedOptions, filteredProductsByCurrentProductHandle } = useLoaderData<typeof loader>()
+  const { product, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls } = useLoaderData<typeof loader>()
 
   const ingredients = product.metafields
     .find((metafield) => metafield && metafield.key === 'ingredients')
@@ -124,7 +133,6 @@ const Product: React.FC = () => {
 
   const shippable = product.metafields.find((metafield) => metafield && metafield.key === 'shippable')?.value === 'true'
 
-  const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
   const imageData = {
     altText: product?.selectedVariant?.image?.altText ?? '',
@@ -259,8 +267,7 @@ const Product: React.FC = () => {
             }
           />
         </div>
-        {/* eslint-disable-next-line hydrogen/prefer-image-component */}
-        <img src='/image/pages/product/banner.webp' alt='レストランバナー' className='w-full' />
+        {restaurantBannerImageUrls && <Image src={restaurantBannerImageUrls[0]} alt='レストランバナー' className='w-full' />}
         {/* <div className=''>
           <div className='font-yumincho flex flex-col gap-4 px-6 md:px-10 lg:px-32 xl:px-56'>
             <Typography variant='h4' color='black' className='text-2xl font-semibold flex flex-col gap-4 md:px-9 lg:px-10'>

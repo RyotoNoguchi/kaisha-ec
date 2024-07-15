@@ -8153,6 +8153,34 @@ export type GetCarouselSlidesQuery = {
   }
 }
 
+export type GetRestaurantBannerQueryVariables = Exact<{ [key: string]: never }>
+
+export type GetRestaurantBannerQuery = {
+  __typename?: 'QueryRoot'
+  metaobjects: {
+    __typename?: 'MetaobjectConnection'
+    nodes: Array<{
+      __typename?: 'Metaobject'
+      id: string
+      handle: string
+      field: {
+        __typename?: 'MetaobjectField'
+        key: string
+        reference:
+          | { __typename: 'Collection' }
+          | { __typename: 'GenericFile' }
+          | { __typename: 'MediaImage'; image: { __typename?: 'Image'; id: string | null; url: string; width: number | null; height: number | null } | null }
+          | { __typename: 'Metaobject' }
+          | { __typename: 'Page' }
+          | { __typename: 'Product' }
+          | { __typename: 'ProductVariant' }
+          | { __typename: 'Video' }
+          | null
+      } | null
+    }>
+  }
+}
+
 export type ProductVariantFragment = {
   __typename?: 'ProductVariant'
   availableForSale: boolean
@@ -9370,6 +9398,88 @@ export const GetCarouselSlidesDocument = {
     }
   ]
 } as unknown as DocumentNode<GetCarouselSlidesQuery, GetCarouselSlidesQueryVariables>
+export const GetRestaurantBannerDocument = {
+  kind: 'Document',
+  definitions: [
+    {
+      kind: 'OperationDefinition',
+      operation: 'query',
+      name: { kind: 'Name', value: 'GetRestaurantBanner' },
+      selectionSet: {
+        kind: 'SelectionSet',
+        selections: [
+          {
+            kind: 'Field',
+            name: { kind: 'Name', value: 'metaobjects' },
+            arguments: [
+              { kind: 'Argument', name: { kind: 'Name', value: 'type' }, value: { kind: 'StringValue', value: 'restaurant', block: false } },
+              { kind: 'Argument', name: { kind: 'Name', value: 'first' }, value: { kind: 'IntValue', value: '250' } }
+            ],
+            selectionSet: {
+              kind: 'SelectionSet',
+              selections: [
+                {
+                  kind: 'Field',
+                  name: { kind: 'Name', value: 'nodes' },
+                  selectionSet: {
+                    kind: 'SelectionSet',
+                    selections: [
+                      { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                      { kind: 'Field', name: { kind: 'Name', value: 'handle' } },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'field' },
+                        arguments: [{ kind: 'Argument', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'image_url', block: false } }],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'key' } },
+                            {
+                              kind: 'Field',
+                              name: { kind: 'Name', value: 'reference' },
+                              selectionSet: {
+                                kind: 'SelectionSet',
+                                selections: [
+                                  { kind: 'Field', name: { kind: 'Name', value: '__typename' } },
+                                  {
+                                    kind: 'InlineFragment',
+                                    typeCondition: { kind: 'NamedType', name: { kind: 'Name', value: 'MediaImage' } },
+                                    selectionSet: {
+                                      kind: 'SelectionSet',
+                                      selections: [
+                                        {
+                                          kind: 'Field',
+                                          name: { kind: 'Name', value: 'image' },
+                                          selectionSet: {
+                                            kind: 'SelectionSet',
+                                            selections: [
+                                              { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'url' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'width' } },
+                                              { kind: 'Field', name: { kind: 'Name', value: 'height' } }
+                                            ]
+                                          }
+                                        }
+                                      ]
+                                    }
+                                  }
+                                ]
+                              }
+                            }
+                          ]
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+} as unknown as DocumentNode<GetRestaurantBannerQuery, GetRestaurantBannerQueryVariables>
 export const ProductDocument = {
   kind: 'Document',
   definitions: [
