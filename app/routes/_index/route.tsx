@@ -87,15 +87,6 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
   return defer({ featuredCollection, recommendedProducts, googleMapsApiKey, products, shop, adminShop, testimonials, aboutChef, recommendedCollection, carouselSlidesObj })
 }
 
-const carouselImages = [
-  { src: '/image/carousel/carousel-1.webp', alt: 'Image 1' },
-  { src: '/image/carousel/carousel-2.webp', alt: 'Image 2' },
-  { src: '/image/carousel/carousel-3.webp', alt: 'Image 3' },
-  { src: '/image/carousel/carousel-4.webp', alt: 'Image 4' },
-  { src: '/image/carousel/carousel-5.webp', alt: 'Image 5' },
-  { src: '/image/carousel/carousel-6.webp', alt: 'Image 6' }
-]
-
 const Homepage = () => {
   const data = useLoaderData<typeof loader>()
   const { googleMapsApiKey, featuredCollection, recommendedProducts, products, shop, adminShop, testimonials, aboutChef, recommendedCollection, carouselSlidesObj } = data
