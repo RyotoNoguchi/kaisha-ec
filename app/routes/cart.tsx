@@ -109,7 +109,7 @@ const Cart = () => {
           lines.length > 0 &&
           lines.map((line) => (
             <div className='grid grid-cols-[1fr,2fr] gap-2' key={line?.id}>
-              <div className='flex gap-1 justify-center'>
+              <div className='flex gap-1 justify-center items-center'>
                 <Link
                   to={{
                     pathname: `/products/${line?.merchandise?.product?.handle}`,
