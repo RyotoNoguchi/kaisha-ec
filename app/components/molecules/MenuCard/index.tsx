@@ -1,8 +1,7 @@
 import { Link } from '@remix-run/react'
-import { AddToCartButton, Image, ProductProvider } from '@shopify/hydrogen-react'
+import { Image, ProductProvider } from '@shopify/hydrogen-react'
 import React from 'react'
 import type { AllProductsQuery } from 'src/gql/graphql'
-import { AddToCartIcon } from '~/components/atoms/AddToCartIcon'
 
 type Props = {
   variant: AllProductsQuery['products']['nodes'][0]['variants']['nodes'][0]
@@ -14,12 +13,12 @@ export const MenuCard: React.FC<Props> = ({ variant }) => {
   return (
     <ProductProvider data={variant.product}>
       <Link to={hasVariants ? `/products/${variant.product.handle}?${queryParams}` : `/products/${variant.product.handle}`}>
-        <li className='w-56 flex flex-shrink-0 flex-col gap-4 p-4 bg-black mb-2 rounded-sm'>
+        <li className='w-56 flex flex-shrink-0 flex-col gap-4 p-4 bg-black mb-2 rounded-sm hover:opacity-70'>
           {variant.image && <Image data={variant.image} alt='product image' className='rounded-sm' />}
           <div className='flex flex-col gap-2 flex-1 min-h-24'>
             <div className='text-primary font-yumincho'>
-              <h3 className='truncate'>{variant.product.title}</h3>
-              {hasVariants && (
+              <h3 className='truncate whitespace-pre-wrap'>{variant.product.title}</h3>
+              {/* {hasVariants && (
                 <div className='flex flex-col'>
                   {variant.selectedOptions.map((option, index) => (
                     // eslint-disable-next-line react/no-array-index-key
@@ -28,20 +27,23 @@ export const MenuCard: React.FC<Props> = ({ variant }) => {
                     </p>
                   ))}
                 </div>
-              )}
+              )} */}
             </div>
-            <div className='flex justify-between items-end flex-1'>
+            <div className='flex justify-end items-end flex-1'>
               <div className='flex'>
-                <p className='text-primary text-xl font-semibold font-yumincho'>
-                  {variant.product.priceRange?.minVariantPrice.amount}
-                  {variant.product.priceRange?.minVariantPrice.currencyCode}
+                <p className='text-primary text-xl font-semibold font-yumincho flex gap-0.5'>
+                  <span className=''>
+                    {Math.floor(variant.product.priceRange?.minVariantPrice.amount).toLocaleString()}
+                    {hasVariants && <span>~</span>}
+                  </span>
+                  <span className=''>{variant.product.priceRange?.minVariantPrice.currencyCode === 'JPY' && '円'}</span>
                 </p>
               </div>
-              {variant.availableForSale && (
+              {/* {variant.availableForSale && (
                 <AddToCartButton variantId={variant.id} className='text-black bg-primary px-3 py-1 rounded-full font-yumincho text-lg font-semibold'>
                   <AddToCartIcon />
                 </AddToCartButton>
-              )}
+              )} */}
             </div>
           </div>
         </li>
