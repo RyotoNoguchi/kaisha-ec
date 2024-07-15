@@ -1,20 +1,40 @@
 import type { MetaFunction } from '@remix-run/react'
 import { Link } from '@remix-run/react'
 import { Image, useCart } from '@shopify/hydrogen-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { SelectedOption } from 'src/generated/graphql'
 import { Button } from '~/components/atoms/Button'
 import { CloseIcon } from '~/components/atoms/CloseIcon'
 import DateSelector from '~/components/atoms/DateSelector'
 import { TimeSelector } from '~/components/atoms/TimeSelector'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
+import { translateText } from '~/lib/translate'
 
 export const meta: MetaFunction = () => {
   return [{ title: `膾炙 | カート` }]
 }
 
 const Cart = () => {
+  const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
+
   const { status, lines, cost, totalQuantity, id, cartAttributesUpdate, noteUpdate, linesUpdate, linesRemove, attributes, checkoutUrl } = useCart()
+  useEffect(() => {
+    const translateOptions = async () => {
+      const translations: { [key: string]: string } = {}
+      for (const line of lines ?? []) {
+        for (const option of line?.merchandise?.selectedOptions ?? []) {
+          if (option?.name && !translations[option.name]) {
+            translations[option.name] = await translateText(option.name)
+          }
+        }
+      }
+      setTranslatedOptions(translations)
+    }
+
+    if (lines && lines.length > 0) {
+      translateOptions()
+    }
+  }, [lines])
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [customerNote, setCustomerNote] = useState('') // ユーザーのノート用の状態
@@ -71,7 +91,11 @@ const Cart = () => {
     <div className='flex flex-col font-yumincho py-10 px-4 md:px-14 lg:px-20 gap-9'>
       <div className='flex justify-between items-end'>
         <h1 className='flex text-4xl font-bold'>ご注文内容</h1>
-        <span className='flex'>他の商品も見る</span>
+        <div className='flex gap-2 hover:opacity-70 font-semibold'>
+          <Link to='/products' className='flex'>
+            他の商品も見る
+          </Link>
+        </div>
       </div>
       <div className='flex flex-col gap-4 sm:gap-8'>
         {lines &&
@@ -107,9 +131,13 @@ const Cart = () => {
                       {line?.merchandise?.selectedOptions &&
                         line?.merchandise?.selectedOptions?.map((option, index) => {
                           if (!option) return null
+                          if (option.value === 'default') return null
+                          if (!option.name) {
+                            return null
+                          }
                           return (
-                            <p key={option.name} className='text-xs flex gap-1'>
-                              <span className=''>{option?.name}</span>
+                            <p key={option.name} className='text-s flex gap-1'>
+                              <span className=''>{translatedOptions[option.name] ?? option.name}</span>
                               <span>:</span>
                               <span className=''>{option?.value}</span>
                               <span>{index === (line?.merchandise?.selectedOptions?.length ?? 0) - 1 ? '' : ','}</span>
@@ -117,7 +145,7 @@ const Cart = () => {
                           )
                         })}
                     </div>
-                    <p className='text-xs text-right'>{Number(line?.cost?.totalAmount?.amount)}円</p>
+                    <p className='text-xs text-right'>{Number(line?.cost?.totalAmount?.amount).toLocaleString()}円</p>
                   </div>
                 </div>
                 <div className='flex items-center gap-2 lg:gap-8'>
@@ -136,7 +164,7 @@ const Cart = () => {
                     />
                   )}
                   <div className='grid place-content-center flex-1'>
-                    <p className='text-black text-2xl font-bold'>{Number(line?.cost?.totalAmount?.amount)}円</p>
+                    <p className='text-black text-2xl font-bold'>{Number(line?.cost?.totalAmount?.amount).toLocaleString()}円</p>
                   </div>
                 </div>
               </div>
@@ -149,11 +177,11 @@ const Cart = () => {
           <div className='flex flex-col gap-2 items-end'>
             <p className='flex gap-2 text-lg font-bold'>
               <span className=''>小計</span>
-              <span className=''>{Number(cost?.subtotalAmount?.amount)}円</span>
+              <span className=''>{Number(cost?.subtotalAmount?.amount).toLocaleString()}円</span>
             </p>
             <p className='flex gap-2'>
               <span className='text-lg font-bold'>合計</span>
-              <span className='text-xl font-extrabold text-crimsonRed'>{Number(cost?.totalAmount?.amount)}円</span>
+              <span className='text-xl font-extrabold text-crimsonRed'>{Number(cost?.totalAmount?.amount).toLocaleString()}円</span>
             </p>
           </div>
           <div className='flex flex-col gap-2'>

@@ -8169,7 +8169,7 @@ export type GetRestaurantBannerQuery = {
         reference:
           | { __typename: 'Collection' }
           | { __typename: 'GenericFile' }
-          | { __typename: 'MediaImage'; image: { __typename?: 'Image'; id: string | null; url: string; width: number | null; height: number | null } | null }
+          | { __typename: 'MediaImage'; image: { __typename?: 'Image'; id: string | null; url: any; width: number | null; height: number | null } | null }
           | { __typename: 'Metaobject' }
           | { __typename: 'Page' }
           | { __typename: 'Product' }

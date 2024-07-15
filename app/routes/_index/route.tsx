@@ -11,7 +11,7 @@ import { TestimonialSection } from '~/components/organisms/TestimonialSection'
 import { ABOUT_CHEF_QUERY, CAROUSEL_SLIDES_QUERY, PRODUCTS_QUERY, RECOMMENDED_COLLECTION_QUERY, SHOP_QUERY, TESTIMONIALS_QUERY } from '~/graphql/storefront/queries'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
-  return [{ title: data?.shop.name }, { name: 'description', content: data?.shop.description }]
+  return [{ title: `${data?.shop.name} | ホーム` }, { name: 'description', content: data?.shop.description }]
 }
 
 export const loader = async ({ context, request }: LoaderFunctionArgs) => {

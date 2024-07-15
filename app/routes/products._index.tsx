@@ -1,11 +1,15 @@
 import { Link, useLoaderData } from '@remix-run/react'
 import { getPaginationVariables, Pagination } from '@shopify/hydrogen'
 import { Image } from '@shopify/hydrogen-react'
-import { json, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
+import { json, type LoaderFunctionArgs, type MetaFunction } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
 import type { AllProductsQuery } from 'src/gql/graphql'
 import { ChevronIcon } from '~/components/atoms/ChevronIcon'
 import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
+
+export const meta: MetaFunction<typeof loader> = () => {
+  return [{ title: `膾炙 | 商品一覧` }]
+}
 
 export async function loader({ context, request }: LoaderFunctionArgs) {
   const paginationVariables = getPaginationVariables(request, {
