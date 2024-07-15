@@ -122,6 +122,9 @@ const Product: React.FC = () => {
   }
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
+  const handleAddToCart = () => {
+    alert('カートに追加されました。カートページをご確認ください。')
+  }
   const { lines } = useCart()
   const { data } = useQuery(document, { variables: { id: product.id, selectedOptions } })
   const quantityAvailable = data?.product?.variantBySelectedOptions?.quantityAvailable ?? 0
@@ -185,6 +188,7 @@ const Product: React.FC = () => {
                       quantity={productCount}
                       variantId={product?.selectedVariant?.id}
                       className='bg-yellow text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                      onClick={handleAddToCart}
                     >
                       カートに追加
                     </AddToCartButton>
