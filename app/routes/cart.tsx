@@ -219,7 +219,7 @@ const Cart = () => {
             />
           </div>
           <div className='flex justify-end'>
-            <Button text='ご注文ページへ進む' fontWeight={'bold'} backgroundColor='crimsonRed' onClick={handleOrderConfirm} />
+            <Button text='ご注文ページへ進む' fontWeight={'bold'} backgroundColor='bg-crimsonRed' onClick={handleOrderConfirm} />
           </div>
         </div>
       </div>

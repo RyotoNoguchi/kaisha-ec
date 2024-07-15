@@ -18,6 +18,8 @@ import ProductGallery from '~/components/molecules/ProductGallery'
 import { PRODUCTS_QUERY, RESTAURANT_BANNER_QUERY, SHOP_QUERY } from '~/graphql/storefront/queries'
 import { getVariantUrl } from '~/lib/variants'
 
+import { VariantSelectButtons } from '~/components/molecules/VariantSelectButtons'
+
 import { CrossSellProductList } from '~/components/organisms/CrossSellProductList'
 
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
@@ -27,17 +29,14 @@ export const meta: MetaFunction<typeof loader> = ({ data }) => {
 export const loader = async ({ params, request, context }: LoaderFunctionArgs) => {
   const { handle } = params
   const { storefront } = context
-
+  const { deepLApiKey } = context
   const { shop } = await context.storefront.query<GetShopQuery>(print(SHOP_QUERY))
-
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 6
   })
-
   const { products } = await context.storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
     variables: paginationVariables
   })
-
   const { metaobjects: restaurantBannerObj } = await context.storefront.query<GetRestaurantBannerQuery>(print(RESTAURANT_BANNER_QUERY))
   const restaurantBannerImageUrls = restaurantBannerObj.nodes
     .map((restaurantBanner) => {
@@ -97,7 +96,7 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
     }
   }
 
-  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls, shop })
+  return defer({ product, context, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls, shop, deepLApiKey })
 }
 const redirectToFirstVariant = ({ product, request }: { product: MyProductFragment; request: Request }) => {
   const url = new URL(request.url)
@@ -117,7 +116,8 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 }
 
 const Product: React.FC = () => {
-  const { product, selectedOptions, filteredProductsByCurrentProductHandle, restaurantBannerImageUrls } = useLoaderData<typeof loader>()
+  const { product, selectedOptions, filteredProductsByCurrentProductHandle, deepLApiKey, restaurantBannerImageUrls } = useLoaderData<typeof loader>()
+  const { data, refetch } = useQuery(document, { variables: { id: product.id, selectedOptions } })
 
   const ingredients = product.metafields
     .find((metafield) => metafield && metafield.key === 'ingredients')
@@ -134,7 +134,6 @@ const Product: React.FC = () => {
   ]
 
   const shippable = product.metafields.find((metafield) => metafield && metafield.key === 'shippable')?.value === 'true'
-
   const [productCount, setProductCount] = useState(1)
   const imageData = {
     altText: product?.selectedVariant?.image?.altText ?? '',
@@ -165,7 +164,6 @@ const Product: React.FC = () => {
   //   }
   // }
   const { lines } = useCart()
-  const { data } = useQuery(document, { variables: { id: product.id, selectedOptions } })
   const quantityAvailable = data?.product?.variantBySelectedOptions?.quantityAvailable ?? 0
   const variantId = data?.product?.variantBySelectedOptions?.id ?? ''
   const correspondingLineQuantity = lines?.find((line) => line?.merchandise?.id === variantId)?.quantity ?? 0
@@ -193,6 +191,9 @@ const Product: React.FC = () => {
                 </Typography>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
+              {product.options.map((option) => (
+                <VariantSelectButtons key={option.id} name={option.name} values={option.values} deepLApiKey={deepLApiKey} />
+              ))}
               <div className='flex justify-between items-end'>
                 {product.selectedVariant.availableForSale ? (
                   !isPlusDisabled && (
@@ -333,6 +334,7 @@ const PRODUCT_FRAGMENT = gql`
       key
     }
     options {
+      id
       name
       values
     }
