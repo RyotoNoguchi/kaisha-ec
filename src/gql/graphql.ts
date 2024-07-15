@@ -8205,7 +8205,7 @@ export type ProductFragment = {
   descriptionHtml: any
   description: string
   metafields: Array<{ __typename?: 'Metafield'; id: string; type: string; value: string; key: string } | null>
-  options: Array<{ __typename?: 'ProductOption'; name: string; values: Array<string> }>
+  options: Array<{ __typename?: 'ProductOption'; id: string; name: string; values: Array<string> }>
   images: { __typename?: 'ImageConnection'; edges: Array<{ __typename?: 'ImageEdge'; node: { __typename?: 'Image'; url: any; altText: string | null; id: string | null } }> }
   selectedVariant: ({ __typename?: 'ProductVariant' } & { ' $fragmentRefs'?: { ProductVariantFragment: ProductVariantFragment } }) | null
   variants: { __typename?: 'ProductVariantConnection'; nodes: Array<{ __typename?: 'ProductVariant' } & { ' $fragmentRefs'?: { ProductVariantFragment: ProductVariantFragment } }> }
@@ -8371,6 +8371,7 @@ export const ProductFragmentDoc = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'values' } }
               ]
@@ -9665,6 +9666,7 @@ export const ProductDocument = {
             selectionSet: {
               kind: 'SelectionSet',
               selections: [
+                { kind: 'Field', name: { kind: 'Name', value: 'id' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'name' } },
                 { kind: 'Field', name: { kind: 'Name', value: 'values' } }
               ]

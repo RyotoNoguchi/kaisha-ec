@@ -85,10 +85,10 @@ const Cart = () => {
 
   if (!lines || lines.length === 0) {
     return (
-      <div className='flex flex-col items-center justify-center'>
+      <div className='py-28 flex flex-col gap-10 items-center justify-center font-yumincho'>
         <p className='text-xl'>カートに商品がありません</p>
         <Link to='/'>
-          <Button text='商品一覧へ' fontWeight='bold' />
+          <Button text='商品一覧へ' fontWeight='bold' className='font-yumincho hover:opacity-70 underline' />
         </Link>
       </div>
     )
@@ -109,7 +109,7 @@ const Cart = () => {
           lines.length > 0 &&
           lines.map((line) => (
             <div className='grid grid-cols-[1fr,2fr] gap-2' key={line?.id}>
-              <div className='flex gap-1 justify-center'>
+              <div className='flex gap-1 justify-center items-center'>
                 <Link
                   to={{
                     pathname: `/products/${line?.merchandise?.product?.handle}`,
@@ -219,7 +219,7 @@ const Cart = () => {
             />
           </div>
           <div className='flex justify-end'>
-            <Button text='ご注文ページへ進む' fontWeight={'bold'} backgroundColor='crimsonRed' onClick={handleOrderConfirm} />
+            <Button text='ご注文ページへ進む' fontWeight={'bold'} backgroundColor='bg-crimsonRed' onClick={handleOrderConfirm} />
           </div>
         </div>
       </div>
