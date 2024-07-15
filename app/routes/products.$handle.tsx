@@ -1,8 +1,11 @@
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 import { gql, useQuery } from '@apollo/client'
 import { List, ListItem, Typography } from '@material-tailwind/react'
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
-import { Image, Money, getSelectedProductOptions } from '@shopify/hydrogen'
-import { AddToCartButton, BuyNowButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
+import { getSelectedProductOptions, Image, Money } from '@shopify/hydrogen'
+import { AddToCartButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
@@ -13,6 +16,7 @@ import { CustomAccordion as Accordion } from '~/components/molecules/Accordion'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import ProductGallery from '~/components/molecules/ProductGallery'
 import { getVariantUrl } from '~/lib/variants'
+
 export const meta: MetaFunction<typeof loader> = ({ data }) => {
   return [{ title: `Hydrogen | ${data?.product.title ?? ''}` }]
 }
@@ -96,14 +100,22 @@ const redirectToFirstVariant = ({ product, request }: { product: MyProductFragme
 
 const Product: React.FC = () => {
   const { product, variants, selectedOptions, products } = useLoaderData<typeof loader>()
-  const ingredient = product.metafield?.value.replaceAll('[', '').replaceAll(']', '').replaceAll('"', '').replaceAll(',', ' / ')
+
+  const ingredients = product.metafields
+    .find((metafield) => metafield && metafield.key === 'ingredients')
+    ?.value.replaceAll('[', '')
+    .replaceAll(']', '')
+    .replaceAll('"', '')
+    .replaceAll(',', ' / ')
 
   const accordionItems = [
     {
       header: '原材料',
-      content: ingredient ?? ''
+      content: ingredients ?? ''
     }
   ]
+
+  const shippable = product.metafields.find((metafield) => metafield && metafield.key === 'shippable')?.value === 'true'
 
   const { selectedVariant } = product
   const [productCount, setProductCount] = useState(1)
@@ -114,6 +126,27 @@ const Product: React.FC = () => {
   }
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
+  const handleAddToCart = () => {
+    if (shippable) {
+      toast.success('カートに追加されました。カートページをご確認ください。')
+    } else {
+      const userConfirmed = window.confirm('この商品は配送することができません。続けますか？')
+      if (userConfirmed) {
+        toast.success('カートに追加されました。カートページをご確認ください。')
+      } else {
+        return
+      }
+    }
+  }
+
+  // const handleClickBuyNowButton = () => {
+  //   if (!shippable) {
+  //     const userConfirmed = window.confirm('この商品は配送することができません。続けますか？')
+  //     if (!userConfirmed) {
+  //       return
+  //     }
+  //   }
+  // }
   const { lines } = useCart()
   const { data } = useQuery(document, { variables: { id: product.id, selectedOptions } })
   const quantityAvailable = data?.product?.variantBySelectedOptions?.quantityAvailable ?? 0
@@ -124,9 +157,12 @@ const Product: React.FC = () => {
   return (
     <ProductProvider data={product}>
       <div className='flex flex-col gap-10'>
+        <ToastContainer pauseOnHover />
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
-          <div className='flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
-            <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
+          <div className='w-full flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
+            <div className='w-full sm:w-1/2'>
+              <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
+            </div>
             <div className='flex flex-col flex-1 font-yumincho gap-3'>
               <div className='flex flex-col gap-1 md:gap-2'>
                 <Typography variant='h6' color='black' className='font-semibold'>
@@ -135,11 +171,14 @@ const Product: React.FC = () => {
                 <Typography variant='h1' color='black' className='font-extrabold text-2xl md:text-3xl lg:text-4xl'>
                   {product.title}
                 </Typography>
+                <Typography variant='small' className='text-red-700 font-semibold'>
+                  {shippable ? 'こちらの商品は配送もお受けしております。' : 'こちらの商品は配送はお受けしておりません。店頭受取のみ可能です。'}
+                </Typography>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
               {product.selectedVariant.availableForSale ? (
                 !isPlusDisabled && (
-                  <div className='flex flex-col gap-2'>
+                  <div className='flex flex-col gap-2 items-end'>
                     <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
                       数量
                     </Typography>
@@ -167,22 +206,25 @@ const Product: React.FC = () => {
                   申し訳ございませんが、この商品はこれ以上購入可能な在庫がございません
                 </Typography>
               )}
-              <div className='flex gap-2'>
+              <div className='flex gap-2 justify-end'>
                 {product.selectedVariant.availableForSale && !isPlusDisabled && (
                   <>
                     <AddToCartButton
                       quantity={productCount}
                       variantId={product?.selectedVariant?.id}
                       className='bg-yellow text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                      onClick={handleAddToCart}
                     >
                       カートに追加
                     </AddToCartButton>
-                    <BuyNowButton
+                    {/* <BuyNowButton
                       variantId={product?.selectedVariant?.id ?? ''}
                       className='bg-crimsonRed text-white py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                      onClick={handleClickBuyNowButton}
+                      quantity={productCount}
                     >
                       今すぐ買う
-                    </BuyNowButton>
+                    </BuyNowButton> */}
                   </>
                 )}
               </div>
@@ -285,11 +327,11 @@ const PRODUCT_FRAGMENT = gql`
     handle
     descriptionHtml
     description
-    metafield(namespace: "custom", key: "ingredients") {
+    metafields(identifiers: [{ namespace: "custom", key: "ingredients" }, { namespace: "custom", key: "shippable" }]) {
       id
-      description
       type
       value
+      key
     }
     options {
       name

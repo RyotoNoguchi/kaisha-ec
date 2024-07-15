@@ -429,3 +429,13 @@ aside li {
 .swiper-pagination-bullet-active {
   background-color: gray
 }
+
+
+/*
+* --------------------------------------------------
+* Toastify
+* --------------------------------------------------
+*/
+.Toastify__toast-body > div:last-child {
+  font-family: 'YuMincho', 'sans-serif'; /* 好きなフォントに変更 */
+}

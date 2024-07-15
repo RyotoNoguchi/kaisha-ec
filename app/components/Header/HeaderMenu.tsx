@@ -39,10 +39,10 @@ export const HeaderMenu: React.FC<Props> = ({ primaryDomainUrl, viewport, header
               key={item.id}
               onClick={closeAside}
               prefetch='intent'
-              style={activeLinkStyle({
-                isActive: location.pathname === new URL(url, window.location.origin).pathname && location.hash === new URL(url, window.location.origin).hash,
-                isPending: false
-              })}
+              // style={activeLinkStyle({
+              //   isActive: location.pathname === new URL(url, window.location.origin).pathname && location.hash === new URL(url, window.location.origin).hash,
+              //   isPending: false
+              // })}
               to={url}
             >
               {item.title}
@@ -54,10 +54,10 @@ export const HeaderMenu: React.FC<Props> = ({ primaryDomainUrl, viewport, header
   )
 }
 
-const activeLinkStyle = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => {
-  const isMobile = window.innerWidth <= 768 // モバイルサイズの判定
-  return {
-    fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'gray' : isMobile ? 'black' : 'white'
-  }
-}
+// const activeLinkStyle = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => {
+//   const isMobile = window.innerWidth <= 768 // モバイルサイズの判定
+//   return {
+//     fontWeight: isActive ? 'bold' : undefined,
+//     color: isPending ? 'gray' : isMobile ? 'black' : 'white'
+//   }
+// }
