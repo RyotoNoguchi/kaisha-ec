@@ -5,7 +5,7 @@ import { gql, useQuery } from '@apollo/client'
 import { List, ListItem, Typography } from '@material-tailwind/react'
 import { Link, useLoaderData, type MetaFunction } from '@remix-run/react'
 import { getSelectedProductOptions, Image, Money } from '@shopify/hydrogen'
-import { AddToCartButton, BuyNowButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
+import { AddToCartButton, ProductProvider, useCart } from '@shopify/hydrogen-react'
 import type { SelectedOption } from '@shopify/hydrogen/storefront-api-types'
 import { defer, redirect, type LoaderFunctionArgs } from '@shopify/remix-oxygen'
 import { print } from 'graphql'
@@ -127,8 +127,26 @@ const Product: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
   const handleAddToCart = () => {
-    toast.success('カートに追加されました。カートページをご確認ください。')
+    if (shippable) {
+      toast.success('カートに追加されました。カートページをご確認ください。')
+    } else {
+      const userConfirmed = window.confirm('この商品は配送することができません。続けますか？')
+      if (userConfirmed) {
+        toast.success('カートに追加されました。カートページをご確認ください。')
+      } else {
+        return
+      }
+    }
   }
+
+  // const handleClickBuyNowButton = () => {
+  //   if (!shippable) {
+  //     const userConfirmed = window.confirm('この商品は配送することができません。続けますか？')
+  //     if (!userConfirmed) {
+  //       return
+  //     }
+  //   }
+  // }
   const { lines } = useCart()
   const { data } = useQuery(document, { variables: { id: product.id, selectedOptions } })
   const quantityAvailable = data?.product?.variantBySelectedOptions?.quantityAvailable ?? 0
@@ -158,7 +176,7 @@ const Product: React.FC = () => {
               </div>
               {product.selectedVariant.availableForSale ? (
                 !isPlusDisabled && (
-                  <div className='flex flex-col gap-2'>
+                  <div className='flex flex-col gap-2 items-end'>
                     <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
                       数量
                     </Typography>
@@ -186,7 +204,7 @@ const Product: React.FC = () => {
                   申し訳ございませんが、この商品はこれ以上購入可能な在庫がございません
                 </Typography>
               )}
-              <div className='flex gap-2'>
+              <div className='flex gap-2 justify-end'>
                 {product.selectedVariant.availableForSale && !isPlusDisabled && (
                   <>
                     <AddToCartButton
@@ -197,12 +215,14 @@ const Product: React.FC = () => {
                     >
                       カートに追加
                     </AddToCartButton>
-                    <BuyNowButton
+                    {/* <BuyNowButton
                       variantId={product?.selectedVariant?.id ?? ''}
                       className='bg-crimsonRed text-white py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                      onClick={handleClickBuyNowButton}
+                      quantity={productCount}
                     >
                       今すぐ買う
-                    </BuyNowButton>
+                    </BuyNowButton> */}
                   </>
                 )}
               </div>
