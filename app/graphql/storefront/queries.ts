@@ -207,3 +207,62 @@ export const SOCIAL_MEDIAS_QUERY = gql`
     }
   }
 `
+
+export const RECOMMENDED_COLLECTION_QUERY = gql`
+  query GetRecommendedCollection {
+    collection(handle: "recommendations") {
+      id
+      handle
+      title
+      description
+      products(first: 20) {
+        nodes {
+          handle
+          id
+          title
+          description
+          featuredImage {
+            url
+            id
+          }
+          variants(first: 250) {
+            nodes {
+              id
+              title
+              availableForSale
+              image {
+                id
+                url
+                altText
+                height
+                width
+              }
+              selectedOptions {
+                name
+                value
+              }
+              product {
+                id
+                title
+                handle
+                priceRange {
+                  minVariantPrice {
+                    amount
+                    currencyCode
+                  }
+                }
+                featuredImage {
+                  id
+                  url
+                  altText
+                  height
+                  width
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`
