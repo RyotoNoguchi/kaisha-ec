@@ -174,7 +174,7 @@ const Product: React.FC = () => {
       <div className='flex flex-col gap-10'>
         <ToastContainer pauseOnHover />
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
-          <div className='w-full flex flex-col sm:flex-row gap-4 sm:gap-8 lg:gap-10'>
+          <div className='w-full flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-10'>
             <div className='w-full sm:w-1/2'>
               <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
             </div>
@@ -191,57 +191,59 @@ const Product: React.FC = () => {
                 </Typography>
                 <Money data={product.selectedVariant.price} className='text-right text-lg' />
               </div>
-              {product.selectedVariant.availableForSale ? (
-                !isPlusDisabled && (
-                  <div className='flex flex-col gap-2 items-end'>
-                    <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
-                      数量
-                    </Typography>
-                    <ProductCounter
-                      productId={product.id}
-                      selectedOptions={selectedOptions}
-                      count={productCount}
-                      onIncrement={() => setProductCount(productCount + 1)}
-                      onDecrement={() => setProductCount(productCount - 1)}
-                      iconWidth={32}
-                      iconHeight={34}
-                      maxHeight={14}
-                      gap={5}
-                      textSize='3xl'
-                    />
-                  </div>
-                )
-              ) : (
-                <Typography variant='paragraph' color='black' className='font-semibold'>
-                  申し訳ございませんが、こちらの商品は現在販売停止中です
-                </Typography>
-              )}
-              {product.selectedVariant.availableForSale && isPlusDisabled && (
-                <Typography variant='paragraph' color='black' className='font-semibold'>
-                  申し訳ございませんが、この商品はこれ以上購入可能な在庫がございません
-                </Typography>
-              )}
-              <div className='flex gap-2 justify-end'>
-                {product.selectedVariant.availableForSale && !isPlusDisabled && (
-                  <>
-                    <AddToCartButton
-                      quantity={productCount}
-                      variantId={product?.selectedVariant?.id}
-                      className='bg-yellow text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
-                      onClick={handleAddToCart}
-                    >
-                      カートに追加
-                    </AddToCartButton>
-                    {/* <BuyNowButton
-                      variantId={product?.selectedVariant?.id ?? ''}
-                      className='bg-crimsonRed text-white py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
-                      onClick={handleClickBuyNowButton}
-                      quantity={productCount}
-                    >
-                      今すぐ買う
-                    </BuyNowButton> */}
-                  </>
+              <div className='flex justify-between items-end'>
+                {product.selectedVariant.availableForSale ? (
+                  !isPlusDisabled && (
+                    <div className='flex flex-col gap-2 items-start'>
+                      <Typography variant='paragraph' color='black' className='font-semibold opacity-80'>
+                        数量
+                      </Typography>
+                      <ProductCounter
+                        productId={product.id}
+                        selectedOptions={selectedOptions}
+                        count={productCount}
+                        onIncrement={() => setProductCount(productCount + 1)}
+                        onDecrement={() => setProductCount(productCount - 1)}
+                        iconWidth={32}
+                        iconHeight={34}
+                        maxHeight={14}
+                        gap={3}
+                        textSize='3xl'
+                      />
+                    </div>
+                  )
+                ) : (
+                  <Typography variant='paragraph' color='black' className='font-semibold'>
+                    申し訳ございませんが、こちらの商品は現在販売停止中です
+                  </Typography>
                 )}
+                {product.selectedVariant.availableForSale && isPlusDisabled && (
+                  <Typography variant='paragraph' color='black' className='font-semibold'>
+                    申し訳ございませんが、この商品はこれ以上購入可能な在庫がございません
+                  </Typography>
+                )}
+                <div className='flex gap-2 justify-end h-full items-end'>
+                  {product.selectedVariant.availableForSale && !isPlusDisabled && (
+                    <div className='flex items-end h-full'>
+                      <AddToCartButton
+                        quantity={productCount}
+                        variantId={product?.selectedVariant?.id}
+                        className='bg-yellow truncate text-bold font-bold py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                        onClick={handleAddToCart}
+                      >
+                        カート追加
+                      </AddToCartButton>
+                      {/* <BuyNowButton
+                        variantId={product?.selectedVariant?.id ?? ''}
+                        className='bg-crimsonRed text-white py-2 px-5 md:text-lg rounded-full md:min-w-36 border-grayOpacity border-2 hover:opacity-50 transition-opacity duration-3000'
+                        onClick={handleClickBuyNowButton}
+                        quantity={productCount}
+                      >
+                        今すぐ買う
+                      </BuyNowButton> */}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-2'>
