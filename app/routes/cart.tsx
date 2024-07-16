@@ -44,10 +44,10 @@ const Cart = () => {
   }, [deepLApiKey, lines])
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
-  const [customerNote, setCustomerNote] = useState('') // ユーザーのノート用の状態
+  const [customerNote, setCustomerNote] = useState('')
+  const isPickupDateAndTimeSelected = selectedDate && selectedTime
   const handleOrderConfirm = () => {
-    // 受取日時と受取時間の両方が未選択の場合に警告
-    if (!selectedDate || !selectedTime) {
+    if (!isPickupDateAndTimeSelected) {
       alert(`受取${!selectedDate ? '日' : ''}${!selectedDate && !selectedTime ? 'と受取' : ''}${!selectedTime ? '時間' : ''}を選択してください`)
       return
     }
@@ -98,8 +98,8 @@ const Cart = () => {
     <div className='flex flex-col font-yumincho py-10 px-4 md:px-14 lg:px-20 gap-9'>
       <div className='flex justify-between items-end'>
         <h1 className='flex text-4xl font-bold'>ご注文内容</h1>
-        <div className='flex gap-2 hover:opacity-70 font-semibold'>
-          <Link to='/products' className='flex'>
+        <div className='flex gap-2 font-semibold'>
+          <Link to='/products' className='flex hover:opacity-70 transition-opacity duration-200'>
             他の商品も見る
           </Link>
         </div>
@@ -109,7 +109,7 @@ const Cart = () => {
           lines.length > 0 &&
           lines.map((line) => (
             <div className='grid grid-cols-[1fr,2fr] gap-2' key={line?.id}>
-              <div className='flex gap-1 justify-center items-center'>
+              <div className='flex gap-1 justify-center items-center hover:opacity-70 transition-opacity duration-200'>
                 <Link
                   to={{
                     pathname: `/products/${line?.merchandise?.product?.handle}`,
@@ -218,8 +218,14 @@ const Cart = () => {
               placeholder='特別な要望があればこちらに記入してください'
             />
           </div>
-          <div className='flex justify-end'>
-            <Button text='ご注文ページへ進む' fontWeight={'bold'} backgroundColor='bg-crimsonRed' onClick={handleOrderConfirm} />
+          <div className={`flex justify-end ${!isPickupDateAndTimeSelected ? 'opacity-50' : 'hover:opacity-70 transition-opacity duration-200'}`}>
+            <Button
+              text='ご注文ページへ進む'
+              fontWeight={'bold'}
+              backgroundColor={!isPickupDateAndTimeSelected ? 'bg-slate-500' : 'bg-crimsonRed'}
+              onClick={handleOrderConfirm}
+              disabled={!isPickupDateAndTimeSelected}
+            />
           </div>
         </div>
       </div>

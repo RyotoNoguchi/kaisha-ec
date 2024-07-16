@@ -2,7 +2,6 @@ import { NavLink, useLocation } from '@remix-run/react'
 import { Image } from '@shopify/hydrogen-react'
 import type { GetFooterMenusQuery, GetSocialMediasQuery } from 'src/gql/graphql'
 import { InstagramIcon } from '~/components/atoms/InstagramIcon'
-// import type { FooterQuery } from 'storefrontapi.generated'
 import { useRootLoaderData } from '~/root'
 
 type Props = {
@@ -22,7 +21,7 @@ export const FooterMenu: React.FC<Props> = ({ menu, primaryDomainUrl, socialMedi
     const url = item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname : item.url
     const isExternal = !url.startsWith('/')
     return isExternal ? (
-      <li className='pl-6 w-full h-full flex items-start' key={item.id}>
+      <li className='pl-6 w-full h-full flex items-start hover:opacity-70 transition-opacity duration-200' key={item.id}>
         <a className='text-white text-left' href={url} key={item.id} rel='noopener noreferrer' target='_blank'>
           {item.title !== 'Instagram' ? (
             item.title
@@ -36,7 +35,7 @@ export const FooterMenu: React.FC<Props> = ({ menu, primaryDomainUrl, socialMedi
       </li>
     ) : (
       <NavLink
-        className='pl-6 w-full h-full flex justify-start text-white'
+        className='pl-6 w-full h-full flex justify-start text-white hover:opacity-70 transition-opacity duration-200'
         end
         key={item.id}
         prefetch='intent'

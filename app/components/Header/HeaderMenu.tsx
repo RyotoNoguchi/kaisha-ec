@@ -1,4 +1,4 @@
-import { NavLink, useLocation } from '@remix-run/react'
+import { NavLink } from '@remix-run/react'
 import type { GetHeaderMenusQuery } from 'src/gql/graphql'
 import type { HeaderQuery } from 'storefrontapi.generated'
 import { useRootLoaderData } from '~/root'
@@ -11,8 +11,6 @@ type Props = {
 
 export const HeaderMenu: React.FC<Props> = ({ primaryDomainUrl, viewport, headerMenus }) => {
   const { publicStoreDomain } = useRootLoaderData()
-  const location = useLocation()
-  // const className = `header-menu-${viewport}`
 
   const closeAside = (event: React.MouseEvent<HTMLAnchorElement>) => {
     if (viewport === 'mobile') {
@@ -33,18 +31,7 @@ export const HeaderMenu: React.FC<Props> = ({ primaryDomainUrl, viewport, header
           const url =
             item.url.includes('myshopify.com') || item.url.includes(publicStoreDomain) || item.url.includes(primaryDomainUrl) ? new URL(item.url).pathname + (new URL(item.url).hash || '') : item.url
           return (
-            <NavLink
-              className='text-black md:text-white'
-              end
-              key={item.id}
-              onClick={closeAside}
-              prefetch='intent'
-              // style={activeLinkStyle({
-              //   isActive: location.pathname === new URL(url, window.location.origin).pathname && location.hash === new URL(url, window.location.origin).hash,
-              //   isPending: false
-              // })}
-              to={url}
-            >
+            <NavLink className='text-black md:text-white hover:opacity-70 transition-opacity duration-200' end key={item.id} onClick={closeAside} prefetch='intent' to={url}>
               {item.title}
             </NavLink>
           )
@@ -53,11 +40,3 @@ export const HeaderMenu: React.FC<Props> = ({ primaryDomainUrl, viewport, header
     </nav>
   )
 }
-
-// const activeLinkStyle = ({ isActive, isPending }: { isActive: boolean; isPending: boolean }) => {
-//   const isMobile = window.innerWidth <= 768 // モバイルサイズの判定
-//   return {
-//     fontWeight: isActive ? 'bold' : undefined,
-//     color: isPending ? 'gray' : isMobile ? 'black' : 'white'
-//   }
-// }
