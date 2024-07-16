@@ -156,14 +156,6 @@ const Product: React.FC = () => {
 
   const shippable = product.metafields.find((metafield) => metafield && metafield.key === 'shippable')?.value === 'true'
   const [productCount, setProductCount] = useState(1)
-  const imageData = {
-    altText: product?.selectedVariant?.image?.altText ?? '',
-    id: product?.selectedVariant?.image?.id ?? '',
-    url: product?.selectedVariant?.image?.url ?? ''
-  }
-  console.log('%capp/routes/products.$handle.tsx:164 imageData', 'color: #26bfa5;', imageData.url)
-  const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
-  const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
   const handleAddToCart = () => {
     if (shippable) {
       toast.success('カートに追加されました。カートページをご確認ください。')
@@ -198,7 +190,7 @@ const Product: React.FC = () => {
         <div className='flex flex-col px-6 py-6 sm:px-10 lg:px-32 xl:px-56 font-yumincho gap-10 w-full'>
           <div className='w-full flex flex-col sm:flex-row gap-4 sm:gap-6 lg:gap-10'>
             <div className='w-full sm:w-1/2'>
-              <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} selectedImage={selectedImage} handleImageClick={handleImageClick} />
+              <ProductGallery product={product as MyProductFragment & { selectedVariant: MyProductVariantFragment }} />
             </div>
             <div className='flex flex-col flex-1 font-yumincho gap-3'>
               <div className='flex flex-col gap-1 md:gap-2'>
