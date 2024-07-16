@@ -119,6 +119,10 @@ const Product: React.FC = () => {
   const { data, refetch } = useQuery(document, { variables: { id: product.id, selectedOptions } })
   const [selectedVariant, setSelectedVariant] = useState(data?.product)
   const [_, setSearchParams] = useSearchParams()
+  const [productCount, setProductCount] = useState(1)
+  useEffect(() => {
+    setProductCount(1)
+  }, [product])
 
   const getQueryParamsAsObjectArray = (search: string) => {
     const params = new URLSearchParams(search)
@@ -155,7 +159,7 @@ const Product: React.FC = () => {
   ]
 
   const shippable = product.metafields.find((metafield) => metafield && metafield.key === 'shippable')?.value === 'true'
-  const [productCount, setProductCount] = useState(1)
+
   const handleAddToCart = () => {
     if (shippable) {
       toast.success('カートに追加されました。カートページをご確認ください。')
