@@ -21,7 +21,7 @@ const ProductGallery: React.FC<Props> = ({ product, selectedImage, handleImageCl
             product.images.edges.map((image: { node: { url?: any; altText: string | null; id: string | null } }) => (
               <li key={image.node.id} className='cursor-pointer'>
                 {image.node.url && (
-                  <div className='w-36'>
+                  <div className='w-36 hover:opacity-70 transition-opacity duration-200'>
                     <Image
                       data={{ url: image.node.url as string, altText: image.node.altText ?? '', id: image.node.id ?? '' }}
                       className='w-36'

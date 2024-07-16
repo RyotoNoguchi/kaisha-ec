@@ -12,22 +12,15 @@ export const MenuCard: React.FC<Props> = ({ variant }) => {
   const queryParams = variant.selectedOptions.map((option) => `${option.name}=${option.value}`).join('&')
   return (
     <ProductProvider data={variant.product}>
-      <Link to={hasVariants ? `/products/${variant.product.handle}?${queryParams}` : `/products/${variant.product.handle}`}>
-        <li className='w-56 flex flex-shrink-0 flex-col gap-4 p-4 bg-black mb-2 rounded-sm hover:opacity-70'>
+      <li className='hover:opacity-70 transition-opacity duration-200'>
+        <Link
+          className='w-56 flex flex-shrink-0 flex-col gap-4 p-4 bg-black mb-2 rounded-sm'
+          to={hasVariants ? `/products/${variant.product.handle}?${queryParams}` : `/products/${variant.product.handle}`}
+        >
           {variant.image && <Image data={variant.image} alt='product image' className='rounded-sm' />}
           <div className='flex flex-col gap-2 flex-1 min-h-24'>
             <div className='text-primary font-yumincho'>
               <h3 className='truncate whitespace-pre-wrap'>{variant.product.title}</h3>
-              {/* {hasVariants && (
-                <div className='flex flex-col'>
-                  {variant.selectedOptions.map((option, index) => (
-                    // eslint-disable-next-line react/no-array-index-key
-                    <p key={index} className='text-xs'>
-                      {option.name}: {option.value}
-                    </p>
-                  ))}
-                </div>
-              )} */}
             </div>
             <div className='flex justify-end items-end flex-1'>
               <div className='flex'>
@@ -39,15 +32,10 @@ export const MenuCard: React.FC<Props> = ({ variant }) => {
                   <span className=''>{variant.product.priceRange?.minVariantPrice.currencyCode === 'JPY' && '円'}</span>
                 </p>
               </div>
-              {/* {variant.availableForSale && (
-                <AddToCartButton variantId={variant.id} className='text-black bg-primary px-3 py-1 rounded-full font-yumincho text-lg font-semibold'>
-                  <AddToCartIcon />
-                </AddToCartButton>
-              )} */}
             </div>
           </div>
-        </li>
-      </Link>
+        </Link>
+      </li>
     </ProductProvider>
   )
 }

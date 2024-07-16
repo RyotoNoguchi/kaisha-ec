@@ -74,7 +74,6 @@ export const loader = async ({ params, request, context }: LoaderFunctionArgs) =
   }
 
   type MyProductQueryType = { product: MyProductFragment & { selectedVariant: MyProductVariantFragment } }
-  // await the query for the critical product data
   const { product } = await storefront.query<MyProductQueryType>(print(PRODUCT_QUERY), {
     variables: { handle, selectedOptions }
   })
@@ -162,6 +161,7 @@ const Product: React.FC = () => {
     id: product?.selectedVariant?.image?.id ?? '',
     url: product?.selectedVariant?.image?.url ?? ''
   }
+  console.log('%capp/routes/products.$handle.tsx:164 imageData', 'color: #26bfa5;', imageData.url)
   const [selectedImage, setSelectedImage] = useState<{ altText: string; id: string; url: URL }>(imageData)
   const handleImageClick = (image: { altText: string; id: string; url: URL }) => setSelectedImage(image)
   const handleAddToCart = () => {
@@ -350,6 +350,10 @@ const PRODUCT_FRAGMENT = gql`
     handle
     descriptionHtml
     description
+    featuredImage {
+      url
+      id
+    }
     metafields(identifiers: [{ namespace: "custom", key: "ingredients" }, { namespace: "custom", key: "shippable" }]) {
       id
       type

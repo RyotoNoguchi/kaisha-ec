@@ -33,7 +33,7 @@ const Products = () => {
           <div className='flex flex-col gap-4'>
             <ul className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 md:px-20 lg:px-4 gap-4'>
               {products.nodes.map((product) => (
-                <li className='flex flex-col flex-1 p-2 gap-4 bg-black rounded' key={product.id}>
+                <li className='flex flex-col flex-1 p-2 gap-4 bg-black rounded hover:opacity-70 transition-opacity duration-200' key={product.id}>
                   <Link to={`/products/${product.handle}`} className='flex flex-col gap-2 h-full'>
                     {product.featuredImage && <Image data={product.featuredImage} />}
                     <div className='flex flex-col flex-1 items-start justify-start'>
