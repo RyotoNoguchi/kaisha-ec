@@ -44,10 +44,10 @@ const Cart = () => {
   }, [deepLApiKey, lines])
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
-  const [customerNote, setCustomerNote] = useState('') // ユーザーのノート用の状態
+  const [customerNote, setCustomerNote] = useState('')
+  const isPickupDateAndTimeSelected = selectedDate && selectedTime
   const handleOrderConfirm = () => {
-    // 受取日時と受取時間の両方が未選択の場合に警告
-    if (!selectedDate || !selectedTime) {
+    if (!isPickupDateAndTimeSelected) {
       alert(`受取${!selectedDate ? '日' : ''}${!selectedDate && !selectedTime ? 'と受取' : ''}${!selectedTime ? '時間' : ''}を選択してください`)
       return
     }
@@ -218,8 +218,14 @@ const Cart = () => {
               placeholder='特別な要望があればこちらに記入してください'
             />
           </div>
-          <div className='flex justify-end hover:opacity-70 transition-opacity duration-200'>
-            <Button text='ご注文ページへ進む' fontWeight={'bold'} backgroundColor='bg-crimsonRed' onClick={handleOrderConfirm} />
+          <div className={`flex justify-end ${!isPickupDateAndTimeSelected ? 'opacity-50' : 'hover:opacity-70 transition-opacity duration-200'}`}>
+            <Button
+              text='ご注文ページへ進む'
+              fontWeight={'bold'}
+              backgroundColor={!isPickupDateAndTimeSelected ? 'bg-slate-500' : 'bg-crimsonRed'}
+              onClick={handleOrderConfirm}
+              disabled={!isPickupDateAndTimeSelected}
+            />
           </div>
         </div>
       </div>
