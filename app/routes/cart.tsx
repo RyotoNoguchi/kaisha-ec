@@ -33,7 +33,7 @@ export const loader = async ({ context, request }: LoaderFunctionArgs) => {
   return defer({ deepLApiKey, products })
 }
 
-const Cart = () => {
+const CartPage = () => {
   const { deepLApiKey, products } = useLoaderData<typeof loader>()
   const shippableProductIds = products.nodes.filter((product) => product.metafields.some((field) => field?.key === 'shippable' && field.value === 'true')).map((product) => product.id)
   const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
@@ -233,4 +233,4 @@ const Cart = () => {
   )
 }
 
-export default Cart
+export default CartPage
