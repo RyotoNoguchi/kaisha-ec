@@ -7970,6 +7970,7 @@ export type AllProductsQuery = {
       title: string
       handle: string
       featuredImage: { __typename?: 'Image'; id: string | null; url: any; altText: string | null; height: number | null; width: number | null } | null
+      metafields: Array<{ __typename?: 'Metafield'; id: string; type: string; value: string; key: string } | null>
       variants: {
         __typename?: 'ProductVariantConnection'
         nodes: Array<{
@@ -8625,6 +8626,44 @@ export const AllProductsDocument = {
                             { kind: 'Field', name: { kind: 'Name', value: 'altText' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'height' } },
                             { kind: 'Field', name: { kind: 'Name', value: 'width' } }
+                          ]
+                        }
+                      },
+                      {
+                        kind: 'Field',
+                        name: { kind: 'Name', value: 'metafields' },
+                        arguments: [
+                          {
+                            kind: 'Argument',
+                            name: { kind: 'Name', value: 'identifiers' },
+                            value: {
+                              kind: 'ListValue',
+                              values: [
+                                {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    { kind: 'ObjectField', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+                                    { kind: 'ObjectField', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'ingredients', block: false } }
+                                  ]
+                                },
+                                {
+                                  kind: 'ObjectValue',
+                                  fields: [
+                                    { kind: 'ObjectField', name: { kind: 'Name', value: 'namespace' }, value: { kind: 'StringValue', value: 'custom', block: false } },
+                                    { kind: 'ObjectField', name: { kind: 'Name', value: 'key' }, value: { kind: 'StringValue', value: 'shippable', block: false } }
+                                  ]
+                                }
+                              ]
+                            }
+                          }
+                        ],
+                        selectionSet: {
+                          kind: 'SelectionSet',
+                          selections: [
+                            { kind: 'Field', name: { kind: 'Name', value: 'id' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'type' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'value' } },
+                            { kind: 'Field', name: { kind: 'Name', value: 'key' } }
                           ]
                         }
                       },

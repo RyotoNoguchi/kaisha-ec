@@ -1,30 +1,51 @@
 import type { MetaFunction } from '@remix-run/react'
 import { defer, Link, useLoaderData } from '@remix-run/react'
 import type { LoaderFunctionArgs } from '@remix-run/server-runtime'
+import { getPaginationVariables } from '@shopify/hydrogen'
 import { Image, useCart } from '@shopify/hydrogen-react'
+import { print } from 'graphql'
 import { useEffect, useState } from 'react'
 import type { SelectedOption } from 'src/generated/graphql'
+import type { AllProductsQuery } from 'src/gql/graphql'
 import { Button } from '~/components/atoms/Button'
 import { CloseIcon } from '~/components/atoms/CloseIcon'
 import DateSelector from '~/components/atoms/DateSelector'
 import { TimeSelector } from '~/components/atoms/TimeSelector'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
+import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
 import { translateText } from '~/lib/translate'
 
 export const meta: MetaFunction = () => {
   return [{ title: `膾炙 | カート` }]
 }
 
-export const loader = async ({ context }: LoaderFunctionArgs) => {
-  const { deepLApiKey } = context
-  return defer({ deepLApiKey })
+export const loader = async ({ context, request }: LoaderFunctionArgs) => {
+  const { deepLApiKey, storefront } = context
+  const paginationVariables = getPaginationVariables(request, {
+    pageBy: 100 // maybe enough for now
+  })
+  const { products } = await storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
+    variables: paginationVariables
+  })
+  return defer({ deepLApiKey, products })
 }
 
 const Cart = () => {
-  const { deepLApiKey } = useLoaderData<typeof loader>()
+  const { deepLApiKey, products } = useLoaderData<typeof loader>()
+  const shippableProductIds = products.nodes.filter((product) => product.metafields.some((field) => field?.key === 'shippable' && field.value === 'true')).map((product) => product.id)
   const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
-
   const { status, lines, cost, totalQuantity, id, cartAttributesUpdate, noteUpdate, linesUpdate, linesRemove, attributes, checkoutUrl } = useCart()
+  const hasNonShippableProduct =
+    (
+      lines
+        ?.filter((line) => {
+          const productId = line?.merchandise?.product?.id
+          return productId && !shippableProductIds.includes(productId)
+        })
+        ?.map((line) => line?.merchandise?.product?.id)
+        ?.filter(Boolean) ?? []
+    ).length > 0
+
   useEffect(() => {
     const translateOptions = async () => {
       const translations: { [key: string]: string } = {}
@@ -93,6 +114,26 @@ const Cart = () => {
       </div>
     )
   }
+
+  /**
+   * TODO
+   * パターンわけ
+   * A. 配送不可能な商品がふくまれている場合(hasNonShippableProduct)
+   *    1. 以下のテキストメッセージを表示する
+   *        a. 「配送対応していない商品がカートにふくまれているため、必ず「受取日」と「受取時間」を選択してください」
+   *        b. 必ず、次の注文ページにて「配達」項目の「ストアで受け取る」を選択してください
+   *    2. [受取日]と[受取時間]を選択を表示する
+   * B. 配送不可能な商品が含まれていない場合(!hasNonShippableProduct)
+   *    1. 以下の選択肢のラジオボタンを設置
+   *        i. 「店舗受取を希望する」
+   *        ii. 「配送を希望する」
+   *    2. ラジオボタンの値で以下の処理を行う
+   *        i. 「店舗受取を希望する」にチェックが入っている場合
+   *          1. 「受取日」と「受取時間」を表示
+   *          2. 必ず、次の注文ページにて「配達」項目の「ストアで受け取る」を選択してください
+   *        ii. 「配送を希望する」にチェックが入っている場合
+   *          1. 必ず、次の注文ページにて「配達」項目の「発送」を選択してください
+   */
 
   return (
     <div className='flex flex-col font-yumincho py-10 px-4 md:px-14 lg:px-20 gap-9'>
@@ -192,6 +233,9 @@ const Cart = () => {
             </p>
           </div>
           <div className='flex flex-col gap-2'>
+            <p className='text-base font-semibold'>ご注文ページでは「店舗受け取り」または「配送」のどちらかをお選び下さい。</p>
+          </div>
+          <div className='flex flex-col gap-2'>
             <div className='grid grid-cols-[2fr,1fr] lg:grid-cols-[1fr,1fr] gap-4 md:gap-6 lg:gap-8'>
               <div className='flex gap-2 items-start justify-end'>
                 <span className='bg-crimsonRed text-white text-sm py-1 px-2'>必須</span>
@@ -224,7 +268,7 @@ const Cart = () => {
               fontWeight={'bold'}
               backgroundColor={!isPickupDateAndTimeSelected ? 'bg-slate-500' : 'bg-crimsonRed'}
               onClick={handleOrderConfirm}
-              disabled={!isPickupDateAndTimeSelected}
+              disabled={!isPickupDateAndTimeSelected && hasNonShippableProduct}
             />
           </div>
         </div>
