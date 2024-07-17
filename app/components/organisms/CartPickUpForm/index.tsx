@@ -4,17 +4,15 @@ import { TimeSelector } from '~/components/atoms/TimeSelector'
 
 type Props = {
   isPickupDateAndTimeSelected: boolean
+  children: React.ReactNode
   setSelectedDate: React.Dispatch<React.SetStateAction<string>>
   setSelectedTime: React.Dispatch<React.SetStateAction<string>>
 }
 
-export const CartPickUpForm: React.FC<Props> = ({ isPickupDateAndTimeSelected, setSelectedDate, setSelectedTime }) => {
+export const CartPickUpForm: React.FC<Props> = ({ isPickupDateAndTimeSelected, setSelectedDate, setSelectedTime, children }) => {
   return (
     <div className='flex flex-col gap-2'>
-      <p className='text-sm'>
-        配送対応していない商品がカートにふくまれているため、 必ず
-        <span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>を選択してください
-      </p>
+      {children}
       <div className='grid grid-cols-[2fr,1fr] lg:grid-cols-[1fr,1fr] gap-4 md:gap-6 lg:gap-8'>
         <div className='flex gap-2 items-start justify-end'>
           <span className='bg-crimsonRed text-white text-sm py-1 px-2'>必須</span>
@@ -26,11 +24,13 @@ export const CartPickUpForm: React.FC<Props> = ({ isPickupDateAndTimeSelected, s
         </div>
       </div>
       {isPickupDateAndTimeSelected && (
-        <p className='text-sm'>
-          必ず、次の注文ページにて
-          <span className='font-bold px-0.5 text-crimsonRed'>配達</span>項目の
-          <span className='font-bold px-0.5 text-crimsonRed'>ストアで受け取る</span>を選択してください
-        </p>
+        <div className='flex flex-col md:items-end'>
+          <p className=''>
+            必ず、次の注文ページにて
+            <span className='font-bold px-0.5 text-crimsonRed'>配達</span>項目の
+            <span className='font-bold px-0.5 text-crimsonRed'>ストアで受け取る</span>を選択してください
+          </p>
+        </div>
       )}
     </div>
   )

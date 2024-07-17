@@ -15,6 +15,7 @@ import { CartLineDeleteButton } from '~/components/organisms/CartLineDeleteButto
 import { CartLineTitle } from '~/components/organisms/CartLineTitle'
 import { CartPickUpForm } from '~/components/organisms/CartPickUpForm'
 import { CartTextArea } from '~/components/organisms/CartTextArea'
+import { DeliveryOptionRadioButtons } from '~/components/organisms/DeliveryOptionRadioButtons'
 import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
 import { translateText } from '~/lib/translate'
 
@@ -37,6 +38,7 @@ const CartPage = () => {
   const { deepLApiKey, products } = useLoaderData<typeof loader>()
   const shippableProductIds = products.nodes.filter((product) => product.metafields.some((field) => field?.key === 'shippable' && field.value === 'true')).map((product) => product.id)
   const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
+  const [deliveryOption, setDeliveryOption] = useState<'pickup' | 'shipping'>('pickup')
   const { status, lines, cost, totalQuantity, id, cartAttributesUpdate, noteUpdate, linesUpdate, linesRemove, attributes, checkoutUrl } = useCart()
   const hasNonShippableProduct =
     (
@@ -69,11 +71,23 @@ const CartPage = () => {
   const [selectedDate, setSelectedDate] = useState('')
   const [selectedTime, setSelectedTime] = useState('')
   const [customerNote, setCustomerNote] = useState('')
-  const isPickupDateAndTimeSelected = selectedDate && selectedTime
+  const isPickupDateAndTimeSelected = !!selectedDate && !!selectedTime
+
   const handleOrderConfirm = () => {
-    if (!isPickupDateAndTimeSelected) {
+    if (checkoutButtonDisabled()) {
       alert(`受取${!selectedDate ? '日' : ''}${!selectedDate && !selectedTime ? 'と受取' : ''}${!selectedTime ? '時間' : ''}を選択してください`)
       return
+    }
+
+    if (deliveryOption === 'shipping') {
+      try {
+        if (checkoutUrl) {
+          window.location.href = checkoutUrl // 更新後にチェックアウトページへリダイレクト
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('カートの更新に失敗しました:', error)
+      }
     }
 
     const attributesToUpdate = [
@@ -94,6 +108,11 @@ const CartPage = () => {
     }
   }
 
+  const handleClickStorePickUpRadioButton = () => {
+    setSelectedDate('')
+    setSelectedTime('')
+  }
+
   const handleIncrement = ({ id, quantity }: { id: string; quantity: number }) => {
     if (!id || !quantity) return
     linesUpdate([{ id, quantity: quantity + 1 }])
@@ -108,6 +127,28 @@ const CartPage = () => {
     linesRemove([id])
   }
 
+  const checkoutButtonDisabled = () => {
+    // 配送不可能な商品がカートに含まれていない場合
+    if (!hasNonShippableProduct) {
+      // 配送希望の場合
+      if (deliveryOption === 'shipping') {
+        // 受取日と受取時間が選択されていない場合
+        return false
+      }
+      if (deliveryOption === 'pickup') {
+        if (isPickupDateAndTimeSelected) {
+          return false
+        }
+      }
+    } else {
+      // 配送不可能な商品がカートに含まれている場合
+      if (isPickupDateAndTimeSelected) {
+        return false
+      }
+    }
+    return true
+  }
+
   if (!lines || lines.length === 0) {
     return (
       <div className='py-28 flex flex-col gap-10 items-center justify-center font-yumincho'>
@@ -118,26 +159,6 @@ const CartPage = () => {
       </div>
     )
   }
-
-  /**
-   * TODO
-   * パターンわけ
-   * A. 配送不可能な商品がふくまれている場合(hasNonShippableProduct)
-   *    1. 以下のテキストメッセージを表示する
-   *        a. 「配送対応していない商品がカートにふくまれているため、必ず「受取日」と「受取時間」を選択してください」
-   *        b. 必ず、次の注文ページにて「配達」項目の「ストアで受け取る」を選択してください
-   *    2. [受取日]と[受取時間]を選択を表示する
-   * B. 配送不可能な商品が含まれていない場合(!hasNonShippableProduct)
-   *    1. 以下の選択肢のラジオボタンを設置
-   *        i. 「店舗受取を希望する」
-   *        ii. 「配送を希望する」
-   *    2. ラジオボタンの値で以下の処理を行う
-   *        i. 「店舗受取を希望する」にチェックが入っている場合
-   *          1. 「受取日」と「受取時間」を表示
-   *          2. 必ず、次の注文ページにて「配達」項目の「ストアで受け取る」を選択してください
-   *        ii. 「配送を希望する」にチェックが入っている場合
-   *          1. 必ず、次の注文ページにて「配達」項目の「発送」を選択してください
-   */
 
   return (
     <div className='flex flex-col font-yumincho py-10 px-4 md:px-14 lg:px-20 gap-9'>
@@ -212,19 +233,45 @@ const CartPage = () => {
       </div>
       <hr className='border-gray border-opacity-50 border-2' />
       <div className='flex flex-col gap-2 items-end'>
-        <div className='flex flex-col lg:flex-row-reverse gap-4 w-full'>
+        <div className='flex flex-col  gap-4 w-full'>
           <CartAmountTotal subtotalAmount={Number(cost?.subtotalAmount?.amount).toLocaleString()} totalAmount={Number(cost?.totalAmount?.amount).toLocaleString()} />
-          {hasNonShippableProduct && <CartPickUpForm isPickupDateAndTimeSelected={!!isPickupDateAndTimeSelected} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime} />}
+          {hasNonShippableProduct && (
+            <CartPickUpForm isPickupDateAndTimeSelected={!!isPickupDateAndTimeSelected} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime}>
+              <p className='text-sm md:text-right'>
+                配送対応していない商品がカートにふくまれているため、こちらのご注文は
+                <span className='text-crimsonRed font-bold'>店舗受け取り</span>のみ可能です。
+                <br /> 必ず<span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>を選択してください。
+              </p>
+            </CartPickUpForm>
+          )}
+          {!hasNonShippableProduct && <DeliveryOptionRadioButtons deliveryOption={deliveryOption} setDeliveryOption={setDeliveryOption} clearPickupDateAndTime={handleClickStorePickUpRadioButton} />}
+          {!hasNonShippableProduct && deliveryOption === 'pickup' && (
+            <CartPickUpForm isPickupDateAndTimeSelected={!!isPickupDateAndTimeSelected} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime}>
+              <div className='flex flex-col md:items-end'>
+                <p className='text-sm'>
+                  店舗受取をご希望の場合は必ず、<span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>を選択してください。
+                </p>
+              </div>
+            </CartPickUpForm>
+          )}
+          {!hasNonShippableProduct && deliveryOption === 'shipping' && (
+            <div className='flex flex-col md:items-end'>
+              <p className=''>
+                必ず、次の注文ページにて<span className='text-crimsonRed px-0.5 font-bold'>配達</span>項目の<span className='text-crimsonRed px-0.5 font-bold'>発送</span>
+                を選択してください。
+              </p>
+            </div>
+          )}
         </div>
         <div className='flex flex-col gap-4 lg:w-1/2'>
           <CartTextArea customerNote={customerNote} setCustomerNote={setCustomerNote} />
-          <div className={`flex justify-end ${!isPickupDateAndTimeSelected ? 'opacity-50' : 'hover:opacity-70 transition-opacity duration-200'}`}>
+          <div className={`flex justify-end ${checkoutButtonDisabled() ? 'opacity-50' : 'hover:opacity-70 transition-opacity duration-200'}`}>
             <Button
               text='ご注文ページへ進む'
               fontWeight={'bold'}
-              backgroundColor={!isPickupDateAndTimeSelected ? 'bg-slate-500' : 'bg-crimsonRed'}
+              backgroundColor={checkoutButtonDisabled() ? 'bg-slate-500' : 'bg-crimsonRed'}
               onClick={handleOrderConfirm}
-              disabled={!isPickupDateAndTimeSelected && hasNonShippableProduct}
+              disabled={checkoutButtonDisabled()}
             />
           </div>
         </div>
