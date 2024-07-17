@@ -14,6 +14,12 @@ export const PRODUCTS_QUERY = gql`
           height
           width
         }
+        metafields(identifiers: [{ namespace: "custom", key: "ingredients" }, { namespace: "custom", key: "shippable" }]) {
+          id
+          type
+          value
+          key
+        }
         variants(first: 250) {
           nodes {
             id
