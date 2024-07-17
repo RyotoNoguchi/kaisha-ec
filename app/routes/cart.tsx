@@ -122,6 +122,7 @@ const CartPage = () => {
     linesUpdate([{ id, quantity: quantity - 1 }])
   }
   const handleDelete = ({ id }: { id: string }, e: React.MouseEvent<HTMLButtonElement>) => {
+    handleClickStorePickUpRadioButton()
     e.preventDefault()
     if (!id) return
     linesRemove([id])
