@@ -8,10 +8,13 @@ import { useEffect, useState } from 'react'
 import type { SelectedOption } from 'src/generated/graphql'
 import type { AllProductsQuery } from 'src/gql/graphql'
 import { Button } from '~/components/atoms/Button'
-import { CloseIcon } from '~/components/atoms/CloseIcon'
-import DateSelector from '~/components/atoms/DateSelector'
-import { TimeSelector } from '~/components/atoms/TimeSelector'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
+import { CartAmountTotal } from '~/components/organisms/CartAmountTotal'
+import { CartHeading } from '~/components/organisms/CartHeading'
+import { CartLineDeleteButton } from '~/components/organisms/CartLineDeleteButton'
+import { CartLineTitle } from '~/components/organisms/CartLineTitle'
+import { CartPickUpForm } from '~/components/organisms/CartPickUpForm'
+import { CartTextArea } from '~/components/organisms/CartTextArea'
 import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
 import { translateText } from '~/lib/translate'
 
@@ -99,7 +102,8 @@ const Cart = () => {
     if (!id || !quantity) return
     linesUpdate([{ id, quantity: quantity - 1 }])
   }
-  const handleDelete = ({ id }: { id: string }) => {
+  const handleDelete = ({ id }: { id: string }, e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault()
     if (!id) return
     linesRemove([id])
   }
@@ -137,14 +141,7 @@ const Cart = () => {
 
   return (
     <div className='flex flex-col font-yumincho py-10 px-4 md:px-14 lg:px-20 gap-9'>
-      <div className='flex justify-between items-end'>
-        <h1 className='flex text-4xl font-bold'>ご注文内容</h1>
-        <div className='flex gap-2 font-semibold'>
-          <Link to='/products' className='flex hover:opacity-70 transition-opacity duration-200'>
-            他の商品も見る
-          </Link>
-        </div>
-      </div>
+      <CartHeading />
       <div className='flex flex-col gap-4 sm:gap-8'>
         {lines &&
           lines.length > 0 &&
@@ -163,17 +160,10 @@ const Cart = () => {
               <div className='flex flex-col lg:flex-row gap-1 justify-between'>
                 <div className='flex flex-col'>
                   <div className='flex justify-between'>
-                    <p className='text-base sm:text-xl sm:text-bold leading-8'>{line?.merchandise?.product?.title}</p>
-                    <button
-                      className='grid place-content-center'
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                        e.preventDefault()
-                        handleDelete({ id: line?.id ?? '' })
-                      }}
-                    >
-                      <CloseIcon />
-                    </button>
+                    <CartLineTitle title={line?.merchandise?.product?.title ?? ''} />
+                    <CartLineDeleteButton onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleDelete({ id: line?.id ?? '' }, e)} />
                   </div>
+                  {/* Variants */}
                   <div className='flex justify-between'>
                     <div className='flex gap-1'>
                       {line?.merchandise?.selectedOptions &&
@@ -185,9 +175,9 @@ const Cart = () => {
                           }
                           return (
                             <p key={option.name} className='text-s flex gap-1'>
-                              <span className=''>{translatedOptions[option.name] ?? option.name}</span>
+                              <span>{translatedOptions[option.name] ?? option.name}</span>
                               <span>:</span>
-                              <span className=''>{option?.value}</span>
+                              <span>{option?.value}</span>
                               <span>{index === (line?.merchandise?.selectedOptions?.length ?? 0) - 1 ? '' : ','}</span>
                             </p>
                           )
@@ -196,6 +186,7 @@ const Cart = () => {
                     <p className='text-xs text-right'>{Number(line?.cost?.totalAmount?.amount).toLocaleString()}円</p>
                   </div>
                 </div>
+                {/* Product Counter */}
                 <div className='flex items-center gap-2 lg:gap-8'>
                   {line?.merchandise?.selectedOptions && line?.merchandise?.product?.id && (
                     <ProductCounter
@@ -222,46 +213,11 @@ const Cart = () => {
       <hr className='border-gray border-opacity-50 border-2' />
       <div className='flex flex-col gap-2 items-end'>
         <div className='flex flex-col lg:flex-row-reverse gap-4 w-full'>
-          <div className='flex flex-col gap-2 items-end'>
-            <p className='flex gap-2 text-lg font-bold'>
-              <span className=''>小計</span>
-              <span className=''>{Number(cost?.subtotalAmount?.amount).toLocaleString()}円</span>
-            </p>
-            <p className='flex gap-2'>
-              <span className='text-lg font-bold'>合計</span>
-              <span className='text-xl font-extrabold text-crimsonRed'>{Number(cost?.totalAmount?.amount).toLocaleString()}円</span>
-            </p>
-          </div>
-          <div className='flex flex-col gap-2'>
-            <p className='text-base font-semibold'>ご注文ページでは「店舗受け取り」または「配送」のどちらかをお選び下さい。</p>
-          </div>
-          <div className='flex flex-col gap-2'>
-            <div className='grid grid-cols-[2fr,1fr] lg:grid-cols-[1fr,1fr] gap-4 md:gap-6 lg:gap-8'>
-              <div className='flex gap-2 items-start justify-end'>
-                <span className='bg-crimsonRed text-white text-sm py-1 px-2'>必須</span>
-                <p className='text-xl font-semibold'>受取日時</p>
-              </div>
-              <div className='flex flex-col md:flex-row lg:flex-col gap-1'>
-                <DateSelector onChange={setSelectedDate} />
-                <TimeSelector onChange={setSelectedTime} />
-              </div>
-            </div>
-          </div>
+          <CartAmountTotal subtotalAmount={Number(cost?.subtotalAmount?.amount).toLocaleString()} totalAmount={Number(cost?.totalAmount?.amount).toLocaleString()} />
+          {hasNonShippableProduct && <CartPickUpForm isPickupDateAndTimeSelected={!!isPickupDateAndTimeSelected} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime} />}
         </div>
         <div className='flex flex-col gap-4 lg:w-1/2'>
-          <div className='flex flex-col gap-1'>
-            <label htmlFor='customerNote' className='text-xs'>
-              ご注文に伴うご要望がございましたら、こちらにご記入ください
-            </label>
-            <textarea
-              name='customerNote'
-              id='customerNote'
-              className='border border-gray-300 bg-slate-200 rounded-md text-black p-2 text-xs'
-              value={customerNote}
-              onChange={(e) => setCustomerNote(e.target.value)}
-              placeholder='特別な要望があればこちらに記入してください'
-            />
-          </div>
+          <CartTextArea customerNote={customerNote} setCustomerNote={setCustomerNote} />
           <div className={`flex justify-end ${!isPickupDateAndTimeSelected ? 'opacity-50' : 'hover:opacity-70 transition-opacity duration-200'}`}>
             <Button
               text='ご注文ページへ進む'
