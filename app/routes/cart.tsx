@@ -8,6 +8,7 @@ import { useEffect, useState } from 'react'
 import type { SelectedOption } from 'src/generated/graphql'
 import type { AllProductsQuery } from 'src/gql/graphql'
 import { Button } from '~/components/atoms/Button'
+import { CartPickUpRemark } from '~/components/molecules/CartPickUpRemark'
 import { ProductCounter } from '~/components/molecules/ProductCounter'
 import { CartAmountTotal } from '~/components/organisms/CartAmountTotal'
 import { CartHeading } from '~/components/organisms/CartHeading'
@@ -17,6 +18,7 @@ import { CartPickUpForm } from '~/components/organisms/CartPickUpForm'
 import { CartTextArea } from '~/components/organisms/CartTextArea'
 import { DeliveryOptionRadioButtons } from '~/components/organisms/DeliveryOptionRadioButtons'
 import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
+import { formatPhoneNumber } from '~/lib/phoneNumber'
 import { translateText } from '~/lib/translate'
 
 export const meta: MetaFunction = () => {
@@ -24,18 +26,18 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = async ({ context, request }: LoaderFunctionArgs) => {
-  const { deepLApiKey, storefront } = context
+  const { deepLApiKey, storefront, shop } = context
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 100 // maybe enough for now
   })
   const { products } = await storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
     variables: paginationVariables
   })
-  return defer({ deepLApiKey, products })
+  return defer({ deepLApiKey, products, shop })
 }
 
 const CartPage = () => {
-  const { deepLApiKey, products } = useLoaderData<typeof loader>()
+  const { deepLApiKey, products, shop } = useLoaderData<typeof loader>()
   const shippableProductIds = products.nodes.filter((product) => product.metafields.some((field) => field?.key === 'shippable' && field.value === 'true')).map((product) => product.id)
   const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
   const [deliveryOption, setDeliveryOption] = useState<'pickup' | 'shipping'>('pickup')
@@ -234,24 +236,31 @@ const CartPage = () => {
       </div>
       <hr className='border-gray border-opacity-50 border-2' />
       <div className='flex flex-col gap-2 items-end'>
-        <div className='flex flex-col  gap-4 w-full'>
+        <div className='flex flex-col gap-4 w-full'>
           <CartAmountTotal subtotalAmount={Number(cost?.subtotalAmount?.amount).toLocaleString()} totalAmount={Number(cost?.totalAmount?.amount).toLocaleString()} />
           {hasNonShippableProduct && (
             <CartPickUpForm isPickupDateAndTimeSelected={!!isPickupDateAndTimeSelected} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime}>
-              <p className='text-sm md:text-right'>
-                配送対応していない商品がカートにふくまれているため、こちらのご注文は
-                <span className='text-crimsonRed font-bold'>店舗受け取り</span>のみ可能です。
-                <br /> 必ず<span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>を選択してください。
-              </p>
+              <div className='text-sm md:max-w-96 flex flex-col gap-1'>
+                <p className='text-sm'>
+                  <span>配送対応していない商品がカートにふくまれているため、こちらのご注文は</span>
+                  <span className='text-crimsonRed font-bold'>店舗受け取り</span>のみ可能です。
+                </p>
+                <p className='text-sm'>
+                  必ず<span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>
+                  を選択してください。
+                </p>
+                <CartPickUpRemark phoneNumber={formatPhoneNumber(shop?.billingAddress.phone ?? '')} />
+              </div>
             </CartPickUpForm>
           )}
           {!hasNonShippableProduct && <DeliveryOptionRadioButtons deliveryOption={deliveryOption} setDeliveryOption={setDeliveryOption} clearPickupDateAndTime={handleClickStorePickUpRadioButton} />}
           {!hasNonShippableProduct && deliveryOption === 'pickup' && (
             <CartPickUpForm isPickupDateAndTimeSelected={!!isPickupDateAndTimeSelected} setSelectedDate={setSelectedDate} setSelectedTime={setSelectedTime}>
-              <div className='flex flex-col md:items-end'>
+              <div className='flex flex-col gap-1 md:max-w-96'>
                 <p className='text-sm'>
                   店舗受取をご希望の場合は必ず、<span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>を選択してください。
                 </p>
+                <CartPickUpRemark phoneNumber={formatPhoneNumber(shop?.billingAddress.phone ?? '')} />
               </div>
             </CartPickUpForm>
           )}

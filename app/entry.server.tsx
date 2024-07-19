@@ -40,7 +40,8 @@ export default async function handleRequest(request: Request, responseStatusCode
       'https://c5c5ed-e8.myshopify.com/api/graphql.json', // Shopify GraphQL API を許可
       'https://c5c5ed-e8.myshopify.com/2024-04/api/graphql.json', // Shopify GraphQL API を許可
       'https://c5c5ed-e8.myshopify.com/api/2024-04/graphql.json', // Shopify GraphQL API を許可
-      'https://api-free.deepl.com' // DeepL API を許可
+      'https://api-free.deepl.com', // DeepL API を許可
+      'https://holidays-jp.github.io/api/v1/date.json' // 日本の祝日APIを許可
     ],
     imgSrc: [
       'self',

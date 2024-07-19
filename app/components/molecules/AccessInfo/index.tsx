@@ -1,3 +1,5 @@
+import { formatPhoneNumber } from '~/lib/phoneNumber'
+
 type Props = {
   name: string
   email: string
@@ -11,7 +13,7 @@ export const AccessInfo: React.FC<Props> = ({ name, email, address, phoneNumber,
     { label: '店舗名:', value: name },
     { label: '郵便番号:', value: postalCode },
     { label: '住所:', value: address },
-    { label: '電話番号:', value: phoneNumber },
+    { label: '電話番号:', value: formatPhoneNumber(phoneNumber) },
     { label: 'メールアドレス:', value: email }
   ]
   return (

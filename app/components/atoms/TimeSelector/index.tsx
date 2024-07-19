@@ -25,7 +25,7 @@ export const TimeSelector: React.FC<Props> = ({ onChange }) => {
   const timeOptions = generateTimeOptions()
 
   return (
-    <select onChange={(e) => onChange(e.target.value)} className='w-full text-xs border border-gray-300 bg-slate-200 rounded-md text-black p-2'>
+    <select onChange={(e) => onChange(e.target.value)} className='w-full md:min-w-32 text-xs border border-gray-300 bg-slate-200 rounded-md text-black p-2'>
       <option value=''>受取時間を選択</option>
       {timeOptions.map((time) => (
         <option key={time} value={time}>
