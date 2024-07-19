@@ -17,6 +17,7 @@ import { CartPickUpForm } from '~/components/organisms/CartPickUpForm'
 import { CartTextArea } from '~/components/organisms/CartTextArea'
 import { DeliveryOptionRadioButtons } from '~/components/organisms/DeliveryOptionRadioButtons'
 import { PRODUCTS_QUERY } from '~/graphql/storefront/queries'
+import { formatPhoneNumber } from '~/lib/phoneNumber'
 import { translateText } from '~/lib/translate'
 
 export const meta: MetaFunction = () => {
@@ -24,18 +25,18 @@ export const meta: MetaFunction = () => {
 }
 
 export const loader = async ({ context, request }: LoaderFunctionArgs) => {
-  const { deepLApiKey, storefront } = context
+  const { deepLApiKey, storefront, shop } = context
   const paginationVariables = getPaginationVariables(request, {
     pageBy: 100 // maybe enough for now
   })
   const { products } = await storefront.query<AllProductsQuery>(print(PRODUCTS_QUERY), {
     variables: paginationVariables
   })
-  return defer({ deepLApiKey, products })
+  return defer({ deepLApiKey, products, shop })
 }
 
 const CartPage = () => {
-  const { deepLApiKey, products } = useLoaderData<typeof loader>()
+  const { deepLApiKey, products, shop } = useLoaderData<typeof loader>()
   const shippableProductIds = products.nodes.filter((product) => product.metafields.some((field) => field?.key === 'shippable' && field.value === 'true')).map((product) => product.id)
   const [translatedOptions, setTranslatedOptions] = useState<{ [key: string]: string }>({})
   const [deliveryOption, setDeliveryOption] = useState<'pickup' | 'shipping'>('pickup')
@@ -251,6 +252,13 @@ const CartPage = () => {
               <div className='flex flex-col md:items-end'>
                 <p className='text-sm'>
                   店舗受取をご希望の場合は必ず、<span className='font-bold px-0.5'>受取日</span>と<span className='font-bold px-0.5'>受取時間</span>を選択してください。
+                </p>
+                <p className='text-sm'>
+                  なお、 受取日はご注文日より2日後以降1週間以内の店舗が営業しております
+                  <span className='font-bold text-crimsonRed'>平日</span>と<span className='font-bold text-crimsonRed'>土曜日</span>をお選びいただけます。
+                </p>
+                <p className='text-sm '>
+                  ご希望の受取日が選択肢にない場合はお電話にてご相談ください。<span className='ml-1'>（TEL : {formatPhoneNumber(shop?.billingAddress.phone ?? '')}）</span>
                 </p>
               </div>
             </CartPickUpForm>
