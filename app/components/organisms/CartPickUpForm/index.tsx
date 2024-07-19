@@ -11,7 +11,7 @@ type Props = {
 
 export const CartPickUpForm: React.FC<Props> = ({ isPickupDateAndTimeSelected, setSelectedDate, setSelectedTime, children }) => {
   return (
-    <div className='flex flex-col gap-2'>
+    <div className='flex flex-col gap-2 md:items-end'>
       {children}
       <div className='grid grid-cols-[2fr,1fr] lg:grid-cols-[1fr,1fr] gap-4 md:gap-6 lg:gap-8'>
         <div className='flex gap-2 items-start justify-end'>

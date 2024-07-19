@@ -38,7 +38,7 @@ export const DateSelector: React.FC<Props> = ({ onChange }) => {
   }).filter((date) => date.getDay() !== 0 && !holidays[date.toISOString().split('T')[0]])
 
   return (
-    <select onChange={(e) => onChange(e.target.value)} className='w-full text-xs border border-gray-300 bg-slate-200 rounded-md text-black p-2'>
+    <select onChange={(e) => onChange(e.target.value)} className='w-full md:min-w-32 text-xs border border-gray-300 bg-slate-200 rounded-md text-black p-2'>
       <option value='' className=''>
         受取日を選択
       </option>
